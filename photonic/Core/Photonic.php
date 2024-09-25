@@ -16,7 +16,6 @@ class Photonic {
 	public static $lightbox_replacements;
 	public static $safe_tags;
 	public static $safe_title_tags;
-	private $ajax;
 
 	public function __construct() {
 		// $start = microtime(true);
@@ -251,7 +250,7 @@ class Photonic {
 		}
 
 		require_once PHOTONIC_PATH . "/Core/AJAX.php";
-		$this->ajax = AJAX::get_instance($this);
+		AJAX::get_instance($this);
 
 		/*
 		add_action('photonic_token_monitor', [&$this, 'monitor_token_validity']);

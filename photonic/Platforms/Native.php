@@ -147,9 +147,9 @@ class Native extends Base implements Level_One_Module {
 		$thumbs        = [];
 		foreach ($response as $id => $attachment) {
 			$wp_details   = wp_prepare_attachment_for_js($id);
-			$sources[$id] = wp_get_attachment_image_src($id, $main_size, false);
-			$tiles[$id]   = wp_get_attachment_image_src($id, $tile_size, false);
-			$thumbs[$id]  = wp_get_attachment_image_src($id, $thumb_size);
+			$sources[$id] = wp_get_attachment_image_src($id, $main_size, true);
+			$tiles[$id]   = wp_get_attachment_image_src($id, $tile_size, true);
+			$thumbs[$id]  = wp_get_attachment_image_src($id, $thumb_size, true);
 
 			if (isset($attachment->post_title)) {
 				$title = wptexturize($attachment->post_title);

@@ -1,5 +1,16 @@
 == Changelog ==
 
+= 3.12 =
+
+*	Changed: Updated stable tag to 3.12
+
+= 3.11 =
+
+*	Changed: Minimum PHP version compatibility bumped up to 7.3
+*	Changed: Updated WP compatibility support to 6.6
+*	Changed: For native galleries, if the size is missing, the code will now return a mime-type thumbnail.
+*	Removed: Polyfill.js is no longer a part of the script, hence removing the file.
+
 = 3.10 =
 
 *	Added: New layout, "Horizontal Masonry", for left-to-right ordering in masonry layouts.

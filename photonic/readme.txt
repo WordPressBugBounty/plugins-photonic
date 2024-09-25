@@ -1,12 +1,12 @@
 === Photonic Gallery & Lightbox for Flickr, SmugMug, Google Photos & Others ===
 Contributors: sayontan
 Donate link: https://aquoid.com/plugins/photonic/
-Tags: flickr, google photos, smugmug, zenfolio, gallery, lightbox, responsive, block, baguettebox, fancybox, lightcase, lightgallery, magnific, photoswipe, prettyphoto, swipebox, strip, slideshow, deeplinking, social
+Tags: flickr, google photos, smugmug, zenfolio, gallery, lightbox
 Text Domain: photonic
 Requires at least: 6.2
-Tested up to: 6.5
-Requires PHP: 7.2
-Stable tag: 3.10
+Tested up to: 6.6
+Requires PHP: 7.3
+Stable tag: 3.12
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug, Google Photos and Zenfolio photos and videos.
@@ -140,6 +140,7 @@ Photonic displays your galleries in multiple forms:
 *	A grid of circular thumbnails (like Jetpack)
 *	A neat justified grid
 *	A masonry layout
+*	A "horizontal" masonry layout, for those who prefer having their masonry layouts sorted horizontally
 *	A tiled, random mosaic (a much improved variant of the Jetpack Tiled Gallery layout)
 *	A slideshow, using the <a href='https://splidejs.com'>Splide</a> script
 
@@ -236,15 +237,14 @@ Version 3.00 is a major update, where syntax that will only work on PHP 7.0+ has
 
 == Changelog ==
 
-= 3.10 =
+= 3.12 =
 
-*	Added: New layout, "Horizontal Masonry", for left-to-right ordering in masonry layouts.
-*	Added: Ability to select more options for the title in WP galleries.
-*	Changed: Minimum WP version compatibility bumped up to 6.2.
-*	Changed: Minimum PHP version compatibility bumped up to 7.2.
-*	Fixed: Lazy-expanded Flickr collections were not showing square thumbnails.
-*	Fixed: Zenfolio issue where square thumbnails were not showing a uniform size.
-*	Fixed: LightGallery thumbnails were not showing in lazy-loaded galleries.
-*	Fixed: Corrected a PHP 8.1-specific warning.
-*	Changed: Removed unnecessary markup (data attributes) from slideshows.
+*	Changed: Updated stable tag to 3.12
+
+= 3.11 =
+
+*	Changed: Minimum PHP version compatibility bumped up to 7.3
+*	Changed: Updated WP compatibility support to 6.6
+*	Changed: For native galleries, if the size is missing, the code will now return a mime-type thumbnail.
+*	Removed: Polyfill.js is no longer a part of the script, hence removing the file.
 
