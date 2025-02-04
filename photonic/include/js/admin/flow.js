@@ -1,10 +1,10 @@
 jQuery(document).ready(function($) {
-	var wpActiveEditor;
-	var photonicLastActiveScreen = 1;
-	var photonicNativeWPMediaLibrary;
-	var photonicMustPost = false;
-	var photonicPermittedGalleries = ['wp', 'default', 'flickr', 'smugmug', 'picasa', 'google', 'zenfolio', 'instagram'];
-	var photonicIsWidget = false;
+	let wpActiveEditor;
+	let photonicLastActiveScreen = 1;
+	let photonicNativeWPMediaLibrary;
+	let photonicMustPost = false;
+	let photonicPermittedGalleries = ['wp', 'default', 'flickr', 'smugmug', 'google', 'zenfolio', 'instagram'];
+	let photonicIsWidget = false;
 
 	window.photonicAddTBClass = function() {
 		var tb = $('#TB_window', window.parent.document);
@@ -595,6 +595,16 @@ jQuery(document).ready(function($) {
 						tb_close();
 					}
 					else {
+/*
+						shortcode = top.wp.shortcode.next(Photonic_Wizard_JS.shortcode, existing.trim());
+						if (shortcode !== undefined && shortcode.content.length === existing.trim().length) {
+							attributes = shortcode.shortcode.attrs.named;
+							if (attributes['filter']) {
+								albumFilter = attributes['filter'];
+							}
+						}
+*/
+
 						win.send_to_editor($(shortcode[0]).html());
 					}
 				}

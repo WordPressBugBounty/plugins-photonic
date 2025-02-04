@@ -58,7 +58,7 @@ body.iframe { background: #fff; }
 span[aria-hidden="true"] {display:none;}
 span[aria-hidden="false"] {display:block;}
 
-.photonic-flow-error { color: #c00; padding: 1em; border: 0 solid #c00; border-left-width: 3px; background: lavenderblush; }
+.photonic-flow-error, .photonic-flow-notice { color: #c00; padding: 1em; border: 0 solid #c00; border-left-width: 3px; background: lavenderblush; }
 .photonic-editor-info { color: #00c; border: 0 solid #00c; border-left-width: 3px; background: aliceblue; }
 .photonic-editor-info div { padding: 1em; }
 

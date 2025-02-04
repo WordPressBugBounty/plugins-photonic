@@ -69,6 +69,7 @@ div.donate ul li.coffee .icon { background-position: 0 -672px; }
 
 .photonic-options-panel textarea { width: 90%; min-width: 400px; min-height: 150px; }
 .photonic-options-panel input[type='text'] { width: 40%; min-width: 400px;}
+.photonic-options-panel .notice { padding: 1em; }
 .photonic-border-options input[type='text'] { width: 40%; min-width: 150px;}
 
 .opt-sub-table-5 { border-collapse: collapse; width: 98%; }

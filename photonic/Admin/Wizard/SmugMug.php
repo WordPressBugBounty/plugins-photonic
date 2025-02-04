@@ -377,7 +377,7 @@ class SmugMug extends Source {
 				return ['error' => $this->error_mandatory];
 			}
 
-			$nick_name = sanitize_text_field($_POST['user']);
+			$nick_name = sanitize_text_field(wp_unslash($_POST['user']));
 			$user = 'current' === $for ? $photonic_smug_default_user : ('other' === $for ? $nick_name : '');
 			$args = [
 				'APIKey'        => $module->api_key,
@@ -582,11 +582,11 @@ class SmugMug extends Source {
 		if (check_ajax_referer('photonic-wizard-next-' . get_current_user_id())) {
 			if ('album-photo' === $display_type) {
 				$short_code['view'] = 'album';
-				$short_code['album'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['album'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('folder-photo' === $display_type) {
 				$short_code['view'] = 'images';
-				$short_code['folder'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['folder'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('user-photo' === $display_type) {
 				$short_code['view'] = 'images';
@@ -599,7 +599,7 @@ class SmugMug extends Source {
 			}
 			elseif ('folder' === $display_type) {
 				$short_code['view'] = 'folder';
-				$short_code['folder'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['folder'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 		}
 

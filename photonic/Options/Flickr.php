@@ -55,7 +55,7 @@ class Flickr extends Option_Tab {
 			],
 
 			[
-				'name'     => "Access Token (for Back-end / Server-side Authentication)",
+				'name'     => "Access Token",
 				'desc'     => "To get your token go to <em>Photonic &rarr; Authentication &rarr; Flickr</em>, and authenticate. Save the token you get here. <br/>If you have set
 			up a token, your users can see protected Flickr photos without a Flickr account. See <a href='https://aquoid.com/plugins/photonic/authentication/'>here</a> for more.",
 				'id'       => 'flickr_access_token',
@@ -64,7 +64,7 @@ class Flickr extends Option_Tab {
 			],
 
 			[
-				'name'     => "Access Token Secret (for Back-end / Server-side Authentication)",
+				'name'     => "Access Token Secret",
 				'desc'     => "To get your token secret go to <em>Photonic &rarr; Authentication &rarr; Flickr</em>, and authenticate. Save the token secret you get here. Your token secret works with the token set in the previous option. See <a href='https://aquoid.com/plugins/photonic/authentication/'>here</a> for more.",
 				'id'       => 'flickr_token_secret',
 				'grouping' => 'flickr-settings',

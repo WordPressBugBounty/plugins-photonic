@@ -453,7 +453,7 @@ class Zenfolio extends Source {
 				return ['error' => $this->error_mandatory];
 			}
 
-			$login_name = sanitize_text_field($_POST['login_name']);
+			$login_name = sanitize_text_field(wp_unslash($_POST['login_name']));
 			global $photonic_zenfolio_default_user;
 			if ('current' === $for && empty($photonic_zenfolio_default_user)) {
 				return ['error' => sprintf(esc_html__('Default user not defined under %1$s. %2$sSelect "Another user" and put in your user id.', 'photonic'), '<em>Photonic &rarr; Settings &rarr; Zenfolio &rarr; Zenfolio Photo Settings &rarr; Default User</em>', '<br/>')];
@@ -652,11 +652,11 @@ class Zenfolio extends Source {
 			}
 			elseif ('single-photo' === $display_type) {
 				$short_code['view'] = 'photos';
-				$short_code['object_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['object_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('gallery-photo' === $display_type/* || $display_type == 'collection-photo'*/) {
 				$short_code['view'] = 'photosets';
-				$short_code['object_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['object_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('multi-gallery' === $display_type || 'multi-collection' === $display_type || 'multi-gallery-collection' === $display_type) {
 				$short_code['view'] = 'photosets';
@@ -669,7 +669,7 @@ class Zenfolio extends Source {
 			}
 			elseif ('group' === $display_type) {
 				$short_code['view'] = 'group';
-				$short_code['object_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['object_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('group-hierarchy' === $display_type) {
 				$short_code['view'] = 'hierarchy';

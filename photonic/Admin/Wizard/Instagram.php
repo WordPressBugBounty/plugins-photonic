@@ -192,10 +192,10 @@ class Instagram extends Source {
 
 		if (check_ajax_referer('photonic-wizard-next-' . get_current_user_id())) {
 			if ('single-photo' === $display_type) {
-				$short_code['media_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['media_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('album-photo' === $display_type) {
-				$short_code['carousel'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['carousel'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 		}
 

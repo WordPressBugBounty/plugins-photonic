@@ -70,7 +70,7 @@ class Admin {
 	}
 
 	public function enqueue_wizard_scripts() {
-		if (current_user_can('edit_posts') && wp_verify_nonce($_REQUEST['nonce'], 'photonic-wizard-' . get_current_user_id())) {
+		if (current_user_can('edit_posts') && isset($_REQUEST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'])), 'photonic-wizard-' . get_current_user_id())) {
 			global $photonic_alternative_shortcode;
 			$wizard_js = [
 				'ajaxurl'                   => admin_url('admin-ajax.php'),

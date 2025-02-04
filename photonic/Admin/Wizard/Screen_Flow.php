@@ -23,7 +23,7 @@ class Screen_Flow {
 	private $editor_shortcode_text;
 
 	public function __construct() {
-		if (wp_verify_nonce($_REQUEST['nonce'], 'photonic-wizard-' . get_current_user_id())) {
+		if (wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'] ?? '')), 'photonic-wizard-' . get_current_user_id())) {
 			if (isset($_REQUEST['shortcode'])) {
 				$this->input_shortcode = sanitize_text_field($_REQUEST['shortcode']);
 				$this->input_shortcode = base64_decode($this->input_shortcode);  // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in flow.js, which encodes it
@@ -48,11 +48,11 @@ class Screen_Flow {
 	}
 
 	public function render() {
-		if (wp_verify_nonce($_REQUEST['nonce'], 'photonic-wizard-' . get_current_user_id())) {
+		if (wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'] ?? '')), 'photonic-wizard-' . get_current_user_id())) {
 			?>
 		<div id="photonic-flow-wrapper" data-current-screen="1">
 			<form id="photonic-flow" data-photonic-submission="" data-photonic-submission-pending="">
-				<input type="hidden" name="post_id" value="<?php echo esc_attr($_REQUEST['post_id']); ?>"/>
+				<input type="hidden" name="post_id" value="<?php echo esc_attr(sanitize_text_field(wp_unslash($_REQUEST['post_id'] ?? 0))); ?>"/>
 				<input name="photonic-editor-shortcode" id="photonic-editor-shortcode" type="hidden"
 					   value="<?php echo !empty($this->editor_shortcode_text) ? esc_attr($this->editor_shortcode_text) : ''; ?>"/>
 				<input name="photonic-editor-shortcode-raw" id="photonic-editor-shortcode-raw" type="hidden"

@@ -177,10 +177,10 @@ class Shortcode_Usage extends WP_List_Table {
 	private function process_bulk_action() {
 		if ('replace_shortcode' === $this->current_action() && !empty($_POST['photonic_post']) && wp_verify_nonce('photonic-replace-shortcode-' . get_current_user_id(), '_photonic_replacement_nonce')) {
 			$post_ids = $_POST['photonic_post']; // Cannot sanitize this since it is an array. Will sanitize each of its components in the array_walk.
-			array_walk($post_ids, 'sanitize_text_Field');
+			array_walk($post_ids, 'sanitize_text_field');
 		}
 		elseif ('replace_shortcode_individual' === $this->current_action() && !empty($_REQUEST['photonic_post_id'])) {
-			$post_ids = [sanitize_text_field($_REQUEST['photonic_post_id'])];
+			$post_ids = [sanitize_text_field(wp_unslash($_REQUEST['photonic_post_id']))];
 		}
 
 		if (!empty($post_ids)) {

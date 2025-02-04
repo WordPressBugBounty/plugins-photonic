@@ -75,6 +75,17 @@ class Authentication extends Admin_Page {
 	private function display_google() {
 		global $photonic_google_client_id, $photonic_google_client_secret, $photonic_google_refresh_token;
 		echo "<div class=\"photonic-token-header\">\n";
+
+		echo '<section class="notice notice-error">' .
+			sprintf(
+				esc_html__('%1$sAPI Shutdown%2$s%3$sGoogle is making a change to its APIs, which make them unusable for browsing on the web. This will prevent Photonic from working after %1$s31st March 2025%2$s. Please switch to a different platform to avoid disruption.%4$s', 'photonic'),
+				'<strong>',
+				'</strong>',
+				'<p>',
+				'</p>'
+			) .
+			'</section>';
+
 		if (empty($photonic_google_client_id) || empty($photonic_google_client_secret)) {
 			echo sprintf(
 				esc_html__('Please set up your Google Client ID and Client Secret under %s', 'photonic'),
@@ -84,7 +95,7 @@ class Authentication extends Admin_Page {
 		else {
 			require_once PHOTONIC_PATH . '/Platforms/Google_Photos.php';
 
-			$parameters = Base::parse_parameters($_SERVER['QUERY_STRING']);
+			$parameters = Base::parse_parameters($_SERVER['QUERY_STRING'] ?? '');
 
 			if (!empty($photonic_google_refresh_token)) {
 				$this->print_auth_done_all_good();
@@ -193,7 +204,7 @@ class Authentication extends Admin_Page {
 		}
 		echo "</div>\n";
 
-		$response = Base::parse_parameters($_SERVER['QUERY_STRING']);
+		$response = Base::parse_parameters($_SERVER['QUERY_STRING'] ?? '');
 		if (!empty($photonic_zenfolio_default_user) && (empty($response['provider']) || 'zenfolio' !== $response['provider'])) {
 			echo '<label>' . esc_html__('Password:', 'photonic') . "<input type='password' name='zenfolio-password' id='zenfolio-password'></label>";
 		}
@@ -232,11 +243,11 @@ class Authentication extends Admin_Page {
 		$ret = [];
 		echo "<div class=\"photonic-token-header\">\n";
 
-		if (empty($auth['api_key']) || empty($auth['api_secret'])) {
-			echo sprintf(esc_html__('Please set up your %1$s API key under %2$s.', 'photonic'), esc_html($provider), sprintf('<em>Photonic &rarr; Settings &rarr; %1$s &rarr; %1$s Settings</em>', esc_html($provider)));
-		}
-		elseif ('Instagram' === $provider) {
+		if ('Instagram' === $provider) {
 			echo '<p class="notice notice-error">' . esc_html__("Unfortunately Instagram is no longer supported in Photonic. This is due to a change in Meta's Terms and Conditions, that only allow businesses to access their API. As Photonic is developed by an individual, the API is no longer accessible to the developer.", 'photonic') . '</p><br/>';
+		}
+		elseif (empty($auth['api_key']) || empty($auth['api_secret'])) {
+			echo sprintf(esc_html__('Please set up your %1$s API key under %2$s.', 'photonic'), esc_html($provider), sprintf('<em>Photonic &rarr; Settings &rarr; %1$s &rarr; %1$s Settings</em>', esc_html($provider)));
 		}
 		elseif ('Instagram' === $provider && !empty($auth['token'])) {
 			require_once PHOTONIC_PATH . '/Platforms/Instagram.php';
@@ -278,7 +289,7 @@ class Authentication extends Admin_Page {
 	 */
 	public function show_token_section_body($auth, $provider, $provider_text) {
 		$photonic_authentication = get_option('photonic_authentication');
-		$response = Base::parse_parameters($_SERVER['QUERY_STRING']);
+		$response = Base::parse_parameters($_SERVER['QUERY_STRING'] ?? '');
 
 		if (empty($response['provider']) || (!empty($response['provider']) && $provider !== $response['provider'])) {
 			$nonce = wp_create_nonce($provider . '-request-token-' . $auth['api_secret']);
@@ -327,10 +338,10 @@ class Authentication extends Admin_Page {
 	}
 
 	public function obtain_token() {
-		$provider = sanitize_text_field($_POST['provider']);
+		$provider = sanitize_text_field($_POST['provider'] ?? '');
 		global $photonic_google_client_secret, $photonic_flickr_api_secret, $photonic_smug_api_secret;
 		if ('google' === $provider && check_ajax_referer('google-obtain-token-' . $photonic_google_client_secret, '_ajax_nonce')) {
-			$code = sanitize_text_field($_POST['code']);
+			$code = sanitize_text_field($_POST['code'] ?? '');
 			require_once PHOTONIC_PATH . '/Platforms/Google_Photos.php';
 			$module = Google_Photos::get_instance();
 			// if (!empty($photonic_google_use_own_keys) || (!empty($photonic_google_client_id) && !empty($photonic_google_client_secret))) {

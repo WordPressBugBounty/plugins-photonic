@@ -180,12 +180,12 @@ class Photonic {
 
 		$this->localized = false;
 		$this->provider_map = [
-			'flickr'    => 'Flickr',
-			'smug'      => 'SmugMug',
-			'smugmug'   => 'SmugMug',
-			'google'    => 'Google',
-			'zenfolio'  => 'Zenfolio',
-			'instagram' => 'Instagram',
+			'flickr'        => 'Flickr',
+			'smug'          => 'SmugMug',
+			'smugmug'       => 'SmugMug',
+			'google'        => 'Google',
+			'zenfolio'      => 'Zenfolio',
+			'instagram'     => 'Instagram',
 		];
 
 		add_action('admin_menu', [&$this, 'add_admin_menu']);

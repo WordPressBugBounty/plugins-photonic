@@ -6,7 +6,7 @@ Text Domain: photonic
 Requires at least: 6.2
 Tested up to: 6.6
 Requires PHP: 7.3
-Stable tag: 3.12
+Stable tag: 3.13
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug, Google Photos and Zenfolio photos and videos.
@@ -79,6 +79,8 @@ The following Google Photos concepts are supported in Photonic:
 *	<a href='https://aquoid.com/plugins/photonic/google-photos/albums/'>Albums</a>
 
 For demos of Google Photos support visit the <a href='https://aquoid.com/plugins/photonic/google-photos/'>Google Photos page</a>.
+
+**Google API Change:** With effect from 31st March 2025, Google's API will cease to work. Consequently, **Photonic will stop working for Google Photos**. For more details, see <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a>.
 
 #### SmugMug
 
@@ -190,9 +192,9 @@ Of course, it would be easiest if you were to disable that plugin. If a lightbox
 
 However, if you really wanted to keep that plugin, Photonic offers a way out there too! For each provider (e.g. Flickr, Google Photos etc.) go to the Settings page, e.g. <em>Photonic &rarr; Settings &rarr; SmugMug &rarr; SmugMug Settings &rarr; Disable lightbox linking</em> and set that option.
 
-= My Instagram gallery is not working. Are you really sure the plugin is working? =
+= I received an email about Google Photos' API change. Does that impact me? =
 
-Yes, the plugin is working, but Meta does not allow individual developers (i.e. developers not operating as a business) to access its API. While the working code for Instagram is bundled with the plugin, you will not be able to use it since Photonic is built by an individual developer. Please switch to a different plugin if you wish to use Instagram.
+Unfortunately, yes. Photonic will stop working for Google Photos starting the end of March. See <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a> for details.
 
 = Why is the Google Photos setup process so painful? =
 
@@ -229,22 +231,9 @@ Bug reports are welcome, and handled enthusiastically.
 
 Yes, but only for the plugin front-end and the wizard. The Settings pages are not translated at this point. Also note that any strings included in the third-party JS scripts are not translated.
 
-== Upgrade Notice ==
-
-= 3.00 =
-
-Version 3.00 is a major update, where syntax that will only work on PHP 7.0+ has been introduced. <strong>Do not upgrade if you are on PHP 5.6 or older.</strong>
-
 == Changelog ==
 
-= 3.12 =
+= 3.13 =
 
-*	Changed: Updated stable tag to 3.12
-
-= 3.11 =
-
-*	Changed: Minimum PHP version compatibility bumped up to 7.3
-*	Changed: Updated WP compatibility support to 6.6
-*	Changed: For native galleries, if the size is missing, the code will now return a mime-type thumbnail.
-*	Removed: Polyfill.js is no longer a part of the script, hence removing the file.
-
+*	Added: Warning notices about the impending Google Photos shutdown.
+*	Changed: Added adaptability for the "Plugin Check" plugin.

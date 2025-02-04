@@ -24,4 +24,5 @@ class Photo {
 	public $uploaded_on;
 
 	public $main_page;
+	public $buy_link;
 }

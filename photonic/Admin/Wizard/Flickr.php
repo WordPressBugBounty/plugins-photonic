@@ -414,8 +414,8 @@ class Flickr extends Source {
 		$login = '';
 
 		if (check_ajax_referer('photonic-wizard-next-' . get_current_user_id())) {
-			$group = sanitize_text_field($_POST['group']);
-			$login = sanitize_text_field($_POST['login']);
+			$group = sanitize_text_field(wp_unslash($_POST['group'] ?? ''));
+			$login = sanitize_text_field(wp_unslash($_POST['login'] ?? ''));
 		}
 
 		global $photonic_flickr_default_user, $photonic_flickr_api_key;
@@ -639,18 +639,18 @@ class Flickr extends Source {
 		if (check_ajax_referer('photonic-wizard-next-' . get_current_user_id())) {
 			if ('single-photo' === $display_type) {
 				$short_code['view'] = 'photo';
-				$short_code['photo_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['photo_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('multi-photo' === $display_type) {
 				$short_code['view'] = 'photos';
 			}
 			elseif ('album-photo' === $display_type) {
 				$short_code['view'] = 'photosets';
-				$short_code['photoset_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['photoset_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('gallery-photo' === $display_type) {
 				$short_code['view'] = 'galleries';
-				$short_code['gallery_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['gallery_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('multi-album' === $display_type) {
 				$short_code['view'] = 'photosets';
@@ -663,7 +663,7 @@ class Flickr extends Source {
 			}
 			elseif ('collection' === $display_type) {
 				$short_code['view'] = 'collections';
-				$short_code['collection_id'] = sanitize_text_field($_POST['selected_data']);
+				$short_code['collection_id'] = sanitize_text_field(wp_unslash($_POST['selected_data'] ?? ''));
 			}
 			elseif ('collections' === $display_type) {
 				$short_code['view'] = 'collections';

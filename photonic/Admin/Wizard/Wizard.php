@@ -101,9 +101,9 @@ class Wizard {
 		$ret = '';
 
 		if (check_ajax_referer('photonic-wizard-next-' . get_current_user_id())) {
-			$screen = sanitize_text_field($_POST['screen'] ?? 0);
-			$provider = sanitize_text_field($_POST['provider'] ?? '');
-			$display_type = sanitize_text_field($_POST['display_type'] ?? '');
+			$screen = sanitize_text_field(wp_unslash($_POST['screen'] ?? 0));
+			$provider = sanitize_text_field(wp_unslash($_POST['provider'] ?? ''));
+			$display_type = sanitize_text_field(wp_unslash($_POST['display_type'] ?? ''));
 
 			$raw_shortcode = !empty($_POST['photonic-editor-shortcode-raw']) ? sanitize_text_field($_POST['photonic-editor-shortcode-raw']) : '';
 			if (!empty($raw_shortcode)) {
@@ -142,6 +142,7 @@ class Wizard {
 				$fields = $screen_fields['display'];// $screen_fields[$provider]['display'];
 				$ret .= $this->render_all_fields($fields, $deconstructed);
 				$ret = (empty($screen_fields['header']) ? '' : "<h1>" . wp_kses_post($screen_fields['header']) . "</h1>\n") .
+					(empty($screen_fields['notice']) ? '' : "<section class='photonic-flow-notice'>" . wp_kses_post($screen_fields['notice']) . "</section>\n") .
 					(empty($screen_fields['desc']) ? '' : "<p>" . wp_kses_post($screen_fields['desc']) . "</p>\n") .
 					$ret;
 			}
@@ -154,6 +155,7 @@ class Wizard {
 				$ret .= $this->render_all_fields($fields, $deconstructed);
 
 				$ret = (empty($screen_fields[$display_type]['header']) ? '' : "<h1>" . wp_kses_post($screen_fields[$display_type]['header']) . "</h1>\n") .
+					(empty($screen_fields[$display_type]['notice']) ? '' : "<section class='photonic-flow-notice'>" . wp_kses_post($screen_fields[$display_type]['notice']) . "</section>\n") .
 					(empty($screen_fields[$display_type]['desc']) ? '' : "<p>" . wp_kses_post($screen_fields[$display_type]['desc']) . "</p>\n") .
 					str_replace('{{placeholder_value}}', $output['success'], $ret);
 			}
@@ -200,9 +202,6 @@ class Wizard {
 							return ['error' => sprintf($this->error_missing_api, 'Flickr API key', '<em>Photonic &rarr; Settings &rarr; Flickr &rarr; Flickr Settings</em>')];
 						}
 						break;
-
-					case 'picasa':
-						return ['error' => esc_html__('Google has deprecated the Picasa API with effect from January 2019. Please consider using the Google Photos module.', 'photonic')];
 
 					case 'google':
 						global $photonic_google_client_id, $photonic_google_client_secret, $photonic_google_refresh_token;
@@ -747,7 +746,7 @@ class Wizard {
 		if (check_ajax_referer('photonic-wizard-next-' . get_current_user_id())) {
 			global $photonic_alternative_shortcode;
 
-			$provider = sanitize_text_field($_POST['provider']);
+			$provider = sanitize_text_field(wp_unslash($_POST['provider']));
 			$display_type = sanitize_text_field($_POST['display_type']);
 
 			$short_code = [];
@@ -1035,7 +1034,7 @@ class Wizard {
 	 */
 	public function process_response($response, $provider, $display_type = null, $form_parameters = [], $existing = [], $url = null, $more = false): array {
 		if (!is_wp_error($response)) {
-			if (isset($response['response']) && isset($response['response']['code'])) {
+			if (isset($response['response']['code'])) {
 				if (200 === $response['response']['code']) {
 					$pagination = [];
 					$source = $this->flow_fields->get_source($provider);

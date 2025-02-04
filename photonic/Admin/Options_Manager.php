@@ -352,6 +352,9 @@ class Options_Manager extends Admin_Page {
 					if (isset($value['buttons'])) {
 						$option_structure[$value['category']]['buttons'] = $value['buttons'];
 					}
+					if (isset($value['preface'])) {
+						$option_structure[$value['category']]['preface'] = $value['preface'];
+					}
 					break;
 
 				default:
@@ -582,6 +585,9 @@ class Options_Manager extends Admin_Page {
 
 		echo "<div id='" . esc_attr($section['id']) . "' class='photonic-options-panel'> \n";
 		echo "<form method=\"post\" action=\"options.php\" id=\"photonic-options-form-" . esc_attr($section['id']) . "\" class='photonic-options-form'>\n";
+		if (!empty($option_structure[$section['id']]['preface'])) {
+			echo wp_kses_post($option_structure[$section['id']]['preface']);
+		}
 		echo '<h3>' . wp_kses_post($option_structure[$section['id']]['name']) . "</h3>\n";
 
 		/*
@@ -589,7 +595,7 @@ class Options_Manager extends Admin_Page {
 		 * We are registering the same setting across multiple pages, hence we need to pass the "page" parameter to options.php.
 		 * Otherwise options.php returns an error saying "Options page not found"
 		 */
-		echo "<input type='hidden' name='page' value='" . esc_attr($_REQUEST['page']) . "' />\n";
+		echo "<input type='hidden' name='page' value='" . esc_attr(sanitize_text_field($_REQUEST['page'] ?? '')) . "' />\n";
 		if (!isset($_REQUEST['tab'])) {
 			$tab = 'Generic.php';
 		}
