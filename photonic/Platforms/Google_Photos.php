@@ -24,9 +24,15 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	public $refresh_token_valid;
 	private static $instance = null;
 
+	private $eol_date;
+	private $current_date;
+
 	protected function __construct() {
 		parent::__construct();
 		global $photonic_google_client_id, $photonic_google_client_secret, $photonic_google_refresh_token;
+
+		$this->eol_date = gmdate("Ymd", gmmktime(0, 0, 0, 3, 30, 2025));
+		$this->current_date = gmdate("Ymd");
 
 		// if (!empty($photonic_google_use_own_keys) || (!empty($photonic_google_client_id) && !empty($photonic_google_client_secret))) {
 		if (!empty($photonic_google_client_id) && !empty($photonic_google_client_secret)) {
@@ -57,7 +63,10 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 
 		$this->error_date_format = esc_html__('Dates must be entered in the format Y/M/D where Y is from 0 to 9999, M is from 0 to 12 and D is from 0 to 31. You entered %s.', 'photonic');
 		$this->oauth_done        = false;
-		$this->authenticate($photonic_google_refresh_token);
+
+		if ($this->current_date < $this->eol_date) {
+			$this->authenticate($photonic_google_refresh_token);
+		}
 	}
 
 	/**
@@ -68,238 +77,236 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	 */
 	public function get_gallery_images($attr = []): array {
 		global $photonic_google_refresh_token, $photonic_google_media, $photonic_google_title_caption;
-		$this->push_to_stack('Get Gallery Images');
 
-		$attr = array_merge(
-			$this->common_parameters,
-			[
-				'caption'         => $photonic_google_title_caption,
-				'thumb_size'      => '150',
-				'main_size'       => '1600',
-				'tile_size'       => '1600',
-				'crop_thumb'      => 'crop',
+		$out = [];
 
-				// Google ...
-				'count'           => 100,
-				'media'           => $photonic_google_media,
-				'video_size'      => 'dv',
-				'date_filters'    => '',
-				'content_filters' => '',
-				'access'          => 'all',
-			],
-			$attr
-		);
-		$attr = array_map('trim', $attr);
+		if ($this->current_date < $this->eol_date) {
+			$this->push_to_stack('Get Gallery Images');
+			$attr                       = array_merge(
+				$this->common_parameters,
+				[
+					'caption'         => $photonic_google_title_caption,
+					'thumb_size'      => '150',
+					'main_size'       => '1600',
+					'tile_size'       => '1600',
+					'crop_thumb'      => 'crop',
 
-		$attr['overlay_size']       = empty($attr['overlay_size']) ? $attr['thumb_size'] : $attr['overlay_size'];
-		$attr['overlay_video_size'] = empty($attr['overlay_video_size']) ? $attr['video_size'] : $attr['overlay_video_size'];
-		$attr['overlay_crop']       = empty($attr['overlay_crop']) ? $attr['crop_thumb'] : $attr['overlay_crop'];
-
-		if (empty($this->client_id)) {
-			$this->pop_from_stack();
-			return [new Error(esc_html__('Google Photos Client ID not defined.', 'photonic') . Photonic::doc_link($this->doc_links['general']))];
-		}
-		if (empty($this->client_secret)) {
-			$this->pop_from_stack();
-			return [new Error(esc_html__('Google Photos Client Secret not defined.', 'photonic') . Photonic::doc_link($this->doc_links['general']))];
-		}
-		if (empty($photonic_google_refresh_token)) {
-			$this->pop_from_stack();
-			return [new Error(sprintf(esc_html__('Google Photos Refresh Token not defined. Please authenticate from %s.', 'photonic'), '<em>Photonic &rarr; Authentication</em>') . Photonic::doc_link($this->doc_links['general']))];
-		}
-		if (!$this->refresh_token_valid) {
-			$this->pop_from_stack();
-			$error = sprintf(esc_html__('Google Photos Refresh Token invalid. Please authenticate from %s.', 'photonic'), '<em>Photonic &rarr; Authentication</em>');
-			if (!empty($this->auth_error)) {
-				$error .= '<br/>' . sprintf(esc_html__('Error encountered during authentication: %s', 'photonic'), '<br/><pre>' . $this->auth_error . '</pre>');
+					// Google ...
+					'count'           => 100,
+					'media'           => $photonic_google_media,
+					'video_size'      => 'dv',
+					'date_filters'    => '',
+					'content_filters' => '',
+					'access'          => 'all',
+				],
+				$attr
+			);
+			$attr                       = array_map('trim', $attr);
+			$attr['overlay_size']       = empty($attr['overlay_size']) ? $attr['thumb_size'] : $attr['overlay_size'];
+			$attr['overlay_video_size'] = empty($attr['overlay_video_size']) ? $attr['video_size'] : $attr['overlay_video_size'];
+			$attr['overlay_crop']       = empty($attr['overlay_crop']) ? $attr['crop_thumb'] : $attr['overlay_crop'];
+			if (empty($this->client_id)) {
+				$this->pop_from_stack();
+				return [new Error(esc_html__('Google Photos Client ID not defined.', 'photonic') . Photonic::doc_link($this->doc_links['general']))];
 			}
-			return [new Error($error . Photonic::doc_link($this->doc_links['general']))];
-		}
-
-		if (empty($attr['view'])) {
-			$this->pop_from_stack();
-			return [new Error(sprintf(esc_html__('The %s parameter is mandatory for the shortcode.', 'photonic'), '<code>view</code>'))];
-		}
-
-		$query_urls = [];
-		if ('albums' === $attr['view']) {
-			$additional = [];
-			if (!empty($attr['count'])) {
-				$additional['pageSize'] = intval($attr['count']) > 50 ? 50 : intval($attr['count']);
+			if (empty($this->client_secret)) {
+				$this->pop_from_stack();
+				return [new Error(esc_html__('Google Photos Client Secret not defined.', 'photonic') . Photonic::doc_link($this->doc_links['general']))];
 			}
-
-			if (!empty($attr['next_token'])) {
-				$additional['pageToken'] = $attr['next_token'];
+			if (empty($photonic_google_refresh_token)) {
+				$this->pop_from_stack();
+				return [new Error(sprintf(esc_html__('Google Photos Refresh Token not defined. Please authenticate from %s.', 'photonic'), '<em>Photonic &rarr; Authentication</em>') . Photonic::doc_link($this->doc_links['general']))];
 			}
-
-			$access = $this->access_all_or_shared($attr);
-			if ($access['shared']) {
-				$query_urls['https://photoslibrary.googleapis.com/v1/sharedAlbums'] = ['GET' => $additional];
+			if (!$this->refresh_token_valid) {
+				$this->pop_from_stack();
+				$error = sprintf(esc_html__('Google Photos Refresh Token invalid. Please authenticate from %s.', 'photonic'), '<em>Photonic &rarr; Authentication</em>');
+				if (!empty($this->auth_error)) {
+					$error .= '<br/>' . sprintf(esc_html__('Error encountered during authentication: %s', 'photonic'), '<br/><pre>' . $this->auth_error . '</pre>');
+				}
+				return [new Error($error . Photonic::doc_link($this->doc_links['general']))];
 			}
-			if ($access['self']) {
-				$query_urls['https://photoslibrary.googleapis.com/v1/albums'] = ['GET' => $additional];
+			if (empty($attr['view'])) {
+				$this->pop_from_stack();
+				return [new Error(sprintf(esc_html__('The %s parameter is mandatory for the shortcode.', 'photonic'), '<code>view</code>'))];
 			}
-		}
-		elseif ('photos' === $attr['view'] || 'shared-photos' === $attr['view']) {
-			$additional = [];
-			if (!empty($attr['album_id'])) {
-				$additional['albumId'] = $attr['album_id'];
-			}
-			else {
-				$filters = [];
-
-				$date_parameter  = [];
-				$range_parameter = [];
-				if (!empty($attr['date_filters'])) {
-					/*
-					 * Structure of $attr['date_filters']: comma-separated list of dates or date ranges.
-					 * Each date is represented by Y/M/D, where 0 <= Y <= 9999, 0 <= M <= 12, 0 <= D < 31
-					 * Each range is represented as Y/M/D-Y/M/D
-					 */
-					$date_filters = explode(',', trim($attr['date_filters']));
-					foreach ($date_filters as $date_filter) {
-						$dates = explode('-', trim($date_filter));
-						if (count($dates) > 2) {
-							$dates = array_slice($dates, 0, 2);
-						}
-						$range = [];
-						foreach ($dates as $idx => $date) {
-							$date_parts = explode('/', trim($date));
-							if (count($date_parts) !== 3) {
-								$this->pop_from_stack();
-								return [new Error(sprintf($this->error_date_format, $date))];
-							}
-
-							if (!is_numeric($date_parts[0]) || $date_parts[0] > 9999 || $date_parts[0] < 0 ||
-								!is_numeric($date_parts[1]) || $date_parts[1] > 12 || $date_parts[1] < 0 ||
-								!is_numeric($date_parts[2]) || $date_parts[2] > 31 || $date_parts[2] < 0) {
-								$this->pop_from_stack();
-								return [new Error(sprintf($this->error_date_format, $date))];
-							}
-
-							$date_object = [
-								'year'  => intval($date_parts[0]),
-								'month' => intval($date_parts[1]),
-								'day'   => intval($date_parts[2]),
-							];
-
-							if (count($dates) === 1) {
-								$date_parameter[] = $date_object;
-							}
-							elseif (0 === $idx) {
-								$range['startDate'] = $date_object;
-							}
-							else {
-								$range['endDate'] = $date_object;
-							}
-						}
-						if (!empty($range)) {
-							$range_parameter[] = $range;
-						}
-					}
-
-					$date_filter_parameter = [];
-					if (!empty($date_parameter)) {
-						$date_filter_parameter['dates'] = $date_parameter;
-					}
-					if (!empty($range_parameter)) {
-						$date_filter_parameter['ranges'] = $range_parameter;
-					}
-					if (!empty($date_filter_parameter)) {
-						$filters['dateFilter'] = $date_filter_parameter;
-					}
+			$query_urls = [];
+			if ('albums' === $attr['view']) {
+				$additional = [];
+				if (!empty($attr['count'])) {
+					$additional['pageSize'] = intval($attr['count']) > 50 ? 50 : intval($attr['count']);
 				}
 
-				if (!empty($attr['content_filters'])) {
-					$valid_filters = [
-						'NONE'         => 'Default content category. This category is ignored if any other category is also listed.',
-						'LANDSCAPES'   => 'Media items containing landscapes.',
-						'RECEIPTS'     => 'Media items containing receipts.',
-						'CITYSCAPES'   => 'Media items containing cityscapes.',
-						'LANDMARKS'    => 'Media items containing landmarks.',
-						'SELFIES'      => 'Media items that are selfies.',
-						'PEOPLE'       => 'Media items containing people.',
-						'PETS'         => 'Media items containing pets.',
-						'WEDDINGS'     => 'Media items from weddings.',
-						'BIRTHDAYS'    => 'Media items from birthdays.',
-						'DOCUMENTS'    => 'Media items containing documents.',
-						'TRAVEL'       => 'Media items taken during travel.',
-						'ANIMALS'      => 'Media items containing animals.',
-						'FOOD'         => 'Media items containing food.',
-						'SPORT'        => 'Media items from sporting events.',
-						'NIGHT'        => 'Media items taken at night.',
-						'PERFORMANCES' => 'Media items from performances.',
-						'WHITEBOARDS'  => 'Media items containing whiteboards.',
-						'SCREENSHOTS'  => 'Media items that are screenshots.',
-						'UTILITY'      => 'Media items that are considered to be utility. These include, but are not limited to documents, screenshots, whiteboards etc.',
-					];
+				if (!empty($attr['next_token'])) {
+					$additional['pageToken'] = $attr['next_token'];
+				}
 
-					/*
-					 * Structure of content_filters: C1,C2,-C3,C4,-C5.
-					 * The filters are specified as a comma-separated list.
-					 * A "-" before the filter's name indicates that the filter should be excluded rather than included.
-					 */
-					$content_filters = explode(',', $attr['content_filters']);
-					$include         = $exclude = [];
-					foreach ($content_filters as $content_filter) {
-						$content_filter = strtoupper($content_filter);
-						if (stripos($content_filter, '-') === 0 && array_key_exists(substr($content_filter, 1), $valid_filters)) {
-							$exclude[] = substr($content_filter, 1);
+				$access = $this->access_all_or_shared($attr);
+				if ($access['shared']) {
+					$query_urls['https://photoslibrary.googleapis.com/v1/sharedAlbums'] = ['GET' => $additional];
+				}
+				if ($access['self']) {
+					$query_urls['https://photoslibrary.googleapis.com/v1/albums'] = ['GET' => $additional];
+				}
+			}
+			elseif ('photos' === $attr['view'] || 'shared-photos' === $attr['view']) {
+				$additional = [];
+				if (!empty($attr['album_id'])) {
+					$additional['albumId'] = $attr['album_id'];
+				}
+				else {
+					$filters = [];
+
+					$date_parameter  = [];
+					$range_parameter = [];
+					if (!empty($attr['date_filters'])) {
+						/*
+						 * Structure of $attr['date_filters']: comma-separated list of dates or date ranges.
+						 * Each date is represented by Y/M/D, where 0 <= Y <= 9999, 0 <= M <= 12, 0 <= D < 31
+						 * Each range is represented as Y/M/D-Y/M/D
+						 */
+						$date_filters = explode(',', trim($attr['date_filters']));
+						foreach ($date_filters as $date_filter) {
+							$dates = explode('-', trim($date_filter));
+							if (count($dates) > 2) {
+								$dates = array_slice($dates, 0, 2);
+							}
+							$range = [];
+							foreach ($dates as $idx => $date) {
+								$date_parts = explode('/', trim($date));
+								if (count($date_parts) !== 3) {
+									$this->pop_from_stack();
+									return [new Error(sprintf($this->error_date_format, $date))];
+								}
+
+								if (!is_numeric($date_parts[0]) || $date_parts[0] > 9999 || $date_parts[0] < 0 ||
+									!is_numeric($date_parts[1]) || $date_parts[1] > 12 || $date_parts[1] < 0 ||
+									!is_numeric($date_parts[2]) || $date_parts[2] > 31 || $date_parts[2] < 0) {
+									$this->pop_from_stack();
+									return [new Error(sprintf($this->error_date_format, $date))];
+								}
+
+								$date_object = [
+									'year'  => intval($date_parts[0]),
+									'month' => intval($date_parts[1]),
+									'day'   => intval($date_parts[2]),
+								];
+
+								if (count($dates) === 1) {
+									$date_parameter[] = $date_object;
+								}
+								elseif (0 === $idx) {
+									$range['startDate'] = $date_object;
+								}
+								else {
+									$range['endDate'] = $date_object;
+								}
+							}
+							if (!empty($range)) {
+								$range_parameter[] = $range;
+							}
 						}
-						elseif (array_key_exists($content_filter, $valid_filters)) {
-							$include[] = $content_filter;
+
+						$date_filter_parameter = [];
+						if (!empty($date_parameter)) {
+							$date_filter_parameter['dates'] = $date_parameter;
+						}
+						if (!empty($range_parameter)) {
+							$date_filter_parameter['ranges'] = $range_parameter;
+						}
+						if (!empty($date_filter_parameter)) {
+							$filters['dateFilter'] = $date_filter_parameter;
 						}
 					}
 
-					$content_filter_parameter = [];
-					if (!empty($include)) {
-						$content_filter_parameter['includedContentCategories'] = $include;
+					if (!empty($attr['content_filters'])) {
+						$valid_filters = [
+							'NONE'         => 'Default content category. This category is ignored if any other category is also listed.',
+							'LANDSCAPES'   => 'Media items containing landscapes.',
+							'RECEIPTS'     => 'Media items containing receipts.',
+							'CITYSCAPES'   => 'Media items containing cityscapes.',
+							'LANDMARKS'    => 'Media items containing landmarks.',
+							'SELFIES'      => 'Media items that are selfies.',
+							'PEOPLE'       => 'Media items containing people.',
+							'PETS'         => 'Media items containing pets.',
+							'WEDDINGS'     => 'Media items from weddings.',
+							'BIRTHDAYS'    => 'Media items from birthdays.',
+							'DOCUMENTS'    => 'Media items containing documents.',
+							'TRAVEL'       => 'Media items taken during travel.',
+							'ANIMALS'      => 'Media items containing animals.',
+							'FOOD'         => 'Media items containing food.',
+							'SPORT'        => 'Media items from sporting events.',
+							'NIGHT'        => 'Media items taken at night.',
+							'PERFORMANCES' => 'Media items from performances.',
+							'WHITEBOARDS'  => 'Media items containing whiteboards.',
+							'SCREENSHOTS'  => 'Media items that are screenshots.',
+							'UTILITY'      => 'Media items that are considered to be utility. These include, but are not limited to documents, screenshots, whiteboards etc.',
+						];
+
+						/*
+						 * Structure of content_filters: C1,C2,-C3,C4,-C5.
+						 * The filters are specified as a comma-separated list.
+						 * A "-" before the filter's name indicates that the filter should be excluded rather than included.
+						 */
+						$content_filters = explode(',', $attr['content_filters']);
+						$include         = $exclude = [];
+						foreach ($content_filters as $content_filter) {
+							$content_filter = strtoupper($content_filter);
+							if (stripos($content_filter, '-') === 0 && array_key_exists(substr($content_filter, 1), $valid_filters)) {
+								$exclude[] = substr($content_filter, 1);
+							}
+							elseif (array_key_exists($content_filter, $valid_filters)) {
+								$include[] = $content_filter;
+							}
+						}
+
+						$content_filter_parameter = [];
+						if (!empty($include)) {
+							$content_filter_parameter['includedContentCategories'] = $include;
+						}
+						if (!empty($exclude)) {
+							$content_filter_parameter['excludedContentCategories'] = $exclude;
+						}
+						if (!empty($content_filter_parameter)) {
+							$filters['contentFilter'] = $content_filter_parameter;
+						}
 					}
-					if (!empty($exclude)) {
-						$content_filter_parameter['excludedContentCategories'] = $exclude;
+
+					$media_filters          = explode(',', $attr['media']);
+					$media_filter_parameter = [];
+					if (in_array('all', $media_filters, true)) {
+						$media_filter_parameter[] = 'ALL_MEDIA';
 					}
-					if (!empty($content_filter_parameter)) {
-						$filters['contentFilter'] = $content_filter_parameter;
+					elseif (in_array('photos', $media_filters, true)) {
+						$media_filter_parameter[] = 'PHOTO';
+					}
+					elseif (in_array('videos', $media_filters, true)) {
+						$media_filter_parameter[] = 'VIDEO';
+					}
+
+					if (!empty($media_filter_parameter)) {
+						$filters['mediaTypeFilter'] = ['mediaTypes' => $media_filter_parameter];
+					}
+
+					if (!empty($filters)) {
+						$additional['filters'] = $filters;
 					}
 				}
 
-				$media_filters          = explode(',', $attr['media']);
-				$media_filter_parameter = [];
-				if (in_array('all', $media_filters, true)) {
-					$media_filter_parameter[] = 'ALL_MEDIA';
+				if (!empty($attr['count']) || !empty($attr['photo_count'])) {
+					$additional['pageSize'] = !empty($attr['photo_count']) ? $attr['photo_count'] : $attr['count'];
+					$additional['pageSize'] = intval($additional['pageSize']) > 100 ? 100 : intval($additional['pageSize']);
 				}
-				elseif (in_array('photos', $media_filters, true)) {
-					$media_filter_parameter[] = 'PHOTO';
-				}
-				elseif (in_array('videos', $media_filters, true)) {
-					$media_filter_parameter[] = 'VIDEO';
+				if (!empty($attr['next_token'])) {
+					$additional['pageToken'] = $attr['next_token'];
 				}
 
-				if (!empty($media_filter_parameter)) {
-					$filters['mediaTypeFilter'] = ['mediaTypes' => $media_filter_parameter];
-				}
-
-				if (!empty($filters)) {
-					$additional['filters'] = $filters;
-				}
+				$query_urls['https://photoslibrary.googleapis.com/v1/mediaItems:search'] = ['POST' => $additional];
 			}
-
-			if (!empty($attr['count']) || !empty($attr['photo_count'])) {
-				$additional['pageSize'] = !empty($attr['photo_count']) ? $attr['photo_count'] : $attr['count'];
-				$additional['pageSize'] = intval($additional['pageSize']) > 100 ? 100 : intval($additional['pageSize']);
+			$out = $this->make_call($query_urls, $attr);
+			$this->pop_from_stack();
+			if (!empty($this->stack_trace[$this->gallery_index])) {
+				$out[] = $this->stack_trace[$this->gallery_index];
 			}
-			if (!empty($attr['next_token'])) {
-				$additional['pageToken'] = $attr['next_token'];
-			}
-
-			$query_urls['https://photoslibrary.googleapis.com/v1/mediaItems:search'] = ['POST' => $additional];
-		}
-
-		$out = $this->make_call($query_urls, $attr);
-		$this->pop_from_stack();
-
-		if (!empty($this->stack_trace[$this->gallery_index])) {
-			$out[] = $this->stack_trace[$this->gallery_index];
 		}
 
 		return $out;

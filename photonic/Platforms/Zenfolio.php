@@ -102,7 +102,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 		$attr['overlay_video_size'] = empty($attr['overlay_video_size']) ? $attr['video_size'] : $attr['overlay_video_size'];
 
 		if (isset($_COOKIE['photonic-zf-keyring'])) {
-			$realms = $this->make_wp_call('KeyringGetUnlockedRealms', ['keyring' => sanitize_text_field($_COOKIE['photonic-zf-keyring'])]);
+			$realms = $this->make_wp_call('KeyringGetUnlockedRealms', ['keyring' => sanitize_text_field(wp_unslash($_COOKIE['photonic-zf-keyring']))]);
 			if (!empty($realms) && !empty($realms->result)) {
 				$this->unlocked_realms = $realms->result;
 			}
@@ -200,7 +200,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 							if (!in_array($realm_id, $this->unlocked_realms, true)) {
 								$attr['headers_already_called'] = empty($attr['panel']); // false;
 								$chained_methods[]              = 'KeyringAddKeyPlain';
-								$zenfolio_params['keyring']     = empty($_COOKIE['photonic-zf-keyring']) ? '' : sanitize_text_field($_COOKIE['photonic-zf-keyring']);
+								$zenfolio_params['keyring']     = empty($_COOKIE['photonic-zf-keyring']) ? '' : sanitize_text_field(wp_unslash($_COOKIE['photonic-zf-keyring']));
 								$zenfolio_params['realmId']     = $realm_id;
 								$zenfolio_params['password']    = $attr['password'];
 							}
@@ -1202,7 +1202,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 			$headers['X-Zenfolio-Token'] = $this->token;
 		}
 		if (isset($_COOKIE['photonic-zf-keyring'])) {
-			$headers['X-Zenfolio-Keyring'] = sanitize_text_field($_COOKIE['photonic-zf-keyring']);
+			$headers['X-Zenfolio-Keyring'] = sanitize_text_field(wp_unslash($_COOKIE['photonic-zf-keyring']));
 		}
 		elseif (!empty($keyring)) {
 			$headers['X-Zenfolio-Keyring'] = $keyring;

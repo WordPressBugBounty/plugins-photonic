@@ -61,6 +61,7 @@ class Defaults {
 			// Generic - Photo Template
 			'gallery_template_page'                           => '',
 			'page_title'                                      => 'replace-if-available',
+			'page_meta_title'                                 => 'append-if-available',
 			'page_content'                                    => 'replace-if-available',
 
 			// Generic - Advanced

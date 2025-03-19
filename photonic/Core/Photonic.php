@@ -552,7 +552,7 @@ class Photonic {
 	}
 
 	public static function get_version($file) {
-		return date("Ymd-Gis", @filemtime($file)); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		return gmdate("Ymd-Gis", @filemtime($file)); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 	}
 
 	public function admin_init(): void {

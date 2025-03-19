@@ -26,7 +26,7 @@ class Screen_Flow {
 		if (wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'] ?? '')), 'photonic-wizard-' . get_current_user_id())) {
 			if (isset($_REQUEST['shortcode'])) {
 				$this->input_shortcode = sanitize_text_field($_REQUEST['shortcode']);
-				$this->input_shortcode = base64_decode($this->input_shortcode);  // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in flow.js, which encodes it
+				$this->input_shortcode = base64_decode($this->input_shortcode);  // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in wizard.js, which encodes it
 				$this->input_shortcode = json_decode($this->input_shortcode);
 			}
 

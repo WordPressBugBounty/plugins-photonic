@@ -78,6 +78,7 @@ class Authentication extends Admin_Page {
 
 		echo '<section class="notice notice-error">' .
 			sprintf(
+				/* Translators: 1: Open HTML tag 2: Close HTML tag 3: Open HTML tag 4: Close HTML tag */
 				esc_html__('%1$sAPI Shutdown%2$s%3$sGoogle is making a change to its APIs, which make them unusable for browsing on the web. This will prevent Photonic from working after %1$s31st March 2025%2$s. Please switch to a different platform to avoid disruption.%4$s', 'photonic'),
 				'<strong>',
 				'</strong>',
@@ -88,6 +89,7 @@ class Authentication extends Admin_Page {
 
 		if (empty($photonic_google_client_id) || empty($photonic_google_client_secret)) {
 			echo sprintf(
+				/* Translators: 1: Location in menu, untranslated */
 				esc_html__('Please set up your Google Client ID and Client Secret under %s', 'photonic'),
 				'<em>Photonic &rarr; Settings &rarr; Google Photos &rarr; Google Photos Settings</em>'
 			);
@@ -146,6 +148,7 @@ class Authentication extends Admin_Page {
 		echo "</div>\n";
 		echo '<div class="result" id="google-result">&nbsp;</div>';
 		echo sprintf(
+			/* Translators: 1: Open HTML tag 2: Close HTML tag */
 			esc_html__('If you are facing issues with the authentication please follow the workaround %1$shere%2$s', 'photonic'),
 			'<a href="https://aquoid.com/plugins/photonic/google-photos/#auth-workaround" target="_blank">',
 			'</a>'
@@ -197,6 +200,7 @@ class Authentication extends Admin_Page {
 
 		echo "<div class=\"photonic-token-header\">\n";
 		if (empty($photonic_zenfolio_default_user)) {
+			/* Translators: 1: Menu location, untranslated */
 			echo sprintf(esc_html__('Please set up the default user for Zenfolio under %s', 'photonic'), '<em>Photonic &rarr; Settings &rarr; Zenfolio &rarr; Zenfolio Photo Settings &rarr; Default User</em>') . "\n";
 		}
 		elseif (!empty($gallery->token)) {
@@ -247,6 +251,7 @@ class Authentication extends Admin_Page {
 			echo '<p class="notice notice-error">' . esc_html__("Unfortunately Instagram is no longer supported in Photonic. This is due to a change in Meta's Terms and Conditions, that only allow businesses to access their API. As Photonic is developed by an individual, the API is no longer accessible to the developer.", 'photonic') . '</p><br/>';
 		}
 		elseif (empty($auth['api_key']) || empty($auth['api_secret'])) {
+			/* Translators: 1: Platform 2: Menu location */
 			echo sprintf(esc_html__('Please set up your %1$s API key under %2$s.', 'photonic'), esc_html($provider), sprintf('<em>Photonic &rarr; Settings &rarr; %1$s &rarr; %1$s Settings</em>', esc_html($provider)));
 		}
 		elseif ('Instagram' === $provider && !empty($auth['token'])) {
@@ -267,6 +272,7 @@ class Authentication extends Admin_Page {
 				$cached_token = $module->get_cached_token();
 
 				if (!empty($cached_token) && !empty($cached_token['user'])) {
+					/* Translators: 1: User in <code> tags */
 					$this->print_auth_done_all_good(sprintf(esc_html__('You are logged in as %1$s.', 'photonic'), '<code>' . $cached_token['user'] . '</code>'));
 				}
 				else {
@@ -330,6 +336,7 @@ class Authentication extends Admin_Page {
 	}
 
 	private function get_login_button($provider) {
+		/* Translators: 1: Platform, untranslated */
 		return sprintf(esc_html__('Login and get Access Token from %s', 'photonic'), $provider);
 	}
 

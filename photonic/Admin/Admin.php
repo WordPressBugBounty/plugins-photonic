@@ -81,13 +81,14 @@ class Admin {
 				'media_library_title'       => esc_html__('Select from WordPress Media Library', 'photonic'),
 				'media_library_button'      => esc_html__('Select', 'photonic'),
 				'info_editor_not_shortcode' => esc_html__('The text selected in the editor is not a Photonic shortcode. Creating a new shortcode.', 'photonic'),
+				/* Translators: 1: Open HTML tag 2: Close HTML tag */
 				'info_editor_block_select'  => sprintf(esc_html__('%1$sHint:%2$s To edit an existing Photonic block simply click on the block.', 'photonic'), '<strong>', '</strong>'),
 			];
 			if (!empty($_REQUEST['shortcode'])) {
 				$wizard_js['shortcode'] = sanitize_text_field($_REQUEST['shortcode']);
 			}
 			wp_enqueue_style('photonic-flow', PHOTONIC_URL . 'include/css/admin/admin-flow.css', [], Photonic::get_version(PHOTONIC_PATH . '/include/css/admin/admin-flow.css'));
-			wp_enqueue_script('photonic-flow-js', PHOTONIC_URL . 'include/js/admin/flow.js', ['jquery'], Photonic::get_version(PHOTONIC_PATH . '/include/js/admin/flow.js'), false);
+			wp_enqueue_script('photonic-flow-js', PHOTONIC_URL . 'include/js/admin/wizard.js', ['jquery'], Photonic::get_version(PHOTONIC_PATH . '/include/js/admin/wizard.js'), false);
 			wp_localize_script('photonic-flow-js', 'Photonic_Wizard_JS', $wizard_js);
 		}
 	}
@@ -184,7 +185,7 @@ class Admin {
 		if (check_ajax_referer('photonic-wizard-more-' . get_current_user_id())) {
 			require_once PHOTONIC_PATH . '/Admin/Wizard/Wizard.php';
 			if (isset($_POST['url']) && isset($_POST['provider']) && isset($_POST['display_type'])) {
-				$url = base64_decode(sanitize_text_field($_POST['url'])); // The `url` for fetching additional results is base64-encoded in the wizard in flow.js using `btoa`
+				$url = base64_decode(sanitize_text_field($_POST['url'])); // The `url` for fetching additional results is base64-encoded in the wizard in wizard.js using `btoa`
 
 				$provider = sanitize_text_field($_POST['provider']);
 				$display_type = sanitize_text_field($_POST['display_type']);

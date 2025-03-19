@@ -1,19 +1,19 @@
-=== Photonic Gallery & Lightbox for Flickr, SmugMug, Google Photos & Others ===
+=== Photonic Gallery & Lightbox for Flickr, SmugMug & Others ===
 Contributors: sayontan
 Donate link: https://aquoid.com/plugins/photonic/
-Tags: flickr, google photos, smugmug, zenfolio, gallery, lightbox
+Tags: flickr, smugmug, zenfolio, gallery, lightbox
 Text Domain: photonic
 Requires at least: 6.2
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.3
-Stable tag: 3.13
+Stable tag: 3.15
 License: GPLv3 or later
 
-Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug, Google Photos and Zenfolio photos and videos.
+Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
 
 ## Description
 
-Photonic takes the WordPress gallery and super-charges it with a lot of added functionality. It adds support for several new sources and parameters to enhance the content and look-and-feel of your galleries. It supports <a href='https://flickr.com'>Flickr</a> photos, Albums (Photosets), Galleries and Collections, along with <a href='https://photos.google.com/'>Google Photos</a> photos and albums, <a href='https://smugmug.com'>SmugMug</a> folders, albums and images, and <a href='https://zenfolio.com'>Zenfolio</a> photos, Photosets and Groups. You can also set up authentication so that visitors can see private and protected photos from each provider.
+Photonic takes the WordPress gallery and super-charges it with a lot of added functionality. It adds support for several new sources and parameters to enhance the content and look-and-feel of your galleries. It supports <a href='https://flickr.com'>Flickr</a> photos, Albums (Photosets), Galleries and Collections, along with <a href='https://smugmug.com'>SmugMug</a> folders, albums and images, and <a href='https://zenfolio.com'>Zenfolio</a> photos, Photosets and Groups. You can also set up authentication so that visitors can see private and protected photos from each provider.
 
 When used without the Gutenberg editor Photonic by default overrides the <code>gallery</code> shortcode. In case you happen to be using a theme or plugin that already overrides the <code>gallery</code> shortcode, Photonic provides you with the option to use your own shortcode for Photonic galleries. This lets your plugins coexist. Bear in mind that if you deactivate Photonic you will have to remove all instances of this custom shortcode, something that is not required if you stick to the <code>gallery</code> shortcode.
 
@@ -194,7 +194,7 @@ However, if you really wanted to keep that plugin, Photonic offers a way out the
 
 = I received an email about Google Photos' API change. Does that impact me? =
 
-Unfortunately, yes. Photonic will stop working for Google Photos starting the end of March. See <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a> for details.
+Unfortunately, yes. Photonic will stop working for Google Photos starting the end of March. See <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a> for details. You could delete your galleries using Google Photos, or you could leave them in place - Photonic will ignore them after March 2025
 
 = Why is the Google Photos setup process so painful? =
 
@@ -233,7 +233,14 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.13 =
+= 3.15 =
 
-*	Added: Warning notices about the impending Google Photos shutdown.
-*	Changed: Added adaptability for the "Plugin Check" plugin.
+*	Changed: Updated stable tag to 3.15
+
+= 3.14 =
+
+*	Changed: Added code to make galleries gracefully disappear
+*	Changed: WP version compatibility updated to 6.7
+*	Changed: Refactored flow.js to wizard.js
+*	Changed: Improved support for the "Plugin Check" plugin
+

@@ -107,7 +107,7 @@ class Wizard {
 
 			$raw_shortcode = !empty($_POST['photonic-editor-shortcode-raw']) ? sanitize_text_field($_POST['photonic-editor-shortcode-raw']) : '';
 			if (!empty($raw_shortcode)) {
-				$input = base64_decode($raw_shortcode); // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in flow.js, which encodes it
+				$input = base64_decode($raw_shortcode); // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in wizard.js, which encodes it
 				$input = json_decode($input);
 				if (!empty($input->shortcode) && !empty($input->shortcode->attrs) && !empty($input->shortcode->attrs->named)) {
 					$input = $input->shortcode->attrs->named;
@@ -803,7 +803,7 @@ class Wizard {
 
 			$raw_shortcode = !empty($_POST['photonic-editor-shortcode-raw']) ? sanitize_text_field($_POST['photonic-editor-shortcode-raw']) : '';
 			if (!empty($raw_shortcode)) {
-				$input = base64_decode($raw_shortcode); // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in flow.js, which encodes it
+				$input = base64_decode($raw_shortcode); // The in-flight shortcode is passed from screen to screen using the JS function `btoa`, in wizard.js, which encodes it
 				$input = json_decode($input);
 				if (!empty($input->shortcode) && !empty($input->shortcode->attrs) && !empty($input->shortcode->attrs->named)) {
 					$input = $input->shortcode->attrs->named;

@@ -546,9 +546,24 @@ class Generic extends Option_Tab {
 				'type'     => 'select',
 				'options'  => [
 					'replace-if-available' => "Show album title if available, otherwise show the title of the WordPress page",
+					// 'append-if-available'  => "Append album title to the page title if available, otherwise show the title of the WordPress page",
 					'page'                 => "Show the title of the WordPress page",
 				]
 			],
+
+/*			[
+				'name'     => 'Page Meta Title display',
+				'desc'     => "Set the title to be displayed on the title bar of gallery page",
+				'id'       => 'page_meta_title',
+				'grouping' => 'template-page',
+				'type'     => 'select',
+				'options'  => [
+					'replace-if-available'  => "Show album title if available, otherwise show the title of the WordPress page",
+					'prepend-if-available'  => "Prepend album title to the page title if available, otherwise show the title of the WordPress page",
+					'append-if-available'   => "Append album title to the page title if available, otherwise show the title of the WordPress page",
+					'page'                  => "Show the title of the WordPress page",
+				]
+			],*/
 
 			[
 				'name'     => 'Page content display',
