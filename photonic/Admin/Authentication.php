@@ -14,6 +14,7 @@ use Photonic_Plugin\Platforms\Google_Photos;
 use Photonic_Plugin\Platforms\Instagram;
 use Photonic_Plugin\Platforms\SmugMug;
 use Photonic_Plugin\Platforms\Zenfolio;
+use Photonic_Plugin\Platforms\DeviantArt;
 
 require_once 'Admin_Page.php';
 
@@ -40,14 +41,12 @@ class Authentication extends Admin_Page {
 			<h2 id="#photonic-smugmug-auth-section" class="photonic-section">SmugMug</h2>
 			<?php $this->display_smugmug(); ?>
 
-			<h2 id="#photonic-google-auth-section" class="photonic-section">Google Photos</h2>
-			<?php $this->display_google(); ?>
-
-			<h2 id="#photonic-instagram-auth-section" class="photonic-section">Instagram</h2>
-			<?php $this->display_instagram(); ?>
-
 			<h2 id="#photonic-zenfolio-auth-section" class="photonic-section">Zenfolio</h2>
 			<?php $this->display_zenfolio(); ?>
+
+<!--			<h2 id="#photonic-deviantart-auth-section" class="photonic-section">DeviantArt</h2>
+			--><?php /*$this->display_deviantart(); */?>
+
 		</form>
 		<?php
 	}
@@ -70,128 +69,6 @@ class Authentication extends Admin_Page {
 			'token' => trim($photonic_smug_access_token),
 		];
 		$this->show_token_section($auth, 'smug', 'SmugMug');
-	}
-
-	private function display_google() {
-		global $photonic_google_client_id, $photonic_google_client_secret, $photonic_google_refresh_token;
-		echo "<div class=\"photonic-token-header\">\n";
-
-		echo '<section class="notice notice-error">' .
-			sprintf(
-				/* Translators: 1: Open HTML tag 2: Close HTML tag 3: Open HTML tag 4: Close HTML tag */
-				esc_html__('%1$sAPI Shutdown%2$s%3$sGoogle is making a change to its APIs, which make them unusable for browsing on the web. This will prevent Photonic from working after %1$s31st March 2025%2$s. Please switch to a different platform to avoid disruption.%4$s', 'photonic'),
-				'<strong>',
-				'</strong>',
-				'<p>',
-				'</p>'
-			) .
-			'</section>';
-
-		if (empty($photonic_google_client_id) || empty($photonic_google_client_secret)) {
-			echo sprintf(
-				/* Translators: 1: Location in menu, untranslated */
-				esc_html__('Please set up your Google Client ID and Client Secret under %s', 'photonic'),
-				'<em>Photonic &rarr; Settings &rarr; Google Photos &rarr; Google Photos Settings</em>'
-			);
-		}
-		else {
-			require_once PHOTONIC_PATH . '/Platforms/Google_Photos.php';
-
-			$parameters = Base::parse_parameters($_SERVER['QUERY_STRING'] ?? '');
-
-			if (!empty($photonic_google_refresh_token)) {
-				$this->print_auth_done_all_good();
-			}
-
-			echo "</div>\n";
-			echo "<div class=\"photonic-token-header\">\n";
-			echo "<p>\n";
-			esc_html_e('You first have to authorize Photonic to connect to your Google account.', 'photonic');
-			echo "</p>\n";
-			if (!isset($parameters['code']) || !isset($parameters['source']) || 'google' !== $parameters['source']) {
-
-				$url = add_query_arg('test', 'test');
-				$url = remove_query_arg('test', $url);
-				$parameters = [
-					'response_type' => 'code',
-					'redirect_uri' => admin_url('admin.php?page=photonic-auth&source=google'),
-					'client_id' => $photonic_google_client_id,
-					'scope' => 'https://www.googleapis.com/auth/photoslibrary.readonly',
-					'access_type' => 'offline',
-					'state' => md5($photonic_google_client_secret . 'google') . '::' . rawurlencode($url),
-					'prompt' => 'consent',
-				];
-				$url = 'https://accounts.google.com/o/oauth2/auth?' . Google_Photos::build_query($parameters);
-
-				echo "<a href='" . esc_url($url) . "' class='button button-primary'>" . esc_html__('Step 1: Authenticate', 'photonic') . '</a>';
-				echo "</div>\n";
-				echo "<div class=\"photonic-token-header\">\n";
-				echo "<p>\n";
-				echo esc_html__('Next, you have to obtain the token.', 'photonic') . '<br/>';
-				echo "</p>\n";
-				echo "<span class='button photonic-helper-button-disabled'>" .
-					esc_html__('Step 2: Obtain Token', 'photonic') . '</span>';
-			}
-			else {
-				echo "<span class='button photonic-helper-button-disabled'>" .
-					esc_html__('Step 1: Authenticate', 'photonic') . '</span>';
-				echo "</div>\n";
-				echo "<div class=\"photonic-token-header\">\n";
-				echo esc_html__('Next, you have to obtain the token.', 'photonic') . '<br/>';
-				$nonce = wp_create_nonce('google-obtain-token-' . $photonic_google_client_secret);
-				echo "<a href='#' class='button button-primary photonic-google-refresh' data-photonic-nonce='" . esc_attr($nonce) . "'>" .
-					esc_html__('Step 2: Obtain Token', 'photonic') . '</a>';
-				echo '<input type="hidden" value="' . esc_attr($parameters['code']) . '" id="photonic-google-oauth-code"/>';
-				echo '<input type="hidden" value="' . esc_attr($parameters['state']) . '" id="photonic-google-oauth-state"/>';
-			}
-		}
-		echo "</div>\n";
-		echo '<div class="result" id="google-result">&nbsp;</div>';
-		echo sprintf(
-			/* Translators: 1: Open HTML tag 2: Close HTML tag */
-			esc_html__('If you are facing issues with the authentication please follow the workaround %1$shere%2$s', 'photonic'),
-			'<a href="https://aquoid.com/plugins/photonic/google-photos/#auth-workaround" target="_blank">',
-			'</a>'
-		);
-
-		// $this->show_token_deletion_button('Google');
-	}
-
-	private function display_instagram() {
-		global $photonic_instagram_access_token;
-		$auth = [
-			'api_key' => 'not-required-but-not-empty',
-			'api_secret' => 'not-required-but-not-empty',
-			'token' => trim($photonic_instagram_access_token),
-		];
-
-		$header = $this->show_token_section_header($auth, 'Instagram');
-/*		$response = Core::parse_parameters($_SERVER['QUERY_STRING']);
-		if (empty($response['access_token'])) {
-			echo "<a href='https://api.instagram.com/oauth/authorize/?client_id=1089620424711320&scope=user_profile,user_media&redirect_uri=https://aquoid.com/photonic-router/instagram/&state=" .
-				esc_url(admin_url('admin.php?page=photonic-auth')) . "&response_type=code' class='button button-primary'>" .
-				wp_kses_post($this->get_login_button('Instagram')) . '</a>';
-
-			if (!empty($header['deletion'])) {
-				// $this->show_token_deletion_button('Instagram');
-			}
-		}
-		elseif (!empty($response['access_token'])) {
-			echo "<span class='button photonic-helper-button-disabled'>" . wp_kses_post($this->get_login_button('Instagram')) . '</span>';
-			if (!empty($header['deletion'])) {
-				// $this->show_token_deletion_button('Instagram');
-			}
-
-			echo '<div class="result">' .
-				(!empty($response['access_token']) ? 'Access token: <code id="instagram-token">' . esc_html($response['access_token']) . '</code><br/>' : '&nbsp;') .
-				(!empty($response['expires_in']) ? '<input type="hidden" id="instagram-token-expires-in" value="' . esc_attr($response['expires_in']) . '" />' : '') .
-				(!empty($response['user_id']) ? '<input type="hidden" id="instagram-token-client-id" value="' . esc_attr($response['user_id']) . '" />' : '') .
-				(!empty($response['user']) ? 'User name: <code id="instagram-token-user">' . esc_html($response['user']) . '</code><br/>' : '') .
-				'</div>';
-
-			$nonce = wp_create_nonce('instagram-save-token-' . $response['access_token']);
-			echo "<a href='#' class='button button-primary photonic-save-token' data-photonic-provider='instagram' data-photonic-nonce='" . esc_attr($nonce) . "'>" . esc_html__('Save Token', 'photonic') . '</a>';
-		}*/
 	}
 
 	private function display_zenfolio() {
@@ -226,6 +103,73 @@ class Authentication extends Admin_Page {
 		echo "</div>\n";
 
 		echo '<div class="result" id="zenfolio-result">&nbsp;</div>';
+	}
+
+	private function display_deviantart() {
+		global $photonic_deviantart_client_id, $photonic_deviantart_client_secret, $photonic_deviantart_refresh_token;
+
+		echo "<div class=\"photonic-token-header\">\n";
+
+		if (empty($photonic_deviantart_client_id) || empty($photonic_deviantart_client_secret)) {
+			echo sprintf(
+			/* Translators: 1: Location in menu, untranslated */
+				esc_html__('Please set up your DeviantArt Client ID and Client Secret under %s', 'photonic'),
+				'<em>Photonic &rarr; Settings &rarr; DeviantArt &rarr; DeviantArt Settings</em>'
+			);
+		}
+		else {
+			require_once PHOTONIC_PATH . '/Platforms/DeviantArt.php';
+
+			$parameters = Base::parse_parameters($_SERVER['QUERY_STRING'] ?? '');
+
+			if (!empty($photonic_deviantart_refresh_token)) {
+				$this->print_auth_done_all_good();
+			}
+
+			echo "</div>\n";
+			echo "<div class=\"photonic-token-header\">\n";
+			echo "<p>\n";
+			esc_html_e('You first have to authorize Photonic to connect to your DeviantArt account.', 'photonic');
+			echo "</p>\n";
+
+			if (!isset($parameters['code']) || !isset($parameters['source']) || 'deviantart' !== $parameters['source']) {
+				$url = add_query_arg('test', 'test');
+				$url = remove_query_arg('test', $url);
+				$parameters = [
+					'response_type' => 'code',
+					'client_id' => $photonic_deviantart_client_id,
+					'redirect_uri' => admin_url('admin.php?page=photonic-auth&source=deviantart'),
+					'scope' => 'basic',
+					'access_type' => 'offline',
+					'state' => md5($photonic_deviantart_client_secret . 'deviantart') . '::' . rawurlencode($url),
+					'prompt' => 'consent',
+				];
+				$url = 'https://www.deviantart.com/oauth2/authorize?' . DeviantArt::build_query($parameters);
+
+				echo "<a href='" . esc_url($url) . "' class='button button-primary'>" . esc_html__('Step 1: Authenticate', 'photonic') . '</a>';
+				echo "</div>\n";
+				echo "<div class=\"photonic-token-header\">\n";
+				echo "<p>\n";
+				echo esc_html__('Next, you have to obtain the token.', 'photonic') . '<br/>';
+				echo "</p>\n";
+				echo "<span class='button photonic-helper-button-disabled'>" .
+					esc_html__('Step 2: Obtain Token', 'photonic') . '</span>';
+			}
+			else {
+				echo "<span class='button photonic-helper-button-disabled'>" .
+					esc_html__('Step 1: Authenticate', 'photonic') . '</span>';
+				echo "</div>\n";
+				echo "<div class=\"photonic-token-header\">\n";
+				echo esc_html__('Next, you have to obtain the token.', 'photonic') . '<br/>';
+				$nonce = wp_create_nonce('deviantart-obtain-token-' . $photonic_deviantart_client_secret);
+				echo "<a href='#' class='button button-primary photonic-deviantart-refresh' data-photonic-nonce='" . esc_attr($nonce) . "' data-photonic-provider='deviantart'>" .
+					esc_html__('Step 2: Obtain Token', 'photonic') . '</a>';
+				echo '<input type="hidden" value="' . esc_attr($parameters['code']) . '" id="photonic-deviantart-oauth-code"/>';
+				echo '<input type="hidden" value="' . esc_attr($parameters['state']) . '" id="photonic-deviantart-oauth-state"/>';
+			}
+		}
+		echo "</div>\n";
+		echo '<div class="result" id="deviantart-result">&nbsp;</div>';
 	}
 
 	private function show_token_section($auth, $provider_slug, $provider_text) {
@@ -346,46 +290,8 @@ class Authentication extends Admin_Page {
 
 	public function obtain_token() {
 		$provider = sanitize_text_field($_POST['provider'] ?? '');
-		global $photonic_google_client_secret, $photonic_flickr_api_secret, $photonic_smug_api_secret;
-		if ('google' === $provider && check_ajax_referer('google-obtain-token-' . $photonic_google_client_secret, '_ajax_nonce')) {
-			$code = sanitize_text_field($_POST['code'] ?? '');
-			require_once PHOTONIC_PATH . '/Platforms/Google_Photos.php';
-			$module = Google_Photos::get_instance();
-			// if (!empty($photonic_google_use_own_keys) || (!empty($photonic_google_client_id) && !empty($photonic_google_client_secret))) {
-			$response = Photonic::http(
-				$module->access_token_URL(),
-				'POST',
-				[
-					'code' => $code,
-					'grant_type' => 'authorization_code',
-					'client_id' => $module->client_id,
-					'client_secret' => $module->client_secret,
-					'redirect_uri' => admin_url('admin.php?page=photonic-auth&source=google'),
-				]
-			);
-
-			/*
-					  }
-						else {
-							$response = Photonic::http($module->access_token_URL(), 'POST', [
-								'code' => $code,
-								'grant_type' => 'authorization_code',
-								'client_id' => $module->client_id,
-								'client_secret' => $module->client_secret,
-								'redirect_uri' => 'https://aquoid.com/photonic-router/google.php',
-								'state' => admin_url('admin.php?page=photonic-auth&source=google'),
-							]);
-						}
-			*/
-
-			if (!is_wp_error($response) && is_array($response)) {
-				$body = json_decode($response['body']);
-				// Add nonce to the response. This will be used to save the information in the options.
-				$body->nonce = wp_create_nonce('google-save-token-' . $body->refresh_token);
-				echo(wp_json_encode($body));
-			}
-		}
-		elseif ('flickr' === $provider && check_ajax_referer('flickr-request-token-' . $photonic_flickr_api_secret, '_ajax_nonce')) {
+		global $photonic_flickr_api_secret, $photonic_smug_api_secret, $photonic_deviantart_client_secret;
+		if ('flickr' === $provider && check_ajax_referer('flickr-request-token-' . $photonic_flickr_api_secret, '_ajax_nonce')) {
 			require_once PHOTONIC_PATH . '/Platforms/Flickr.php';
 			$module = Flickr::get_instance();
 			if (empty($_POST['oauth_token']) && empty($_POST['oauth_verifier'])) {
@@ -417,6 +323,29 @@ class Authentication extends Admin_Page {
 				elseif (!empty($response['success'])) {
 					esc_html_e('Authentication successful! All your galleries will be displayed with Authentication in place.', 'photonic');
 				}
+			}
+		}
+		elseif ('deviantart' === $provider && check_ajax_referer('deviantart-obtain-token-' . $photonic_deviantart_client_secret, '_ajax_nonce')) {
+			$code = sanitize_text_field($_POST['code'] ?? '');
+			require_once PHOTONIC_PATH . '/Platforms/DeviantArt.php';
+			$module = DeviantArt::get_instance();
+			$response = Photonic::http(
+				$module->access_token_URL(),
+				'POST',
+				[
+					'code' => $code,
+					'grant_type' => 'authorization_code',
+					'client_id' => $module->client_id,
+					'client_secret' => $module->client_secret,
+					'redirect_uri' => admin_url('admin.php?page=photonic-auth&source=deviantart'),
+				]
+			);
+
+			if (!is_wp_error($response) && is_array($response)) {
+				$body = json_decode($response['body']);
+				// Add nonce to the response. This will be used to save the information in the options.
+				$body->nonce = wp_create_nonce('deviantart-save-token-' . $body->refresh_token);
+				echo(wp_json_encode($body));
 			}
 		}
 	}

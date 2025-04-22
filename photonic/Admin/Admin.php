@@ -73,16 +73,17 @@ class Admin {
 		if (current_user_can('edit_posts') && isset($_REQUEST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'])), 'photonic-wizard-' . get_current_user_id())) {
 			global $photonic_alternative_shortcode;
 			$wizard_js = [
-				'ajaxurl'                   => admin_url('admin-ajax.php'),
-				'shortcode'                 => sanitize_text_field($photonic_alternative_shortcode ?: 'gallery'),
-				'insert_gallery'            => esc_html__('Insert Gallery', 'photonic'),
-				'update_gallery'            => esc_html__('Update Gallery', 'photonic'),
-				'error_mandatory'           => esc_html__('Please fill the mandatory fields. Mandatory fields are marked with a red "*".', 'photonic'),
-				'media_library_title'       => esc_html__('Select from WordPress Media Library', 'photonic'),
-				'media_library_button'      => esc_html__('Select', 'photonic'),
-				'info_editor_not_shortcode' => esc_html__('The text selected in the editor is not a Photonic shortcode. Creating a new shortcode.', 'photonic'),
+				'ajaxurl'                       => admin_url('admin-ajax.php'),
+				'shortcode'                     => sanitize_text_field($photonic_alternative_shortcode ?: 'gallery'),
+				'insert_gallery'                => esc_html__('Insert Gallery', 'photonic'),
+				'update_gallery'                => esc_html__('Update Gallery', 'photonic'),
+				'error_mandatory'               => esc_html__('Please fill the mandatory fields. Mandatory fields are marked with a red "*".', 'photonic'),
+				'media_library_title'           => esc_html__('Select from WordPress Media Library', 'photonic'),
+				'media_library_button'          => esc_html__('Select', 'photonic'),
+				'info_editor_not_shortcode'     => esc_html__('The text selected in the editor is not a Photonic shortcode. Creating a new shortcode.', 'photonic'),
+				'info_editor_google_shortcode'  => esc_html__('The text selected in the editor is Photonic shortcode for Google Photos. With effect from April 2025, Google Photos is no longer supported. Creating a new shortcode.', 'photonic'),
 				/* Translators: 1: Open HTML tag 2: Close HTML tag */
-				'info_editor_block_select'  => sprintf(esc_html__('%1$sHint:%2$s To edit an existing Photonic block simply click on the block.', 'photonic'), '<strong>', '</strong>'),
+				'info_editor_block_select'      => sprintf(esc_html__('%1$sHint:%2$s To edit an existing Photonic block simply click on the block.', 'photonic'), '<strong>', '</strong>'),
 			];
 			if (!empty($_REQUEST['shortcode'])) {
 				$wizard_js['shortcode'] = sanitize_text_field($_REQUEST['shortcode']);

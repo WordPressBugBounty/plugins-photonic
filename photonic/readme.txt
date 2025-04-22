@@ -4,9 +4,9 @@ Donate link: https://aquoid.com/plugins/photonic/
 Tags: flickr, smugmug, zenfolio, gallery, lightbox
 Text Domain: photonic
 Requires at least: 6.2
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.3
-Stable tag: 3.15
+Stable tag: 3.20
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -73,14 +73,7 @@ For demos of Flickr support visit the <a href='https://aquoid.com/plugins/photon
 
 #### Google Photos
 
-The following Google Photos concepts are supported in Photonic:
-
-*	<a href='https://aquoid.com/plugins/photonic/google-photos/photos/'>Photos</a>
-*	<a href='https://aquoid.com/plugins/photonic/google-photos/albums/'>Albums</a>
-
-For demos of Google Photos support visit the <a href='https://aquoid.com/plugins/photonic/google-photos/'>Google Photos page</a>.
-
-**Google API Change:** With effect from 31st March 2025, Google's API will cease to work. Consequently, **Photonic will stop working for Google Photos**. For more details, see <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a>.
+Google API Change:** With effect from 31st March 2025, Google's Photos API is discontinued (see <a href='https://developers.google.com/photos/support/updates'>here for Google's official announcement</a>). Consequently, Photonic will stop working for Google Photos**. For more details, see <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a>. Note that while Google's official announcement says otherwise, as of 20th April 2025 the API is still working, so older versions of Photonic will seem to work. However, there is no guarantee about when Google will truly shut it off.
 
 #### SmugMug
 
@@ -128,11 +121,11 @@ Photonic provides gallery and lightbox support for <a href='https://aquoid.com/p
 
 *	External videos from YouTube or Vimeo can be opened in any of the lightboxes apart from Image Lightbox, Thickbox or BaguetteBox
 *	Self-hosted or external videos in MP4 formats can be opened in any of the lightboxes apart from Image Lightbox, PrettyPhoto, Strip or Thickbox
-*	Videos hosted by external service providers (Flickr, Google etc.) can be opened as a part of a gallery in any of the lightboxes apart from Image Lightbox, PrettyPhoto, Strip or Thickbox. Some lightboxes have issues with specific features. Please refer to the <a href='https://aquoid.com/plugins/photonic/third-party-lightboxes/'>Lightboxes</a> documentation for more.
+*	Videos hosted by external service providers (Flickr, SmugMug etc.) can be opened as a part of a gallery in any of the lightboxes apart from Image Lightbox, PrettyPhoto, Strip or Thickbox. Some lightboxes have issues with specific features. Please refer to the <a href='https://aquoid.com/plugins/photonic/third-party-lightboxes/'>Lightboxes</a> documentation for more.
 
 #### Deep-Linking and Social Sharing
 
-Photonic provides deep-linking support for non-WP images, and by extension, supports social sharing to Facebook, Twitter, Google+ and Pinterest.
+Photonic provides deep-linking support for non-WP images, and by extension, supports social sharing to Facebook, Twitter and Pinterest.
 
 #### Beautiful Layouts
 
@@ -190,21 +183,7 @@ Yes, the plugin is working. The issue you are facing is that you have another pl
 
 Of course, it would be easiest if you were to disable that plugin. If a lightbox is all you need, Photonic's lightbox can be used to display regular photos as well, from your admin dashboard under <em>Photonic &rarr; Settings &rarr; Generic Options &rarr; Generic Settings &rarr; Photonic Lightbox for non-Photonic Images</em>. This will ensure consistency across Photonic and non-Photonic images.
 
-However, if you really wanted to keep that plugin, Photonic offers a way out there too! For each provider (e.g. Flickr, Google Photos etc.) go to the Settings page, e.g. <em>Photonic &rarr; Settings &rarr; SmugMug &rarr; SmugMug Settings &rarr; Disable lightbox linking</em> and set that option.
-
-= I received an email about Google Photos' API change. Does that impact me? =
-
-Unfortunately, yes. Photonic will stop working for Google Photos starting the end of March. See <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a> for details. You could delete your galleries using Google Photos, or you could leave them in place - Photonic will ignore them after March 2025
-
-= Why is the Google Photos setup process so painful? =
-
-Blame Big G here! Google Photos' API has several shortcomings, primary among them being the high number of API calls required to fetch a gallery. This would cause API keys to routinely hit their limits if they were being used for too many galleries. This makes it impossible for developers to authenticate users using their API keys without signing up for the Google Partners program. Unfortunately Photonic's design is not one of the use cases supported by the Partners program.
-
-As a net result, to prevent users from getting locked out using Photonic's API key, it is an unfortunate requirement that users use their own key. And this is where Google makes things needlessly complicated. Photonic's documentation is very comprehensive with instructions on how to authenticate, but that doesn't change the fact that Google's process is convoluted.
-
-= After all the pain I got Google Photos working yesterday, but today my galleries don't show up. Why? =
-
-Check if you have a caching plugin active. If so, exclude the page with Google Photos from the cache. Google Photos' URLs are short-lived, hence cannot be cached. This problem does not occur for other sources.
+However, if you really wanted to keep that plugin, Photonic offers a way out there too! For each provider (e.g. Flickr, SmugMug etc.) go to the Settings page, e.g. <em>Photonic &rarr; Settings &rarr; SmugMug &rarr; SmugMug Settings &rarr; Disable lightbox linking</em> and set that option.
 
 = What about other photo-sharing platforms? =
 
@@ -233,14 +212,9 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.15 =
+= 3.20 =
 
-*	Changed: Updated stable tag to 3.15
-
-= 3.14 =
-
-*	Changed: Added code to make galleries gracefully disappear
-*	Changed: WP version compatibility updated to 6.7
-*	Changed: Refactored flow.js to wizard.js
-*	Changed: Improved support for the "Plugin Check" plugin
-
+*	Changed: WP version compatibility updated to 6.8
+*	Removed: Ability to create and edit Google Photos galleries
+*	Removed: Google Photos sections from Helpers page
+*	Removed: Instagram and Google Photos authentication sections

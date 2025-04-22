@@ -251,7 +251,7 @@ class AJAX {
 				$expires_in = sanitize_text_field(wp_unslash($_POST['expires_in']));
 			}
 
-			if (in_array($provider, ['flickr', 'smug', 'zenfolio', 'google', 'instagram'], true)) {
+			if (in_array($provider, ['flickr', 'smug', 'zenfolio', 'google', 'instagram', 'deviantart'], true)) {
 				$options = get_option('photonic_options');
 				if (empty($options)) {
 					$options = [];
@@ -262,7 +262,7 @@ class AJAX {
 					$options[$provider . '_token_secret'] = $secret;
 					$option_set = true;
 				}
-				elseif ('google' === $provider) {
+				elseif ('google' === $provider || 'deviantart' === $provider) {
 					$options[str_replace('-', '_', $provider) . '_refresh_token'] = $token;
 					$option_set = true;
 				}

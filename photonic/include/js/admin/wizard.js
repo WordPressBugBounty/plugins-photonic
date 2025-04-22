@@ -397,10 +397,15 @@ jQuery(document).ready(function($) {
 						}
 
 						if (type !== undefined) {
-							$('[name="photonic-editor-shortcode-raw"]').val(scParameter);
-							$('[name="photonic-editor-shortcode"]').val(shortcode.content);
-							$('[data-photonic-selection-id="' + type + '"]').click();
-							$('.photonic-editor-info').empty();
+							if (type === 'google') {
+								$('.photonic-editor-info').html('<div>' + Photonic_Wizard_JS.info_editor_google_shortcode + '</div>');
+							}
+							else {
+								$('[name="photonic-editor-shortcode-raw"]').val(scParameter);
+								$('[name="photonic-editor-shortcode"]').val(shortcode.content);
+								$('[data-photonic-selection-id="' + type + '"]').click();
+								$('.photonic-editor-info').empty();
+							}
 						}
 						else {
 							$('.photonic-editor-info').html('<div>' + Photonic_Wizard_JS.info_editor_not_shortcode + '</div>');

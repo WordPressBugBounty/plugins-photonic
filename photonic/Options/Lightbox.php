@@ -3,9 +3,7 @@
 namespace Photonic_Plugin\Options;
 
 class Lightbox extends Option_Tab {
-	private static $instance;
-
-	private function __construct() {
+	protected function __construct() {
 		$this->options = [
 			[
 				'name'     => 'Common',
@@ -536,12 +534,5 @@ class Lightbox extends Option_Tab {
 			],
 
 		];
-	}
-
-	public static function get_instance() {
-		if (null === self::$instance) {
-			self::$instance = new Lightbox();
-		}
-		return self::$instance;
 	}
 }

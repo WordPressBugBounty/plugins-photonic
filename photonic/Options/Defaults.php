@@ -223,6 +223,11 @@ class Defaults {
 			'instagram_tile_size'                             => 'same',
 			'instagram_photo_title_display'                   => 'tooltip',
 
+			// DeviantArt
+			'deviantart_client_id'                                => '',
+			'deviantart_client_secret'                            => '',
+			'deviantart_refresh_token'                            => '',
+
 			// Lightbox - common
 			'slideshow_mode'                                  => '',
 			'slideshow_interval'                              => '5000',
@@ -332,6 +337,10 @@ class Defaults {
 
 			// Instagram
 			'instagram-settings',
+
+			// DeviantArt
+			'deviantart-how-to',
+			'deviantart-settings',
 
 			// Lightboxes
 			'lb-settings',

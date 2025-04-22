@@ -9,6 +9,7 @@ if (!current_user_can('edit_theme_options')) {
 use Photonic_Plugin\Core\Photonic;
 
 use Photonic_Plugin\Options\Defaults;
+use Photonic_Plugin\Options\DeviantArt;
 use Photonic_Plugin\Options\Flickr;
 use Photonic_Plugin\Options\Generic;
 use Photonic_Plugin\Options\Google;
@@ -47,20 +48,22 @@ class Options_Manager extends Admin_Page {
 		$options_page_array = [
 			'Generic.php'   => Generic::get_instance()->get_options(),
 			'Flickr.php'    => Flickr::get_instance()->get_options(),
-			'Google.php'    => Google::get_instance()->get_options(),
+			// 'Google.php'    => Google::get_instance()->get_options(),
 			'SmugMug.php'   => SmugMug::get_instance()->get_options(),
 			'Zenfolio.php'  => Zenfolio::get_instance()->get_options(),
-			'Instagram.php' => Instagram::get_instance()->get_options(),
+			// 'Instagram.php' => Instagram::get_instance()->get_options(),
+			'DeviantArt.php' => DeviantArt::get_instance()->get_options(),
 			'Lightbox.php'  => Lightbox::get_instance()->get_options(),
 		];
 
 		$tab_name_array = [
 			'Generic.php'   => 'Generic Options',
 			'Flickr.php'    => 'Flickr Options',
-			'Google.php'    => 'Google Photos Options',
+			// 'Google.php'    => 'Google Photos Options',
 			'SmugMug.php'   => 'SmugMug Options',
 			'Zenfolio.php'  => 'Zenfolio Options',
-			'Instagram.php' => 'Instagram Options',
+			// 'Instagram.php' => 'Instagram Options',
+			'DeviantArt.php' => 'DeviantArt Options',
 			'Lightbox.php'  => 'Lightbox Options',
 		];
 
@@ -155,17 +158,14 @@ class Options_Manager extends Admin_Page {
 						<a class='nav-tab <?php echo ('SmugMug.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
 						   id='photonic-options-smugmug' href='?page=photonic-options-manager&amp;tab=SmugMug.php'><span
 									class="icon">&nbsp;</span> SmugMug</a>
-						<a class='nav-tab <?php echo ('Google.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
-						   id='photonic-options-google' href='?page=photonic-options-manager&amp;tab=Google.php'><span
-									class="icon">&nbsp;</span> Google Photos</a>
 						<a class='nav-tab <?php echo ('Zenfolio.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
 						   id='photonic-options-zenfolio'
 						   href='?page=photonic-options-manager&amp;tab=Zenfolio.php'><span class="icon">&nbsp;</span>
 							Zenfolio</a>
-						<a class='nav-tab <?php echo ('Instagram.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
-						   id='photonic-options-instagram'
-						   href='?page=photonic-options-manager&amp;tab=Instagram.php'><span class="icon">&nbsp;</span>
-							Instagram</a>
+						<!-- <a class='nav-tab <?php /*echo ('DeviantArt.php' === $this->tab) ? 'nav-tab-active' : ''; */?>'
+						   id='photonic-options-deviantart'
+						   href='?page=photonic-options-manager&amp;tab=DeviantArt.php'><span class="icon">&nbsp;</span>
+							DeviantArt</a> -->
 						<a class='nav-tab <?php echo ('Lightbox.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
 						   id='photonic-options-lightbox'
 						   href='?page=photonic-options-manager&amp;tab=Lightbox.php'><span class="icon">&nbsp;</span>

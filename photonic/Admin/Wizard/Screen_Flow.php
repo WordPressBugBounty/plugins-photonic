@@ -39,7 +39,7 @@ class Screen_Flow {
 				$shortcode = $this->input_shortcode->shortcode;
 				$attrs = $shortcode->attrs;
 				$attrs = $attrs->named;
-				if ((!empty($attrs->type) && in_array($attrs->type, ['wp', 'flickr', 'smugmug', 'picasa', 'google', 'zenfolio', 'instagram'], true)) ||
+				if ((!empty($attrs->type) && in_array($attrs->type, ['wp', 'flickr', 'smugmug', 'zenfolio', 'deviantart'], true)) ||
 					(empty($attrs->type) && !empty($attrs->style)) && in_array($attrs->style, ['square', 'circle', 'random', 'masonry', 'masonry-horizontal', 'mosaic', 'strip-above', 'strip-below', 'strip-right', 'no-strip'], true)) {
 					$this->editor_shortcode['provider'] = !empty($attrs->type) ? $attrs->type : 'wp';
 				}
@@ -72,9 +72,10 @@ class Screen_Flow {
 							'wp'        => 'WordPress',
 							'flickr'    => 'Flickr',
 							'smugmug'   => 'SmugMug',
-							'google'    => 'Google Photos',
+							// 'google'    => 'Google Photos',
 							'zenfolio'  => 'Zenfolio',
-							'instagram' => 'Instagram',
+							// 'instagram' => 'Instagram',
+							// 'deviantart' => 'DeviantArt',
 						];
 						foreach ($providers as $provider => $desc) {
 							?>

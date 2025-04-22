@@ -186,6 +186,7 @@ class Photonic {
 			'google'        => 'Google',
 			'zenfolio'      => 'Zenfolio',
 			'instagram'     => 'Instagram',
+			'deviantart'    => 'DeviantArt'
 		];
 
 		add_action('admin_menu', [&$this, 'add_admin_menu']);

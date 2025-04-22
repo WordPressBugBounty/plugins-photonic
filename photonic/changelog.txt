@@ -1,12 +1,19 @@
 == Changelog ==
 
+= 3.20 =
+
+*	Changed: WP version compatibility updated to 6.8
+*	Removed: Ability to create and edit Google Photos galleries
+*	Removed: Google Photos sections from Helpers page
+*	Removed: Instagram and Google Photos authentication sections
+
 = 3.15 =
 
 *	Changed: Updated stable tag to 3.15
 
 = 3.14 =
 
-*	Changed: Added code to make galleries gracefully disappear
+*	Changed: Added code to make Google galleries gracefully disappear
 *	Changed: WP version compatibility updated to 6.7
 *	Changed: Refactored flow.js to wizard.js
 *	Changed: Improved support for the "Plugin Check" plugin

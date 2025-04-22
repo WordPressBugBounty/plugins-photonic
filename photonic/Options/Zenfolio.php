@@ -5,9 +5,7 @@ namespace Photonic_Plugin\Options;
 use Photonic_Plugin\Core\Utilities;
 
 class Zenfolio extends Option_Tab {
-	private static $instance;
-
-	private function __construct() {
+	protected function __construct() {
 		$this->options = [
 			[
 				'name'     => "Zenfolio Photo Settings",
@@ -310,12 +308,5 @@ class Zenfolio extends Option_Tab {
 				'type'     => 'checkbox'
 			],
 		];
-	}
-
-	public static function get_instance() {
-		if (null === self::$instance) {
-			self::$instance = new Zenfolio();
-		}
-		return self::$instance;
 	}
 }

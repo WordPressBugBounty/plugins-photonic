@@ -46,11 +46,11 @@ jQuery(document).ready(function($) {
 		return ( prop && prop in params ) ? params[ prop ] : params;
 	};
 
-	$('.photonic-google-refresh').click(function(e) {
+	$('.photonic-google-refresh, .photonic-deviantart-refresh').click(function(e) {
 		e.preventDefault();
 		var $clicked = $(this);
 		$('.photonic-waiting').show();
-		var provider = 'google';
+		var provider = $clicked.data('photonicProvider'); // 'google';
 		var result = $('#' + provider + '-result');
 		var args = {'action': 'photonic_obtain_token', 'provider': provider, 'code': $('#photonic-' + provider + '-oauth-code').val(), 'state': $('#photonic-' + provider + '-oauth-state').val(), '_ajax_nonce': $clicked.data('photonicNonce') };
 		$.post(ajaxurl, args, function(data) {

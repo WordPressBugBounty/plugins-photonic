@@ -5,11 +5,9 @@ namespace Photonic_Plugin\Options;
 use Photonic_Plugin\Core\Utilities;
 
 class Google extends Option_Tab {
-	private static $instance;
-
 	private $preface;
 
-	private function __construct() {
+	protected function __construct() {
 		$this->preface = "<section class='notice notice-error'><strong>API Shutdown</strong><p>Google is making a change to its APIs, which make them unusable for browsing on the web. This will prevent Photonic from working after <strong>31st March 2025</strong>. Please switch to a different platform to avoid disruption.</p></section>";
 		$this->options = [
 			[
@@ -175,12 +173,5 @@ class Google extends Option_Tab {
 				'options'  => $this->title_styles()
 			],
 		];
-	}
-
-	public static function get_instance() {
-		if (null === self::$instance) {
-			self::$instance = new Google();
-		}
-		return self::$instance;
 	}
 }

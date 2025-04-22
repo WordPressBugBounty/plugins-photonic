@@ -25,9 +25,9 @@ class Screen_Fields {
 			'wp'        => 'WP.php',
 			'flickr'    => 'Flickr.php',
 			'smugmug'   => 'SmugMug.php',
-			'google'    => 'Google_Photos.php',
+			// 'google'    => 'Google_Photos.php',
 			'zenfolio'  => 'Zenfolio.php',
-			'instagram' => 'Instagram.php',
+			// 'instagram' => 'Instagram.php',
 		];
 		$this->layout_options = [
 			'square'             => esc_html__('Square Grid', 'photonic'),

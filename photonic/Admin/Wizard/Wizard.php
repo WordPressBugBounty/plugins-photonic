@@ -916,7 +916,7 @@ class Wizard {
 	private function deconstruct_shortcode($input): array {
 		$deconstructed = [];
 		if (!empty($input)) {
-			if ((!empty($input->type) && in_array($input->type, ['wp', 'default', 'flickr', 'smugmug', 'picasa', 'google', 'zenfolio', 'instagram'], true)) ||
+			if ((!empty($input->type) && in_array($input->type, ['wp', 'default', 'flickr', 'smugmug', 'zenfolio'], true)) ||
 				((empty($input->type) && !empty($input->style)) && in_array($input->style, ['square', 'circle', 'random', 'masonry', 'masonry-horizontal', 'mosaic', 'strip-above', 'strip-below', 'strip-right', 'no-strip'], true))
 			) {
 				$deconstructed['provider'] = !empty($input->type) ? $input->type : 'wp';
@@ -1088,9 +1088,9 @@ class Wizard {
 	public static function base_apis(): array {
 		return [
 			'flickr' => 'api.flickr.com',
-			'google' => 'photoslibrary.googleapis.com',
+			// 'google' => 'photoslibrary.googleapis.com',
 			'smugmug' => 'api.smugmug.com',
-			'instagram' => 'graph.instagram.com',
+			// 'instagram' => 'graph.instagram.com',
 			'zenfolio' => 'api.zenfolio.com',
 		];
 	}
