@@ -312,7 +312,7 @@ class Instagram extends OAuth2 implements Level_One_Module {
 		return $output;
 	}
 
-	public function renew_token($current_token) {
+	public function renew_token($current_token): array {
 		$token = [];
 		$error = '';
 		$soon  = $this->is_token_expiring_soon($this->soon_limit);

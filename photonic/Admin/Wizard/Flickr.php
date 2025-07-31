@@ -51,6 +51,11 @@ class Flickr extends Source {
 				'Mobile MP4'     => esc_html__('Mobile MP4', 'photonic'),
 				'HD MP4'         => esc_html__('HD MP4', 'photonic'),
 				'Video Original' => esc_html__('Video Original', 'photonic'),
+				'Video Player'   => esc_html__('Video Player', 'photonic'),
+				'1080p'          => '1080p',
+				'720p'           => '720p',
+				'360p'           => '360p',
+				'288p'           => '288p',
 			],
 		];
 		$this->allowed_image_sizes['flickr']['thumb_size'][''] .= ' - ' . $this->allowed_image_sizes['flickr']['thumb_size'][$photonic_flickr_thumb_size];

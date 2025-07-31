@@ -28,29 +28,12 @@ abstract class OAuth2 extends Base {
 
 	abstract public function access_token_URL();
 
-	abstract public function renew_token($token);
+	abstract public function renew_token($token): array;
 
 	abstract protected function set_token_validity($validity);
 
 	public function redirect_url() {
 		return get_site_url();
-	}
-
-	public function get_authorization_url($args = []) {
-		$url        = add_query_arg('test', 'test');
-		$url        = remove_query_arg('test', $url);
-		$parameters = array_merge(
-			[
-				'response_type' => $this->response_type,
-				'redirect_uri'  => $this->redirect_url(),
-				'client_id'     => $this->client_id,
-				'scope'         => $this->scope,
-				'access_type'   => 'offline',
-				'state'         => md5($this->client_secret . $this->provider) . '::' . rawurlencode($url),
-			],
-			$args
-		);
-		return $this->authentication_URL() . "?" . self::build_query($parameters);
 	}
 
 	/**
@@ -185,6 +168,9 @@ abstract class OAuth2 extends Base {
 				$token['oauth_token_type']    = $body->token_type;
 				$token['oauth_token_created'] = time();
 				$token['oauth_token_expires'] = $body->expires_in;
+				if (!empty($body->refresh_token)) {
+					$token['oauth_refresh_token'] = $body->refresh_token;
+				}
 				$this->set_token_validity(true);
 			}
 			else {

@@ -12,6 +12,7 @@ use Photonic_Plugin\Platforms\Instagram;
 use Photonic_Plugin\Platforms\Native;
 use Photonic_Plugin\Platforms\SmugMug;
 use Photonic_Plugin\Platforms\Zenfolio;
+use Photonic_Plugin\Platforms\DeviantArt;
 
 class Gallery {
 	private $attr;
@@ -27,7 +28,7 @@ class Gallery {
 
 		$this->set_platform($type);
 
-		if ((!empty($attr['layout']) && in_array($type, ['flickr', 'smugmug', 'google', 'zenfolio', 'instagram'], true) && in_array($attr['layout'], ['strip-above', 'strip-below', 'strip-right', 'no-strip'], true)) ||
+		if ((!empty($attr['layout']) && in_array($type, ['flickr', 'smugmug', 'google', 'zenfolio', 'instagram', 'deviantart'], true) && in_array($attr['layout'], ['strip-above', 'strip-below', 'strip-right', 'no-strip'], true)) ||
 			(!empty($attr['style']) && in_array($type, ['default', 'wp'], true) && in_array($attr['style'], ['strip-above', 'strip-below', 'strip-right', 'no-strip'], true))) {
 			require_once PHOTONIC_PATH . '/Layouts/Slideshow.php';
 			$this->layout = Slideshow::get_instance();
@@ -58,6 +59,10 @@ class Gallery {
 		elseif ('zenfolio' === $type) {
 			require_once PHOTONIC_PATH . "/Platforms/Zenfolio.php";
 			$this->module = Zenfolio::get_instance();
+		}
+		elseif ('deviantart' === $type) {
+			require_once PHOTONIC_PATH . "/Platforms/DeviantArt.php";
+			$this->module = DeviantArt::get_instance();
 		}
 		else {
 			require_once PHOTONIC_PATH . "/Platforms/Native.php";

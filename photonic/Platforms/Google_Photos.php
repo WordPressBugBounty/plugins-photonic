@@ -909,7 +909,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		}
 	}
 
-	public function renew_token($refresh_token) {
+	public function renew_token($refresh_token): array {
 		$token    = [];
 		$error    = '';
 		$response = Photonic::http(

@@ -139,7 +139,7 @@ class Authentication extends Admin_Page {
 					'response_type' => 'code',
 					'client_id' => $photonic_deviantart_client_id,
 					'redirect_uri' => admin_url('admin.php?page=photonic-auth&source=deviantart'),
-					'scope' => 'basic',
+					'scope' => 'basic browse',
 					'access_type' => 'offline',
 					'state' => md5($photonic_deviantart_client_secret . 'deviantart') . '::' . rawurlencode($url),
 					'prompt' => 'consent',

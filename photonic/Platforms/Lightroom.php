@@ -49,7 +49,7 @@ class Lightroom extends OAuth2 implements Level_One_Module, Level_Two_Module {
 		$this->refresh_token_valid = $validity;
 	}
 
-	public function renew_token($refresh_token) {
+	public function renew_token($refresh_token): array {
 		$token    = [];
 		$error    = '';
 		$response = Photonic::http(

@@ -162,11 +162,11 @@ class Options_Manager extends Admin_Page {
 						   id='photonic-options-zenfolio'
 						   href='?page=photonic-options-manager&amp;tab=Zenfolio.php'><span class="icon">&nbsp;</span>
 							Zenfolio</a>
-						<!-- <a class='nav-tab <?php /*echo ('DeviantArt.php' === $this->tab) ? 'nav-tab-active' : ''; */?>'
+<!--						<a class='nav-tab <?php /*echo ('DeviantArt.php' === $this->tab) ? 'nav-tab-active' : ''; */?>'
 						   id='photonic-options-deviantart'
 						   href='?page=photonic-options-manager&amp;tab=DeviantArt.php'><span class="icon">&nbsp;</span>
-							DeviantArt</a> -->
-						<a class='nav-tab <?php echo ('Lightbox.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
+							DeviantArt</a>
+-->						<a class='nav-tab <?php echo ('Lightbox.php' === $this->tab) ? 'nav-tab-active' : ''; ?>'
 						   id='photonic-options-lightbox'
 						   href='?page=photonic-options-manager&amp;tab=Lightbox.php'><span class="icon">&nbsp;</span>
 							Lightboxes</a>

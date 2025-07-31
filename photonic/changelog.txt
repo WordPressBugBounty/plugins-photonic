@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 3.21 =
+
+*	Added: New sizes for Flickr videos
+
 = 3.20 =
 
 *	Changed: WP version compatibility updated to 6.8

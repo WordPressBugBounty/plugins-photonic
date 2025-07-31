@@ -148,6 +148,11 @@ class Flickr extends Option_Tab {
 					'Mobile MP4'     => 'Mobile MP4',
 					'HD MP4'         => 'HD MP4',
 					'Video Original' => 'Video Original',
+					'Video Player'   => 'Video Player',
+					'1080p'          => '1080p',
+					'720p'           => '720p',
+					'360p'           => '360p',
+					'288p'           => '288p',
 				]
 			],
 
