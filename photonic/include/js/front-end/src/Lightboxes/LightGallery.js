@@ -46,7 +46,7 @@ export class PhotonicLightGallery extends Lightbox {
 			a.setAttribute('data-html5-href', a.getAttribute('href'));
 			a.setAttribute('href', '');
 			a.setAttribute('data-video', JSON.stringify(videoSrc));
-			a.setAttribute('data-sub-html', (a.getAttribute('title') ? a.getAttribute('title') : ''));
+			a.setAttribute('data-sub-html', (a.getAttribute('title') ? Util.getText(a.getAttribute('title')) : ''));
 
 			this.videoIndex++;
 		}

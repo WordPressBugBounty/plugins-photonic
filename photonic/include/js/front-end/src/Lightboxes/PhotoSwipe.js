@@ -123,7 +123,7 @@ export class PhotonicPhotoSwipe extends Lightbox {
 					if (link.getAttribute('data-html5-href') !== null) {
 						item = {
 							html: '<div class="photonic-video" id="ps-' + link.getAttribute('href').substring(1) + '">\n<video class="photonic" controls preload="none"><source src="' + link.getAttribute('data-html5-href') + '" type="video/mp4">Your browser does not support HTML5 videos</video>',
-							title: link.getAttribute('data-title')
+							title: Util.HTMLSanitizer.SanitizeHTML(link.getAttribute('data-title'))
 						};
 					}
 					else {
@@ -131,7 +131,7 @@ export class PhotonicPhotoSwipe extends Lightbox {
 							src: link.getAttribute('href'),
 							w: 0,
 							h: 0,
-							title: link.getAttribute('data-title'),
+							title: Util.HTMLSanitizer.SanitizeHTML(link.getAttribute('data-title')),
 							pid: pid[1]
 						};
 					}
@@ -167,7 +167,7 @@ export class PhotonicPhotoSwipe extends Lightbox {
 
 				item = {
 					html: '<div class="photonic-video" id="ps-' + href.getAttribute('id') + '">\n<video class="photonic" controls preload="none"><source src="' + link.getAttribute('data-html5-href') + '" type="video/mp4">Your browser does not support HTML5 videos</video>',
-					title: link.getAttribute('data-title') || link.getAttribute('title') || ''
+					title: Util.HTMLSanitizer.SanitizeHTML(link.getAttribute('data-title')) || Util.getText(link.getAttribute('title')) || ''
 				}
 			}
 			self.videos.push([item]);

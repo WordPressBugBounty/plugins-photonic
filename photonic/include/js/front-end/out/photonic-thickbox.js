@@ -555,7 +555,16 @@ exports.Tooltip = void 0;
  * License: MIT
  */
 var Tooltip = function Tooltip(selector, tooltip_element) {
-  var tooltip, tooltipClass, elemEdges, tooltipElems;
+  var tooltip, tooltipClass, elemEdges, tooltipElems; // From https://locutus.io/php/strings/strip_tags/, or https://stackoverflow.com/questions/5601903/jquery-almost-equivalent-of-phps-strip-tags/46483672#46483672
+
+  function strip_tags(input, allowed) {
+    allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+    var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+    });
+  }
 
   function create(tooltip, elm) {
     var tooltipText = elm.getAttribute('data-photonic-tooltip');
@@ -917,8 +926,11 @@ exports.Core = Core;
   var thumbs = document.querySelectorAll('.photonic-stream a, a.photonic-level-2-thumb');
   thumbs.forEach(thumb => {
     if (!thumb.parentNode.classList.contains('photonic-header-title')) {
-      var title = thumb.getAttribute('title');
+      var title = thumb.getAttribute('title'); // Not doing a Util.getText, which uses innerHTML, which is susceptible to XSS
+
       thumb.setAttribute('title', Util.getText(title));
+      var dataTitle = thumb.getAttribute('data-title');
+      thumb.setAttribute('data-title', Util.HTMLSanitizer.SanitizeHTML(dataTitle));
     }
   });
 });
@@ -3178,6 +3190,7 @@ exports.lazyLoad = lazyLoad;
   !*** ../include/js/front-end/src/Util.js ***!
   \*******************************************/
 /*! flagged exports */
+/*! export HTMLSanitizer [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export fadeIn [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export fadeOut [provided] [no usage info] [missing usage info prevents renaming] */
@@ -3200,7 +3213,7 @@ exports.lazyLoad = lazyLoad;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.hide = exports.show = exports.fadeOut = exports.fadeIn = exports.slideUpTitle = exports.slideUpDown = exports.getText = exports.getElement = exports.next = exports.get = exports.post = exports.hasClass = void 0;
+exports.HTMLSanitizer = exports.hide = exports.show = exports.fadeOut = exports.fadeIn = exports.slideUpTitle = exports.slideUpDown = exports.getText = exports.getElement = exports.next = exports.get = exports.post = exports.hasClass = void 0;
 
 // Utilities for Photonic
 var hasClass = (element, className) => {
@@ -3268,9 +3281,18 @@ var getElement = value => {
 exports.getElement = getElement;
 
 var getText = value => {
-  var txt = document.createElement("div");
-  txt.innerHTML = value;
-  return txt.innerText;
+  // Not using innerHTML because of vulnerability to XSS
+
+  /*
+         const txt = document.createElement("div");
+         txt.innerHTML = value;
+         return txt.innerText;
+     */
+  if (value == null) {
+    return '';
+  }
+
+  return value.replace(/<[^>]+>/g, '');
 };
 
 exports.getText = getText;
@@ -3381,9 +3403,176 @@ var show = el => showHide(el, true);
 
 exports.show = show;
 
-var hide = el => showHide(el);
+var hide = el => showHide(el); //JavaScript HTML Sanitizer v2.0.3, (c) Alexander Yumashev, Jitbit Software.
+//homepage https://github.com/jitbit/HtmlSanitizer
+//License: MIT https://github.com/jitbit/HtmlSanitizer/blob/master/LICENSE
+
 
 exports.hide = hide;
+var HTMLSanitizer = new function () {
+  var _tagWhitelist = {
+    'A': true,
+    'ABBR': true,
+    'B': true,
+    'BLOCKQUOTE': true,
+    'BODY': true,
+    'BR': true,
+    'CENTER': true,
+    'CODE': true,
+    'DD': true,
+    'DIV': true,
+    'DL': true,
+    'DT': true,
+    'EM': true,
+    'FONT': true,
+    'H1': true,
+    'H2': true,
+    'H3': true,
+    'H4': true,
+    'H5': true,
+    'H6': true,
+    'HR': true,
+    'I': true,
+    'IMG': true,
+    'LABEL': true,
+    'LI': true,
+    'OL': true,
+    'P': true,
+    'PRE': true,
+    'SMALL': true,
+    'SOURCE': true,
+    'SPAN': true,
+    'STRONG': true,
+    'SUB': true,
+    'SUP': true,
+    'TABLE': true,
+    'TBODY': true,
+    'TR': true,
+    'TD': true,
+    'TH': true,
+    'THEAD': true,
+    'UL': true,
+    'U': true,
+    'VIDEO': true
+  };
+  var _contentTagWhiteList = {
+    'FORM': true,
+    'GOOGLE-SHEETS-HTML-ORIGIN': true
+  }; //tags that will be converted to DIVs
+
+  var _attributeWhitelist = {
+    'align': true,
+    'color': true,
+    'controls': true,
+    'height': true,
+    'href': true,
+    'id': true,
+    'src': true,
+    'style': true,
+    'target': true,
+    'title': true,
+    'type': true,
+    'width': true
+  };
+  var _cssWhitelist = {
+    'background-color': true,
+    'color': true,
+    'font-size': true,
+    'font-weight': true,
+    'text-align': true,
+    'text-decoration': true,
+    'width': true
+  };
+  var _schemaWhiteList = ['http:', 'https:', 'data:', 'm-files:', 'file:', 'ftp:', 'mailto:', 'pw:']; //which "protocols" are allowed in "href", "src" etc
+
+  var _uriAttributes = {
+    'href': true,
+    'action': true
+  };
+
+  var _parser = new DOMParser();
+
+  this.SanitizeHTML = (input, extraSelector) => {
+    if (input == null) return null;
+    input = input.trim();
+    if (input === "") return ""; //to save performance
+    //firefox "bogus node" workaround for wysiwyg's
+
+    if (input === "<br>") return "";
+    if (input.indexOf("<body") === -1) input = "<body>" + input + "</body>"; //add "body" otherwise some tags are skipped, like <style>
+
+    var doc = _parser.parseFromString(input, "text/html"); //DOM clobbering check (damn you firefox)
+
+
+    if (doc.body.tagName !== 'BODY') doc.body.remove();
+    if (typeof doc.createElement !== 'function') doc.createElement.remove();
+
+    function makeSanitizedCopy(node) {
+      var newNode;
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        newNode = node.cloneNode(true);
+      } else if (node.nodeType === Node.ELEMENT_NODE && (_tagWhitelist[node.tagName] || _contentTagWhiteList[node.tagName] || extraSelector && node.matches(extraSelector))) {
+        //is tag allowed?
+        if (_contentTagWhiteList[node.tagName]) newNode = doc.createElement('DIV'); //convert to DIV
+        else newNode = doc.createElement(node.tagName);
+
+        for (var i = 0; i < node.attributes.length; i++) {
+          var attr = node.attributes[i];
+
+          if (_attributeWhitelist[attr.name]) {
+            if (attr.name === "style") {
+              for (var s = 0; s < node.style.length; s++) {
+                var styleName = node.style[s];
+                if (_cssWhitelist[styleName]) newNode.style.setProperty(styleName, node.style.getPropertyValue(styleName));
+              }
+            } else {
+              if (_uriAttributes[attr.name]) {
+                //if this is a "uri" attribute, that can have "javascript:" or something
+                if (attr.value.indexOf(":") > -1 && !startsWithAny(attr.value, _schemaWhiteList)) continue;
+              }
+
+              newNode.setAttribute(attr.name, attr.value);
+            }
+          }
+        }
+
+        for (var _i = 0; _i < node.childNodes.length; _i++) {
+          var subCopy = makeSanitizedCopy(node.childNodes[_i]);
+          newNode.appendChild(subCopy, false);
+        } //remove useless empty spans (lots of those when pasting from MS Outlook)
+
+
+        if ((newNode.tagName === "SPAN" || newNode.tagName === "B" || newNode.tagName === "I" || newNode.tagName === "U") && newNode.innerHTML.trim() === "") {
+          return doc.createDocumentFragment();
+        }
+      } else {
+        newNode = doc.createDocumentFragment();
+      }
+
+      return newNode;
+    }
+
+    var resultElement = makeSanitizedCopy(doc.body);
+    return resultElement.innerHTML.replace(/div><div/g, "div>\n<div"); //replace is just for cleaner code
+  };
+
+  function startsWithAny(str, substrings) {
+    for (var i = 0; i < substrings.length; i++) {
+      if (str.indexOf(substrings[i]) === 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  this.AllowedTags = _tagWhitelist;
+  this.AllowedAttributes = _attributeWhitelist;
+  this.AllowedCssStyles = _cssWhitelist;
+  this.AllowedSchemas = _schemaWhiteList;
+}();
+exports.HTMLSanitizer = HTMLSanitizer;
 
 /***/ })
 

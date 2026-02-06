@@ -4,9 +4,9 @@ Donate link: https://aquoid.com/plugins/photonic/
 Tags: flickr, smugmug, zenfolio, gallery, lightbox
 Text Domain: photonic
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.3
-Stable tag: 3.21
+Stable tag: 3.24
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -191,7 +191,7 @@ Suggestions are welcome for other photo-sharing platforms.
 
 = What about other JS lightbox libraries? =
 
-You mean apart from the 17 that Photonic currently supports?? If you have specific suggestions please feel free to contact the plugin author, but starting from version 2.60 the focus is shifting to pure JS lightbox libraries.
+You mean apart from the 17 that Photonic currently supports?? If you have specific suggestions please feel free to contact the plugin author, but only pure JS, GPL-compatible lightbox scripts will be supported.
 
 Note that there have been slight modifications have been made to some of the lightboxes to make them play well with newer code.
 
@@ -212,6 +212,6 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.21 =
+= 3.24 =
 
-*	Added: New sizes for Flickr videos
+*	Fixed: Bug in sanitizing for Spotlight lightbox
