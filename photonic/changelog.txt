@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 3.25 =
+
+*	Fixed: Blocks were not working in the Site Editor
+
 = 3.24 =
 
 *	Fixed: Bug in sanitizing for Spotlight lightbox

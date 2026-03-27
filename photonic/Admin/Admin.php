@@ -22,6 +22,7 @@ class Admin {
 
 		// Gutenberg
 		add_action('enqueue_block_editor_assets', [&$this, 'enqueue_gutenberg_assets']);
+		add_action('enqueue_block_assets', [&$this, 'enqueue_fse_assets']); // Site Editor; without this, the block doesn't work on the FSE Site Editor
 
 		if (empty($photonic_disable_flow_editor_global)) {
 			add_action('media_buttons', [&$this, 'add_photonic_button']);
@@ -298,6 +299,17 @@ class Admin {
 			$js_array = $this->get_wizard_js_parameters($url);
 			wp_localize_script('photonic-gutenberg', 'Photonic_Gutenberg_JS', $js_array);
 
+			wp_enqueue_style(
+				'photonic-gutenberg',
+				PHOTONIC_URL . 'include/css/admin/admin-block.css',
+				['thickbox'],
+				Photonic::get_version(PHOTONIC_PATH . '/include/css/admin/admin-block.css')
+			);
+		}
+	}
+
+	public function enqueue_fse_assets() {
+		if (is_admin()) {
 			wp_enqueue_style(
 				'photonic-gutenberg',
 				PHOTONIC_URL . 'include/css/admin/admin-block.css',

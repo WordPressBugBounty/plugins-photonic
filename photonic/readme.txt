@@ -6,7 +6,7 @@ Text Domain: photonic
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.3
-Stable tag: 3.24
+Stable tag: 3.25
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -212,6 +212,6 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.24 =
+= 3.25 =
 
-*	Fixed: Bug in sanitizing for Spotlight lightbox
+*	Fixed: Blocks were not working in the Site Editor
