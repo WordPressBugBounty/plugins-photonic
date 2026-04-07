@@ -794,7 +794,8 @@ class Photonic {
 			'current_shortcode' => esc_html__('Current shortcode', 'photonic'),
 			'edit_message'      => esc_html__('Click on the icon to edit your gallery.', 'photonic'),
 		];
-		wp_enqueue_script('photonic-widget', PHOTONIC_URL . 'include/js/admin/widget.js', ['jquery'], self::get_version(PHOTONIC_PATH . '/include/js/admin/widget.js'), true);
+		wp_enqueue_script('photonic-native-ui', PHOTONIC_URL . 'include/js/admin/native-ui.js', ['shortcode', 'thickbox'], self::get_version(PHOTONIC_PATH . '/include/js/admin/native-ui.js'), false);
+		wp_enqueue_script('photonic-widget', PHOTONIC_URL . 'include/js/admin/widget.js', ['photonic-native-ui'], self::get_version(PHOTONIC_PATH . '/include/js/admin/widget.js'), true);
 		wp_localize_script('photonic-widget', 'Photonic_Widget_JS', $js_array);
 		wp_enqueue_style('photonic-widget', PHOTONIC_URL . 'include/css/admin/widget.css', [], self::get_version(PHOTONIC_PATH . '/include/css/admin/widget.css'));
 	}

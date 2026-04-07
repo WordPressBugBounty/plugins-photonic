@@ -1,5 +1,13 @@
 == Changelog ==
 
+= 3.30 =
+
+*	Changed: Reduced dependency on jQuery for the wizard and its related components
+*	Changed: Significantly rewrote the Wizard UI code, to separate IFrame functionality from the main window
+*	Fixed: Compatibility issue with the Gutenberg Plugin
+*	Fixed: Cross-Origin messages with block editor enabled in some conditions
+*	Fixed: Bug in MCE Editor that was preventing the addition of galleries
+
 = 3.25 =
 
 *	Fixed: Blocks were not working in the Site Editor

@@ -135,7 +135,7 @@ class Screen_Flow {
 				<input type="hidden" id="selection_passworded" name="selection_passworded"/>
 			</form>
 		</div>
-		<div class="photonic-waiting"></div>
+		<div class="photonic-waiting" style="display: block;"></div>
 			<?php
 		}
 	}
