@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		let photonicActiveScreenElementMediaLibrary, photonicClickedNodeMediaLibrary;
 		let startupConnectionError;
 
-		setWaitingVisibility(true);
+		// setWaitingVisibility(true);
 		window.addEventListener('message', initializeWizardPort);
 
 		function initializeWizardPort(event) {
 			// Perform a secure port transfer
 			if (event.ports[0] && event.origin === Photonic_Wizard_JS.safe_origin) {
 				photonicIFramePort = event.ports[0];
-				photonicIFramePort.onmessage = setParentShortcode;
+				photonicIFramePort.onmessage = handleMessageFromParent;
 			}
 			else if (event.origin !== Photonic_Wizard_JS.safe_origin) {
 				startupConnectionError = '<strong>ERROR: </strong>Photonic wizard failed to initiate communication with main page. <ul><li>Main window is on ' + event.origin + '</li><li>Wizard is in ' + Photonic_Wizard_JS.safe_origin + '</li></ul>';
@@ -29,39 +29,43 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 
-		function setParentShortcode(event) {
+		function handleMessageFromParent(event) {
 			if (event.data.type === 'photonicShortcode' || event.data.type === 'photonicMCENode' || event.data.type === 'photonicWidget' || event.data.type === 'photonicBlock') {
-				let selection = event.data.object;
-				// Selection = null if something went wrong
-				// Selection = shortcode object if valid shortcode
-				// Selection = null shortcode object and error, if not a valid shortcode
-				// Selection = '' if nothing was selected
-				if (selection !== null && selection.shortcode !== undefined && selection.shortcode !== null) {
-					if (selection.shortcode.content !== undefined) { // Selection is a valid shortcode
-						photonicParentShortcode = selection.shortcode.content;
-						photonicShortcodeObjectEditor = selection.shortcode;
-					}
-					else {
-						photonicParentShortcode = selection.shortcode; // Selection = ''
-					}
-				}
-				else if (selection !== null && selection.error !== undefined) {
-					photonicParentSelectionError = selection.error;
-				}
-
-				isEditor = event.data.type === 'photonicShortcode';
-				isWidget = event.data.type === 'photonicWidget';
-				isBlock = event.data.type === 'photonicBlock';
-				isMCE = event.data.type === 'photonicMCENode';
-
-				photonicIFramePort.postMessage(event.data);
-				photonicIFramePort.postMessage({type: 'photonicAddTBClass'});
-
-				wizardLogic(1);
+				setParentShortcode(event);
 			}
 			else if (event.data.type === 'photonicReceiveMediaLibrarySelections') {
 				receiveMediaLibrarySelections(event.data.selection, event.data.options);
 			}
+		}
+
+		function setParentShortcode(event) {
+			let selection = event.data.object;
+			// Selection = null if something went wrong
+			// Selection = shortcode object if valid shortcode
+			// Selection = null shortcode object and error, if not a valid shortcode
+			// Selection = '' if nothing was selected
+			if (selection !== null && selection.shortcode !== undefined && selection.shortcode !== null) {
+				if (selection.shortcode.content !== undefined) { // Selection is a valid shortcode
+					photonicParentShortcode = selection.shortcode.content;
+					photonicShortcodeObjectEditor = selection.shortcode;
+				}
+				else {
+					photonicParentShortcode = selection.shortcode; // Selection = ''
+				}
+			}
+			else if (selection !== null && selection.error !== undefined) {
+				photonicParentSelectionError = selection.error;
+			}
+
+			isEditor = event.data.type === 'photonicShortcode';
+			isWidget = event.data.type === 'photonicWidget';
+			isBlock = event.data.type === 'photonicBlock';
+			isMCE = event.data.type === 'photonicMCENode';
+
+			photonicIFramePort.postMessage(event.data);
+			photonicIFramePort.postMessage({type: 'photonicAddTBClass'});
+
+			wizardLogic(1);
 		}
 
 		function post(url, args, callback) {

@@ -469,8 +469,8 @@ class Photonic {
 			wp_add_inline_style('photonic', $this->generate_css());
 		}
 
-		if (class_exists('\FLBuilderModel') && \FLBuilderModel::is_builder_active()) {
-			$this->enqueue_widget_scripts();
+		if (class_exists('\FLBuilder')) {
+			$this->load_beaver();
 		}
 	}
 
@@ -784,6 +784,13 @@ class Photonic {
 	public function load_widget() {
 		require_once PHOTONIC_PATH . '/Add_Ons/WP/Widget.php';
 		register_widget("Photonic_Plugin\Add_Ons\WP\Widget");
+	}
+
+	public function load_beaver() {
+		require_once PHOTONIC_PATH . '/Add_Ons/Beaver/Beaver_Module.php';
+		if (class_exists('\FLBuilderModel') && \FLBuilderModel::is_builder_active()) {
+			$this->enqueue_widget_scripts();
+		}
 	}
 
 	public static function enqueue_widget_scripts() {

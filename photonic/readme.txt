@@ -6,7 +6,7 @@ Text Domain: photonic
 Requires at least: 6.2
 Tested up to: 6.9
 Requires PHP: 7.3
-Stable tag: 3.30
+Stable tag: 3.31
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -212,10 +212,6 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.30 =
+= 3.31 =
 
-*	Changed: Reduced dependency on jQuery for the wizard and its related components
-*	Changed: Significantly rewrote the Wizard UI code, to separate IFrame functionality from the main window
-*	Fixed: Compatibility issue with the Gutenberg Plugin
-*	Fixed: Cross-Origin messages with block editor enabled in some conditions
-*	Fixed: Bug in MCE Editor that was preventing the addition of galleries
+*	Fixed: Bug that was preventing the wizard sources from showing up in some undefined scenarios

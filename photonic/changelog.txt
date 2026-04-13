@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 3.31 =
+
+*	Fixed: Bug that was preventing the wizard sources from showing up in some undefined scenarios
+
 = 3.30 =
 
 *	Changed: Reduced dependency on jQuery for the wizard and its related components
