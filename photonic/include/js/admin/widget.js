@@ -5,8 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const PhotonicWidget = () => {
 		"use strict";
 
-		let sourceMessageChannel;
-		let nativeMediaLibrary;
+		let nativeMediaLibrary = new PhotonicWPNativeUI(sendDataToWizard, getDataFromWizard);
 		let photonicWidgetData;
 		let shortcode = '';
 		let clickedNode;
@@ -24,50 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			tb_show('Click to create gallery', clickedNode.getAttribute('href'));
 		});
 
-		function waitForIFrame() {
-			const observer = new MutationObserver(() => {
-				const iframe = document.querySelector('#TB_iframeContent');
-				if (iframe) {
-					iframe.onload = () => {
-						sourceMessageChannel = new MessageChannel();
-						nativeMediaLibrary = new PhotonicWPNativeUI(sourceMessageChannel);
+		nativeMediaLibrary.waitForIFrame();
 
-						sourceMessageChannel.port1.onmessage = (event) => {
-							if (event.data.type === 'photonicAddTBClass') {
-								document.getElementById('TB_window').classList.add('photonic-tb');
-							}
-							else if (event.data.type === 'photonicInitializeMediaLibrary') {
-								nativeMediaLibrary.initializeMediaLibrary(event.data.mediaOptions, event.data.photonicOptions);
-							}
-							else if (event.data.type === 'photonicOpenMediaLibrary') {
-								nativeMediaLibrary.openMediaLibrary();
-							}
-							else if (event.data.type === 'photonicUpdateGallery') {
-								photonicProcessWidgetChanges(event.data.html);
-								nativeMediaLibrary.closeTB();
-							}
-						};
-
-						// First, send a placeholder message to the iFrame and transfer port2 to it
-						iframe.contentWindow.postMessage('init', '/', [sourceMessageChannel.port2]);
-
-						// Second, send the actual shortcode
-						sourceMessageChannel.port1.postMessage({
-							type: 'photonicWidget',
-							object: parseSelection(shortcode),
-						});
-					};
-				}
-			});
-
-			observer.observe(document.body, {
-				childList: true,
-				subtree: true
-			});
-		}
-		waitForIFrame();
-
-		function photonicProcessWidgetChanges(widgetShortcode) {
+		function processWidgetChanges(widgetShortcode) {
 			const widget = clickedNode.closest('.photonic-widget');
 			widget.querySelector('.photonic-shortcode').value = widgetShortcode;
 			if (top.wp !== undefined && top.wp.shortcode !== undefined) {
@@ -115,6 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			return null;
 		}
 
+		function sendDataToWizard(messageChannel) {
+			messageChannel.port1.postMessage({
+				type: 'photonicWidget',
+				object: parseSelection(shortcode),
+			});
+		}
+
+		function getDataFromWizard(data) {
+			processWidgetChanges(data.html);
+		}
 	};
 
 	PhotonicWidget();

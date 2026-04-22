@@ -1,62 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const PhotonicEditor = () => {
+		const wpEditor = document.getElementById('wp-content-wrap');
 		const wizardButton = document.querySelector('#photonic-add-gallery');
-		let sourceMessageChannel;
-		let nativeMediaLibrary;
+		const mceTab = document.getElementById('content-tmce'), htmlTab = document.getElementById('content-html');
+		const nativeMediaLibrary = new PhotonicWPNativeUI(sendDataToWizard, getDataFromWizard);
 		let photonicEditorSelection = '';
 
 		const isBlock = !!(wp.data && wp.data.select('core/block-editor') && document.body.classList.contains('block-editor-page'));
-		let isTinyMCE;
+		let isTinyMCE = wpEditor ? wpEditor.classList.contains('tmce-active') : false;
+		let lastClickedTab = isTinyMCE ? mceTab : htmlTab;
 
-		function waitForIFrame() {
-			const observer = new MutationObserver(() => {
-				let iframe;
-				iframe = document.querySelector('#TB_iframeContent');
-				if (iframe) {
-					iframe.onload = () => {
-						isTinyMCE = typeof(tinyMCE) !== "undefined" && tinyMCE.activeEditor !== null && !tinyMCE.activeEditor.isHidden();
-						if (!isTinyMCE) {
-							sourceMessageChannel = new MessageChannel();
-							nativeMediaLibrary = new PhotonicWPNativeUI(sourceMessageChannel);
-
-							sourceMessageChannel.port1.onmessage = (event) => {
-								if (event.data.type === 'photonicAddTBClass') {
-									document.getElementById('TB_window').classList.add('photonic-tb');
-								}
-								else if (event.data.type === 'photonicInitializeMediaLibrary') {
-									nativeMediaLibrary.initializeMediaLibrary(event.data.mediaOptions, event.data.photonicOptions);
-								}
-								else if (event.data.type === 'photonicOpenMediaLibrary') {
-									nativeMediaLibrary.openMediaLibrary();
-								}
-								else if (event.data.type === 'photonicUpdateGallery') {
-									const win = window.dialogArguments || opener || parent || top;
-									win.send_to_editor(event.data.html);
-									nativeMediaLibrary.closeTB();
-								}
-							};
-
-							// First, send a placeholder message to the iFrame and transfer port2 to it
-							iframe.contentWindow.postMessage('init', '/', [sourceMessageChannel.port2]);
-
-							// Second, send the actual shortcode
-							sourceMessageChannel.port1.postMessage({
-								type: 'photonicShortcode',
-								object: parseEditorSelection(photonicEditorSelection),
-							});
-						}
-					};
-				}
-			});
-
-			observer.observe(document.body, {
-				childList: true,
-				subtree: true
-			});
-		}
-
-		if (!isBlock) {
-			waitForIFrame();
+		if (!isBlock && !isTinyMCE) {
+			nativeMediaLibrary.waitForIFrame();
 		}
 
 		if (wizardButton) {
@@ -65,6 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
 				const start = textArea.selectionStart;
 				const end = textArea.selectionEnd;
 				photonicEditorSelection = textArea.value.substring(start, end);
+			});
+		}
+
+		if (mceTab && htmlTab) {
+			[mceTab, htmlTab].forEach(button => {
+				button.addEventListener('click', e => {
+					if (lastClickedTab.id !== button.id) {
+						lastClickedTab = button;
+						if (button.id === htmlTab.id) {
+							nativeMediaLibrary.waitForIFrame();
+						}
+					}
+				});
 			});
 		}
 
@@ -91,6 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 			}
 			return null;
+		}
+
+		function sendDataToWizard(messageChannel) {
+			messageChannel.port1.postMessage({
+				type: 'photonicShortcode',
+				object: parseEditorSelection(photonicEditorSelection),
+			});
+		}
+
+		function getDataFromWizard(data) {
+			const win = window.dialogArguments || opener || parent || top;
+			win.send_to_editor(data.html);
 		}
 	};
 

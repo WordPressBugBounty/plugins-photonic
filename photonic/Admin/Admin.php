@@ -72,7 +72,7 @@ class Admin {
 
 	public function enqueue_wizard_scripts() {
 		if (current_user_can('edit_posts') && isset($_REQUEST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'])), 'photonic-wizard-' . get_current_user_id())) {
-			global $photonic_alternative_shortcode;
+			global $photonic_alternative_shortcode, $photonic_debug_on;
 			$safe_origin = '';
 			$url_parts = wp_parse_url(home_url());
 			$safe_origin_scheme = $url_parts['scheme'] ?? '';
@@ -92,6 +92,7 @@ class Admin {
 				/* Translators: 1: Open HTML tag 2: Close HTML tag */
 				'info_editor_block_select'     => sprintf(esc_html__('%1$sHint:%2$s To edit an existing Photonic block simply click on the block.', 'photonic'), '<strong>', '</strong>'),
 				'safe_origin'                  => $safe_origin,
+				'debug_on'                     => !empty($photonic_debug_on),
 			];
 			if (!empty($_REQUEST['shortcode'])) {
 				$wizard_js['shortcode'] = sanitize_text_field($_REQUEST['shortcode']);

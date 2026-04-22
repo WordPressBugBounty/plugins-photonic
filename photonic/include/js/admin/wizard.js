@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 			else if (event.origin !== Photonic_Wizard_JS.safe_origin) {
 				startupConnectionError = '<strong>ERROR: </strong>Photonic wizard failed to initiate communication with main page. <ul><li>Main window is on ' + event.origin + '</li><li>Wizard is in ' + Photonic_Wizard_JS.safe_origin + '</li></ul>';
-				console.log('Photonic failed to initialize communication. Main window is on ' + event.origin + ', Wizard is in ' + Photonic_Wizard_JS.safe_origin);
+				console.error('Photonic failed to initialize communication. Main window is in ' + event.origin + ', Wizard is in ' + Photonic_Wizard_JS.safe_origin);
 				if (startupConnectionError) {
 					document.querySelector('.photonic-editor-info').innerHTML += '<div>' + startupConnectionError + '</div>';
 				}
@@ -93,6 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			return doc.body;
 		}
 
+		function log(value) {
+			if (console !== undefined && Photonic_Wizard_JS.debug_on !== '0' && Photonic_Wizard_JS.debug_on !== '') {
+				console.log(value);
+			}
+		}
+
 		const postFlowData = (activeScreen, nextScreen, activeScreenElement, screenParameters, parameters) => {
 			post(Photonic_Wizard_JS.ajaxurl, parameters, data => {
 				let ret = getElement(data);
@@ -103,6 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					}
 					document.querySelector('.photonic-flow-screen[data-screen="' + activeScreen + '"]').before(ret.querySelector('.photonic-flow-error'));
 					activeScreenElement.setAttribute('data-submitted', '');
+					log('Parameters causing failure: activeScreen = ' + activeScreen + ', nextScreen = ' + nextScreen);
+					log(screenParameters);
+					log(parameters);
 				}
 				else {
 					if (document.querySelector('.photonic-flow-error')) {

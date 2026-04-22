@@ -99,7 +99,7 @@ let photonicBlockProperties; // Must use this, since the properties of a block a
 		 */
 		edit: function (props) {
 			let sourceMessageChannel;
-			let nativeMediaLibrary;
+			let nativeMediaLibrary = new PhotonicWPNativeUI(sendDataToWizard, getDataFromWizard);
 			let markup = [], iconClass = '';
 			let shortcode = props.attributes.shortcode || '{}';
 			shortcode = JSON.parse(shortcode);
@@ -128,54 +128,23 @@ let photonicBlockProperties; // Must use this, since the properties of a block a
 
 			const title = iconClass === '' ? __('Add Photonic Gallery', 'photonic') : __('Edit Photonic Gallery', 'photonic') + ' (' + __('Source: ', 'photonic') + providers[source] + ')';
 
-			function waitForIFrame() {
-				const observer = new MutationObserver(() => {
-					let iframe;
-					iframe = document.querySelector('#TB_iframeContent');
-					if (iframe) {
-						iframe.onload = () => {
-							sourceMessageChannel = new MessageChannel();
-							nativeMediaLibrary = new PhotonicWPNativeUI(sourceMessageChannel);
-							sourceMessageChannel.port1.onmessage = (event) => {
-								if (event.data.type === 'photonicAddTBClass') {
-									document.getElementById('TB_window').classList.add('photonic-tb');
-								}
-								else if (event.data.type === 'photonicInitializeMediaLibrary') {
-									nativeMediaLibrary.initializeMediaLibrary(event.data.mediaOptions, event.data.photonicOptions);
-								}
-								else if (event.data.type === 'photonicOpenMediaLibrary') {
-									nativeMediaLibrary.openMediaLibrary();
-								}
-								else if (event.data.type === 'photonicUpdateGallery') {
-									photonicBlockProperties.setAttributes({shortcode: event.data.props});
-									nativeMediaLibrary.closeTB();
-								}
-							};
-
-							// First, send a placeholder message to the iFrame and transfer port2 to it
-							iframe.contentWindow.postMessage('init', '/', [sourceMessageChannel.port2]);
-
-							// Second, send the actual shortcode
-							sourceMessageChannel.port1.postMessage({
-								type: 'photonicBlock',
-								object: photonicBlockProperties.attributes, // Must use this, since the properties of a block are getting reset in the "waitForIFrame" call
-							});
-						};
-					}
-				});
-
-				observer.observe(document.body, {
-					childList: true,
-					subtree: true
-				});
-			}
-
-			waitForIFrame();
+			nativeMediaLibrary.waitForIFrame();
 
 			const openWizard = () => {
 				photonicBlockProperties = props; // Must use this, since the properties of a block are getting reset in the "waitForIFrame" call
 				tb_show(title, Photonic_Gutenberg_JS.flow_url);
 			};
+
+			function sendDataToWizard(messageChannel) {
+				messageChannel.port1.postMessage({
+					type: 'photonicBlock',
+					object: photonicBlockProperties.attributes, // Must use this, since the properties of a block are getting reset in the "waitForIFrame" call
+				});
+			}
+
+			function getDataFromWizard(data) {
+				photonicBlockProperties.setAttributes({shortcode: data.props});
+			}
 
 			markup.push(
 				el('div', blockProps,

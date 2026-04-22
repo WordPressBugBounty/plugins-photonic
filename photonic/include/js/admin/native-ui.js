@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-	window.PhotonicWPNativeUI = function(messageChannel) {
-		let mediaLibrary;
+	window.PhotonicWPNativeUI = function(fnSendDataToWizard, fnGetDataFromWizard) {
+		let messageChannel, mediaLibrary;
+		const wpEditor = document.getElementById('wp-content-wrap'),
+			mceTab = document.getElementById('content-tmce'),
+			htmlTab = document.getElementById('content-html');
+		let lastClickedTab = wpEditor ? (wpEditor.classList.contains('tmce-active') ? mceTab : htmlTab) : htmlTab;
 
-		const initialize = function(mediaOptions, photonicOptions) {
+		const initializeMediaLibrary = function(mediaOptions, photonicOptions) {
 			mediaLibrary = top.wp.media(mediaOptions);
 
 			mediaLibrary.on('select', () => {
@@ -79,10 +83,48 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 
+		const waitForIFrame = function() {
+			const observer = new MutationObserver(() => {
+				let iframe;
+				iframe = document.querySelector('#TB_iframeContent');
+				if (iframe) {
+					iframe.onload = () => {
+						messageChannel = new MessageChannel();
+						// nativeMediaLibrary = new PhotonicWPNativeUI(sourceMessageChannel);
+
+						messageChannel.port1.onmessage = (event) => {
+							if (event.data.type === 'photonicAddTBClass') {
+								document.getElementById('TB_window').classList.add('photonic-tb');
+							}
+							else if (event.data.type === 'photonicInitializeMediaLibrary') {
+								initializeMediaLibrary(event.data.mediaOptions, event.data.photonicOptions);
+							}
+							else if (event.data.type === 'photonicOpenMediaLibrary') {
+								open();
+							}
+							else if (event.data.type === 'photonicUpdateGallery') {
+								fnGetDataFromWizard(event.data);
+								closeTB();
+							}
+						};
+
+						// First, send a placeholder message to the iFrame and transfer port2 to it
+						iframe.contentWindow.postMessage('init', '/', [messageChannel.port2]);
+
+						// Second, send the actual shortcode
+						fnSendDataToWizard(messageChannel);
+					};
+				}
+			});
+
+			observer.observe(document.body, {
+				childList: true,
+				subtree: true
+			});
+		};
+
 		return {
-			initializeMediaLibrary: initialize,
-			openMediaLibrary: open,
-			closeTB: closeTB
+			waitForIFrame: waitForIFrame
 		};
 	}
 });

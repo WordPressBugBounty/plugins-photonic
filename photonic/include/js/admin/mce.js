@@ -1,6 +1,13 @@
 let photonicClickedNode;
 (function($) {
 	tinymce.PluginManager.add('photonic', function(editor, url) {
+		const wizardButton = document.querySelector('#photonic-add-gallery');
+		const nativeMediaLibrary = new PhotonicWPNativeUI(sendDataToWizard, getDataFromWizard);
+		const mceTab = document.getElementById('content-tmce'), htmlTab = document.getElementById('content-html');
+		let lastClickedTab = mceTab; // We are in the MCE Editor, so this must be the clicked tab.
+
+		nativeMediaLibrary.waitForIFrame();
+
 		function html(cls, data, type) {
 			data = window.encodeURIComponent(data);
 			return '<img src="' + tinymce.Env.transparentSrc + '" class="wp-media mceItem ' + cls + '" ' + 'data-wp-media="' + data + '" data-mce-resize="false" data-mce-placeholder="1" alt="" title="Photonic ' + type + ' gallery" />';
@@ -258,65 +265,6 @@ let photonicClickedNode;
 				else {
 					this.content = html('wp-gallery photonic-gallery photonic-gallery-' + type, this.shortcode.string(), type === 'wp' ? 'WP' : type.substr(0, 1).toUpperCase() + type.substr(1));
 				}
-
-
-				let sourceMessageChannel, nativeMediaLibrary;
-
-				function waitForIFrame() {
-					const observer = new MutationObserver(() => {
-						let iframe;
-						iframe = document.querySelector('#TB_iframeContent');
-						if (iframe) {
-							iframe.onload = () => {
-								sourceMessageChannel = new MessageChannel();
-								nativeMediaLibrary = new PhotonicWPNativeUI(sourceMessageChannel);
-
-								sourceMessageChannel.port1.onmessage = (event) => {
-									if (event.data.type === 'photonicAddTBClass') {
-										document.getElementById('TB_window').classList.add('photonic-tb');
-									}
-									else if (event.data.type === 'photonicInitializeMediaLibrary') {
-										nativeMediaLibrary.initializeMediaLibrary(event.data.mediaOptions, event.data.photonicOptions);
-									}
-									else if (event.data.type === 'photonicOpenMediaLibrary') {
-										nativeMediaLibrary.openMediaLibrary();
-									}
-									else if (event.data.type === 'photonicUpdateGallery') {
-										if (photonicClickedNode) {
-											photonicClickedNode.setAttribute('data-wpview-text', encodeURIComponent(event.data.html));
-										}
-										else {
-											editor.execCommand('mceInsertContent', false, event.data.html);
-										}
-										nativeMediaLibrary.closeTB();
-									}
-								};
-
-								// First, send a placeholder message to the iFrame and transfer port2 to it
-								iframe.contentWindow.postMessage('init', '*', [sourceMessageChannel.port2]);
-
-								const shortcode = wp.mce.views.getText(photonicClickedNode);
-								const shortcodeObj = wp.shortcode.next(Photonic_Admin_JS.shortcode, shortcode);
-
-								// Second, send the actual shortcode
-								sourceMessageChannel.port1.postMessage({
-									type: 'photonicMCENode',
-									object: {
-										shortcode: shortcodeObj
-									}
-								});
-							};
-						}
-					});
-
-					observer.observe(document.body, {
-						childList: true,
-						subtree: true
-					});
-				}
-				waitForIFrame();
-
-
 			}
 		});
 
@@ -362,6 +310,48 @@ let photonicClickedNode;
 				return false;
 			}
 		});
+
+		function sendDataToWizard(messageChannel) {
+			const shortcode = wp.mce.views.getText(photonicClickedNode);
+			const shortcodeObj = wp.shortcode.next(Photonic_Admin_JS.shortcode, shortcode);
+
+			// Second, send the actual shortcode
+			messageChannel.port1.postMessage({
+				type: 'photonicMCENode',
+				object: {
+					shortcode: shortcodeObj
+				}
+			});
+		}
+
+		function getDataFromWizard(data) {
+			if (photonicClickedNode) {
+				photonicClickedNode.setAttribute('data-wpview-text', encodeURIComponent(data.html));
+			}
+			else {
+				editor.execCommand('mceInsertContent', false, data.html);
+			}
+		}
+
+		if (wizardButton) {
+			wizardButton.addEventListener('click', e => {
+				// Need to null this out, since a user can click on the button to add a new gallery, but the `photonicClickedNode` might be carrying the previously clicked node's data
+				photonicClickedNode = null;
+			});
+		}
+
+		if (mceTab && htmlTab) {
+			[mceTab, htmlTab].forEach(button => {
+				button.addEventListener('click', e => {
+					if (lastClickedTab.id !== button.id) {
+						lastClickedTab = button;
+						if (button.id === mceTab.id) {
+							nativeMediaLibrary.waitForIFrame();
+						}
+					}
+				});
+			});
+		}
 
 		wp.mce.views.register(Photonic_Admin_JS.shortcode, wp.mce.photonic_view_renderer);
 	});
