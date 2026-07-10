@@ -3,7 +3,7 @@
 namespace Photonic_Plugin\Options;
 
 abstract class Option_Tab {
-	protected $options;
+	protected array $options;
 
 	final public static function get_instance() {
 		static $instances = array();
@@ -18,7 +18,7 @@ abstract class Option_Tab {
 	/**
 	 * @return array
 	 */
-	public function get_options() {
+	public function get_options(): array {
 		return $this->options;
 	}
 

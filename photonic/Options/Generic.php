@@ -498,15 +498,6 @@ class Generic extends Option_Tab {
 			],
 
 			[
-				'name'     => "Overlaid (popup) Gallery Border",
-				'desc'     => "Setup the border of overlaid gallery (popup).",
-				'id'       => 'flickr_set_popup_thumb_border',
-				'grouping' => 'photos-pop',
-				'type'     => 'border',
-				'options'  => [],
-			],
-
-			[
 				'name'     => "Photo Template",
 				'desc'     => "Let Photonic use a standalone page as a template",
 				'category' => 'template-page',

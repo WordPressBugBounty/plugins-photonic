@@ -1,18 +1,30 @@
-# Copyright (C) 2025 Sayontan Sinha
+# Copyright (C) 2026 Sayontan Sinha
 # This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: Photonic Gallery & Lightbox for Flickr, SmugMug & "
-"Others 3.23\n"
+"Others 3.33\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/photonic\n"
-"POT-Creation-Date: 2025-12-31 22:15:33+00:00\n"
+"POT-Creation-Date: 2026-04-22 14:30:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: Add_Ons/Beaver/Beaver_Module.php:9 Add_Ons/Beaver/Beaver_Module.php:11
+msgid "Photonic"
+msgstr ""
+
+#: Add_Ons/Beaver/Beaver_Module.php:10
+msgid "A module to display a Photonic gallery"
+msgstr ""
+
+#: Add_Ons/Beaver/Beaver_Module.php:12 Admin/Forms/Vanilla_Form.php:991
+msgid "Gallery"
+msgstr ""
 
 #: Add_Ons/WP/Widget.php:16
 msgid "A widget for displaying a Photonic Gallery."
@@ -28,7 +40,7 @@ msgid ""
 "will be created."
 msgstr ""
 
-#: Add_Ons/WP/Widget.php:22 Core/Photonic.php:795
+#: Add_Ons/WP/Widget.php:22 Core/Photonic.php:802
 msgid "Click on the icon to edit your gallery."
 msgstr ""
 
@@ -40,50 +52,50 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: Add_Ons/WP/Widget.php:150 Core/Photonic.php:794
+#: Add_Ons/WP/Widget.php:150 Core/Photonic.php:801
 msgid "Current shortcode"
 msgstr ""
 
-#: Admin/Admin.php:59 Admin/Admin.php:66
+#: Admin/Admin.php:60 Admin/Admin.php:67
 msgid "Add / Edit Photonic Gallery"
 msgstr ""
 
-#: Admin/Admin.php:78
+#: Admin/Admin.php:85
 msgid "Insert Gallery"
 msgstr ""
 
-#: Admin/Admin.php:79
+#: Admin/Admin.php:86
 msgid "Update Gallery"
 msgstr ""
 
-#: Admin/Admin.php:80 Admin/Wizard/Source.php:40 Admin/Wizard/Wizard.php:40
+#: Admin/Admin.php:87 Admin/Wizard/Source.php:40 Admin/Wizard/Wizard.php:40
 msgid ""
 "Please fill the mandatory fields. Mandatory fields are marked with a red "
 "\"*\"."
 msgstr ""
 
-#: Admin/Admin.php:81
+#: Admin/Admin.php:88
 msgid "Select from WordPress Media Library"
 msgstr ""
 
-#: Admin/Admin.php:82
+#: Admin/Admin.php:89
 msgid "Select"
 msgstr ""
 
-#: Admin/Admin.php:83
+#: Admin/Admin.php:90
 msgid ""
 "The text selected in the editor is not a Photonic shortcode. Creating a new "
 "shortcode."
 msgstr ""
 
-#: Admin/Admin.php:84
+#: Admin/Admin.php:91
 msgid ""
 "The text selected in the editor is Photonic shortcode for Google Photos. "
 "With effect from April 2025, Google Photos is no longer supported. Creating "
 "a new shortcode."
 msgstr ""
 
-#: Admin/Admin.php:86
+#: Admin/Admin.php:93
 #. Translators: 1: Open HTML tag 2: Close HTML tag
 msgid "%1$sHint:%2$s To edit an existing Photonic block simply click on the block."
 msgstr ""
@@ -1132,10 +1144,6 @@ msgstr ""
 msgid "Photoset type"
 msgstr ""
 
-#: Admin/Forms/Vanilla_Form.php:991
-msgid "Gallery"
-msgstr ""
-
 #: Admin/Forms/Vanilla_Form.php:992
 msgid "Collection"
 msgstr ""
@@ -1340,7 +1348,7 @@ msgstr ""
 msgid "Group ID:"
 msgstr ""
 
-#: Admin/Helper.php:381 Admin/Wizard/Wizard.php:1062
+#: Admin/Helper.php:381 Admin/Wizard/Wizard.php:1068
 #: Platforms/Google_Photos.php:884
 msgid "Load More"
 msgstr ""
@@ -1349,7 +1357,7 @@ msgstr ""
 msgid "No albums found"
 msgstr ""
 
-#: Admin/Helper.php:416 Platforms/Base.php:188
+#: Admin/Helper.php:416 Platforms/Base.php:186
 msgid "%s Message:"
 msgid_plural "%s Messages:"
 msgstr[0] ""
@@ -1949,11 +1957,11 @@ msgstr ""
 msgid "Same as main gallery page"
 msgstr ""
 
-#: Admin/Wizard/Screen_Flow.php:64
+#: Admin/Wizard/Screen_Flow.php:65
 msgid "Choose Gallery Source"
 msgstr ""
 
-#: Admin/Wizard/Screen_Flow.php:96
+#: Admin/Wizard/Screen_Flow.php:97
 msgid ""
 "%1$sHint:%2$s To edit an existing shortcode select the shortcode before "
 "clicking on the \"Add / Edit Photonic Gallery\" button."
@@ -2454,65 +2462,65 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:568
+#: Admin/Wizard/Wizard.php:570
 msgid "Mark:"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:569
+#: Admin/Wizard/Wizard.php:571
 msgid "%1$sAll%2$s"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:570
+#: Admin/Wizard/Wizard.php:572
 msgid "%1$sNone%2$s"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:671
+#: Admin/Wizard/Wizard.php:673
 msgid "Pick Your Layout"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:672
+#: Admin/Wizard/Wizard.php:674
 msgid "You can configure the default settings from %s."
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:703
+#: Admin/Wizard/Wizard.php:705
 msgid "Configure Your Layout"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:866
+#: Admin/Wizard/Wizard.php:868
 msgid "Your shortcode"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:875
+#: Admin/Wizard/Wizard.php:877
 msgid ""
 "The above shortcode was generated based on your selections. You can either "
 "copy the above and paste it manually into your post, or click on the "
 "buttons below to insert it into or update your post"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:878
+#: Admin/Wizard/Wizard.php:880
 msgid "Your Gallery"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:879
+#: Admin/Wizard/Wizard.php:881
 msgid ""
 "Based on your selections a gallery with the following attributes will be "
 "generated. Please click on the buttons below to insert it into or update "
 "your post:"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:886
+#: Admin/Wizard/Wizard.php:888
 msgid ""
 "The following is the corresponding shortcode for this block. If for some "
 "reason you are unable to create a Photonic block you can paste this into a "
 "Shortcode block:"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:1075 Platforms/Flickr.php:1247
+#: Admin/Wizard/Wizard.php:1081 Platforms/Flickr.php:1247
 #: Platforms/Google_Photos.php:899
 msgid "No data returned. Error code %s"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:1080 Platforms/Flickr.php:1252
+#: Admin/Wizard/Wizard.php:1086 Platforms/Flickr.php:1252
 #: Platforms/Google_Photos.php:904
 msgid "No data returned. Empty response, or empty error code."
 msgstr ""
@@ -2657,7 +2665,7 @@ msgid ""
 "dashboard (%4$s).%5$s"
 msgstr ""
 
-#: Core/Front_End.php:67 Layouts/Core_Layout.php:29 Platforms/Base.php:54
+#: Core/Front_End.php:67 Layouts/Core_Layout.php:29 Platforms/Base.php:52
 msgid "This album is password-protected. Please provide a valid password."
 msgstr ""
 
@@ -2691,13 +2699,13 @@ msgstr ""
 msgid "See %1$shere%2$s for documentation."
 msgstr ""
 
-#: Core/Template.php:100
+#: Core/Template.php:103
 msgid ""
 "You are trying to display a gallery, but no gallery was found corresponding "
 "to the input."
 msgstr ""
 
-#: Core/Template.php:105
+#: Core/Template.php:108
 msgid "You are trying to display a gallery, but no input was provided."
 msgstr ""
 
@@ -2842,7 +2850,7 @@ msgstr ""
 msgid "Overlay - show photos in an overlay first"
 msgstr ""
 
-#: Platforms/Base.php:256
+#: Platforms/Base.php:254
 msgid "There was an error connecting to %s. Please try again later."
 msgstr ""
 

@@ -9,15 +9,15 @@ use Photonic_Plugin\Platforms\Base;
 require_once 'Grid_Figure.php';
 
 class Grid_Anchor implements Printable {
-	public $href;
-	public $id;
-	public $classes = [];
-	public $rel = [];
-	public $title = '';
-	public $data = [];
-	public $figcaption = '';
+	public string $href = '';
+	public string $id = '';
+	public array $classes = [];
+	public array $rel = [];
+	public string $title = '';
+	public array $data = [];
+	public string $figcaption = '';
 
-	public $indent = '';
+	public string $indent = '';
 
 	/**
 	 * @var Grid_Image $image

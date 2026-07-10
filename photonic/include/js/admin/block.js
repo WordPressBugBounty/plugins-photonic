@@ -4,7 +4,7 @@
 let photonicBlockProperties; // Must use this, since the properties of a block are getting reset in the "waitForIFrame" call
 (function (wp) {
 	const el = wp.element.createElement;
-	const __ = wp.i18n.__;
+	const {__, _x, _n, _nx} = wp.i18n;
 	let components = wp.components;
 	const iconEl = el('svg', {width: 23, height: 24, viewBox: "0 0 24 24"},
 		el('g', {transform: "scale(0.046785)"},
@@ -98,7 +98,6 @@ let photonicBlockProperties; // Must use this, since the properties of a block a
 		 * Called when Gutenberg initially loads the block.
 		 */
 		edit: function (props) {
-			let sourceMessageChannel;
 			let nativeMediaLibrary = new PhotonicWPNativeUI(sendDataToWizard, getDataFromWizard);
 			let markup = [], iconClass = '';
 			let shortcode = props.attributes.shortcode || '{}';

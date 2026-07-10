@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								fnGetDataFromWizard(event.data);
 								closeTB();
 							}
+							return true;
 						};
 
 						// First, send a placeholder message to the iFrame and transfer port2 to it

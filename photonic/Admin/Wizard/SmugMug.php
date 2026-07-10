@@ -6,7 +6,7 @@ use Photonic_Plugin\Core\Photonic;
 use Photonic_Plugin\Core\Utilities;
 
 class SmugMug extends Source {
-	private static $instance;
+	private static ?SmugMug $instance = null;
 
 	protected function __construct() {
 		parent::__construct();

@@ -9,12 +9,12 @@ use Photonic_Plugin\Platforms\Base;
 require_once 'Grid_Anchor.php';
 
 class Grid_Image implements Printable {
-	public $alt;
-	public $src_attr = 'src';
-	public $src = '';
-	public $classes = [];
-	public $dimensions = [];
-	public $lazy_load;
+	public string $alt = '';
+	public string $src_attr = 'src';
+	public string $src = '';
+	public array $classes = [];
+	public array $dimensions = [];
+	public string $lazy_load;
 
 	public function html(Base $module, Core_Layout $layout, $print = false): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		$img_dim = '';

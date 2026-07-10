@@ -56,7 +56,6 @@ class Defaults {
 			'enable_popup'                                    => '',
 			'popup_panel_width'                               => '80',
 			'flickr_gallery_panel_background'                 => ['color' => '#111111', 'image' => '', 'trans' => '0', 'position' => 'top left', 'repeat' => 'repeat', 'colortype' => 'custom'],
-			'flickr_set_popup_thumb_border'                   => self::default_border(),
 
 			// Generic - Photo Template
 			'gallery_template_page'                           => '',
@@ -354,16 +353,6 @@ class Defaults {
 			'lb-vb-settings',
 
 		];
-	}
-
-	public static function default_border() {
-		$ret = [
-			'top'    => ['colortype' => 'transparent', 'color' => '#c0c0c0', 'style' => 'none', 'border-width' => 0, 'border-width-type' => 'px'],
-			'right'  => ['colortype' => 'transparent', 'color' => '#c0c0c0', 'style' => 'none', 'border-width' => 0, 'border-width-type' => 'px'],
-			'bottom' => ['colortype' => 'custom', 'color' => '#c0c0c0', 'style' => 'none', 'border-width' => 0, 'border-width-type' => 'px'],
-			'left'   => ['colortype' => 'transparent', 'color' => '#c0c0c0', 'style' => 'none', 'border-width' => 0, 'border-width-type' => 'px'],
-		];
-		return $ret;
 	}
 
 	public static function get_migrated_options() {

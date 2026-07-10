@@ -35,7 +35,7 @@ class Single_Photo implements Printable {
 		$this->caption = $caption;
 	}
 
-	public function html(Base $module, Core_Layout $layout = null, $print = false): string {
+	public function html(Base $module, ?Core_Layout $layout = null, $print = false): string {
 		$ret = $layout->generate_single_photo_markup($this, $module);
 		if ($print) {
 			echo wp_kses($ret, Photonic::$safe_tags);

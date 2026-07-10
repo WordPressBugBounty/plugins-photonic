@@ -6,7 +6,7 @@ use Photonic_Plugin\Core\Photonic;
 use Photonic_Plugin\Core\Utilities;
 
 class Flickr extends Source {
-	private static $instance;
+	private static ?Flickr $instance = null;
 
 	protected function __construct() {
 		parent::__construct();

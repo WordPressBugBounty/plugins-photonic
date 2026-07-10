@@ -252,7 +252,7 @@ class DeviantArt extends OAuth2 implements Level_One_Module, Level_Two_Module, P
 		// TODO: Implement build_level_1_objects() method.
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
 		// TODO: Implement build_level_2_objects() method.
 	}
 

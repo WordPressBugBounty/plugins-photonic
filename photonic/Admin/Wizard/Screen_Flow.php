@@ -18,9 +18,9 @@ if (!current_user_can('edit_posts')) {
 }
 
 class Screen_Flow {
-	private $editor_shortcode;
+	private array $editor_shortcode;
 	private $input_shortcode;
-	private $editor_shortcode_text;
+	private ?string $editor_shortcode_text;
 
 	public function __construct() {
 		if (wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'] ?? '')), 'photonic-wizard-' . get_current_user_id())) {

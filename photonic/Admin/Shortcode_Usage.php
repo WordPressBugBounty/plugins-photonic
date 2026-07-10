@@ -22,8 +22,8 @@ if (!class_exists('WP_List_Table')) {
 
 class Shortcode_Usage extends WP_List_Table {
 	public $items = [];
-	public $tag;
-	private $per_page = 100;
+	public string $tag;
+	private int $per_page = 100;
 
 	public function __construct($args = []) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		parent::__construct(
@@ -42,7 +42,7 @@ class Shortcode_Usage extends WP_List_Table {
 	 *
 	 * @return array
 	 */
-	public function get_columns() {
+	public function get_columns(): array {
 		return [
 			'cb'         => '<input type="checkbox" />',
 			'title'      => esc_html__('Post Title', 'photonic'),
@@ -57,7 +57,7 @@ class Shortcode_Usage extends WP_List_Table {
 	 *
 	 * @return array
 	 */
-	public function get_sortable_columns() {
+	public function get_sortable_columns(): array {
 		return [
 			'type'   => ['type', true],
 			'title'  => ['title', true],
@@ -135,7 +135,7 @@ class Shortcode_Usage extends WP_List_Table {
 	 * @param string $column_name
 	 * @return null|string
 	 */
-	protected function column_default($item, $column_name) {
+	protected function column_default($item, $column_name): ?string {
 		return isset($item[$column_name]) ? esc_html($item[$column_name]) : null;
 	}
 
@@ -145,11 +145,11 @@ class Shortcode_Usage extends WP_List_Table {
 	 * @param object $item
 	 * @return string
 	 */
-	protected function column_cb($item) {
+	protected function column_cb($item): string {
 		return sprintf('<input type="checkbox" name="photonic_post[]" value="%s" />', $item['id']);
 	}
 
-	protected function column_title($item) {
+	protected function column_title($item): string {
 		$actions = [
 			'edit'                         => '<a href="' . get_edit_post_link($item['id']) . '">' . esc_html__('Edit', 'photonic') . '</a>',
 			'view'                         => '<a href="' . get_permalink($item['id']) . '">' . esc_html__('View', 'photonic') . '</a>',
@@ -159,7 +159,7 @@ class Shortcode_Usage extends WP_List_Table {
 		return $item['title'] . $this->row_actions($actions);
 	}
 
-	protected function column_shortcodes($item) {
+	protected function column_shortcodes($item): string {
 		return implode("<br/>\n", $item['shortcodes']);
 	}
 
@@ -167,15 +167,14 @@ class Shortcode_Usage extends WP_List_Table {
 		echo sprintf(esc_html__('No instances of Photonic found with the %s shortcode', 'photonic'), "<code>" . esc_html($this->tag) . "</code>");
 	}
 
-	protected function get_bulk_actions() {
-		$actions = [
+	protected function get_bulk_actions(): array {
+		return [
 			'replace_shortcode' => esc_html__('Replace Shortcode', 'photonic')
 		];
-		return $actions;
 	}
 
 	private function process_bulk_action() {
-		if ('replace_shortcode' === $this->current_action() && !empty($_POST['photonic_post']) && wp_verify_nonce('photonic-replace-shortcode-' . get_current_user_id(), '_photonic_replacement_nonce')) {
+		if ('replace_shortcode' === $this->current_action() && !empty($_POST['photonic_post']) && !empty($_POST['_photonic_replacement_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_photonic_replacement_nonce'])), 'photonic-replace-shortcode-' . get_current_user_id())) {
 			$post_ids = $_POST['photonic_post']; // Cannot sanitize this since it is an array. Will sanitize each of its components in the array_walk.
 			array_walk($post_ids, 'sanitize_text_field');
 		}

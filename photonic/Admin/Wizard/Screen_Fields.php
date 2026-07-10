@@ -16,8 +16,8 @@ use Photonic_Plugin\Core\Utilities;
  * @since 2.00
  */
 class Screen_Fields {
-	public $layout_options;
-	private $paths;
+	public array $layout_options;
+	private array $paths;
 
 	public function __construct() {
 		require_once 'Source.php';

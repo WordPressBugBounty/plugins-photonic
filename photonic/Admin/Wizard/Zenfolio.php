@@ -6,7 +6,7 @@ use Photonic_Plugin\Core\Utilities;
 use WpOrg\Requests\Requests;
 
 class Zenfolio extends Source {
-	private static $instance;
+	private static ?Zenfolio $instance = null;
 
 	protected function __construct() {
 		parent::__construct();
@@ -397,7 +397,7 @@ class Zenfolio extends Source {
 		$category_list = ['' => ''];
 
 		if (!is_wp_error($response)) {
-			if (isset($response['response']) && isset($response['response']['code'])) {
+			if (isset($response['response']['code'])) {
 				if (200 === $response['response']['code']) {
 					if (isset($response['body'])) {
 						$response = simplexml_load_string($response['body']);

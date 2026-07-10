@@ -524,12 +524,14 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 	 */
 	private function set_lazy_loading_attributes(bool $all_sizes_present, array $grid_figures): void {
 		if ($all_sizes_present) {
+			/** @var Grid_Figure $figure */
 			foreach ($grid_figures as $figure) {
 				$figure->anchor->image->lazy_load = 'lazy';
 				$figure->anchor->image->src_attr  = 'data-src';
 			}
 		}
 		else {
+			/** @var Grid_Figure $figure */
 			foreach ($grid_figures as $figure) {
 				$figure->anchor->image->lazy_load = 'eager';
 				$figure->anchor->image->src_attr  = 'src';

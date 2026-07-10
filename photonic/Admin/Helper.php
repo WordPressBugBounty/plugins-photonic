@@ -145,7 +145,7 @@ class Helper extends Admin_Page {
 
 	public function invoke_helper() {
 		if (current_user_can('edit_posts') && check_admin_referer('photonic-helper-' . get_current_user_id(), 'photonic_helper_nonce')) {
-			if (isset($_POST['helper']) && !empty($_POST['helper'])) {
+			if (!empty($_POST['helper'])) {
 				$helper = sanitize_text_field($_POST['helper']);
 				$photonic_options = get_option('photonic_options');
 				switch ($helper) {
@@ -231,7 +231,7 @@ class Helper extends Admin_Page {
 	private function execute_query($where, $url, $method) {
 		$response = wp_remote_request($url, ['sslverify' => PHOTONIC_SSL_VERIFY]);
 		if (!is_wp_error($response)) {
-			if (isset($response['response']) && isset($response['response']['code'])) {
+			if (isset($response['response']['code'])) {
 				if (200 === $response['response']['code']) {
 					if (isset($response['body'])) {
 						if ('flickr' === $where) {

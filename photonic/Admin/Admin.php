@@ -43,7 +43,7 @@ class Admin {
 		$screen = get_current_screen();
 
 		// check if WYSIWYG is enabled
-		if (user_can_richedit() && empty($photonic_disable_editor) && !in_array($_REQUEST['post_type'] ?? 'post', $disabled_types, true) && 'post' === $screen->base) {
+		if (user_can_richedit() && empty($photonic_disable_editor) && !in_array($_REQUEST['post_type'] ?? 'post', $disabled_types, true) && 'post' === $screen->base) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->prepare_mce_data();
 			add_filter('mce_external_plugins', [$this, 'mce_photonic'], 5);
 			add_filter('mce_buttons', [$this, 'mce_flow_button'], 5);
@@ -62,7 +62,7 @@ class Admin {
 	}
 
 	public function open_wizard() {
-		define('IFRAME_REQUEST', true);
+		define('IFRAME_REQUEST', true); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 		$this->enqueue_wizard_scripts();
 		iframe_header(esc_html__('Add / Edit Photonic Gallery', 'photonic'));
 		require_once PHOTONIC_PATH . '/Admin/Wizard/Screen_Flow.php';
@@ -265,7 +265,7 @@ class Admin {
 			];
 			wp_localize_script('photonic-editor', 'Photonic_Editor_JS', $editor_js);
 
-			if (empty($photonic_disable_editor) && !in_array($_REQUEST['post_type'] ?? 'post', $disabled_types, true)) {
+			if (empty($photonic_disable_editor) && !in_array($_REQUEST['post_type'] ?? 'post', $disabled_types, true)) { // phpcs:ignore WordPress.Security.NonceVerification
 				$this->prepare_mce_data();
 
 				add_editor_style(PHOTONIC_URL . 'include/css/admin/admin-editor.css?' . Photonic::get_version(PHOTONIC_PATH . '/include/css/admin/admin-editor.css'));
@@ -295,33 +295,27 @@ class Admin {
 	}
 
 	public function enqueue_gutenberg_assets() {
-		if (function_exists('register_block_type')) {
-			wp_enqueue_script('photonic-native-ui', PHOTONIC_URL . 'include/js/admin/native-ui.js', ['shortcode', 'thickbox'], Photonic::get_version(PHOTONIC_PATH . '/include/js/admin/native-ui.js'), false);
-			wp_enqueue_script(
-				'photonic-gutenberg',
-				PHOTONIC_URL . 'include/js/admin/block.js',
-				['wp-blocks', 'wp-i18n', 'wp-element', 'shortcode', 'thickbox', 'photonic-native-ui'],
-				Photonic::get_version(PHOTONIC_PATH . '/include/js/admin/block.js'),
-				false
-			);
+		wp_enqueue_script('photonic-native-ui', PHOTONIC_URL . 'include/js/admin/native-ui.js', ['shortcode', 'thickbox'], Photonic::get_version(PHOTONIC_PATH . '/include/js/admin/native-ui.js'), false);
+		wp_enqueue_script(
+			'photonic-gutenberg',
+			PHOTONIC_URL . 'include/js/admin/block.js',
+			['wp-blocks', 'wp-i18n', 'wp-element', 'shortcode', 'thickbox', 'photonic-native-ui'],
+			Photonic::get_version(PHOTONIC_PATH . '/include/js/admin/block.js'),
+			false
+		);
 
-			if (function_exists('gutenberg_get_jed_locale_data')) {
-				$locale = gutenberg_get_jed_locale_data('photonic');
-				$content = 'wp.i18n.setLocaleData(' . wp_json_encode($locale) . ', "photonic");';
-				wp_script_add_data('photonic-gutenberg', 'data', $content);
-			}
+		wp_set_script_translations('photonic-gutenberg', 'photonic');
 
-			$url = $this->get_wizard_modal_url();
-			$js_array = $this->get_wizard_js_parameters($url);
-			wp_localize_script('photonic-gutenberg', 'Photonic_Gutenberg_JS', $js_array);
+		$url = $this->get_wizard_modal_url();
+		$js_array = $this->get_wizard_js_parameters($url);
+		wp_localize_script('photonic-gutenberg', 'Photonic_Gutenberg_JS', $js_array);
 
-			wp_enqueue_style(
-				'photonic-gutenberg',
-				PHOTONIC_URL . 'include/css/admin/admin-block.css',
-				['thickbox'],
-				Photonic::get_version(PHOTONIC_PATH . '/include/css/admin/admin-block.css')
-			);
-		}
+		wp_enqueue_style(
+			'photonic-gutenberg',
+			PHOTONIC_URL . 'include/css/admin/admin-block.css',
+			['thickbox'],
+			Photonic::get_version(PHOTONIC_PATH . '/include/css/admin/admin-block.css')
+		);
 	}
 
 	public function enqueue_fse_assets() {
@@ -341,8 +335,9 @@ class Admin {
 	 * @param $tabs
 	 * @return array
 	 */
-	public function media_upload_tabs($tabs) {
-		if (!function_exists('is_gutenberg_page') || (function_exists('is_gutenberg_page') && !is_gutenberg_page())) {
+	public function media_upload_tabs($tabs): array {
+		$current_screen = get_current_screen();
+		if (!empty($current_screen) && $current_screen->is_block_editor()) {
 			$tabs['photonic'] = 'Photonic';
 		}
 		return $tabs;
@@ -371,7 +366,7 @@ class Admin {
 		global $photonic_disable_editor, $photonic_disable_editor_post_type;
 		$disabled_types = explode(',', $photonic_disable_editor_post_type);
 		// check if WYSIWYG is enabled
-		if (user_can_richedit() && empty($photonic_disable_editor) && !in_array($_REQUEST['post_type'] ?? 'post', $disabled_types, true)) {
+		if (user_can_richedit() && empty($photonic_disable_editor) && !in_array($_REQUEST['post_type'] ?? 'post', $disabled_types, true)) { // phpcs:ignore WordPress.Security.NonceVerification
 			require_once PHOTONIC_PATH . '/Admin/Forms/Edit_Gallery_Templates.php';
 		}
 	}
@@ -385,9 +380,9 @@ class Admin {
 			$user = wp_rand(1);
 		}
 
-		$post = empty($_REQUEST['post']) ? '' : sanitize_text_field($_REQUEST['post']);
+		$post = empty($_REQUEST['post']) ? '' : sanitize_text_field($_REQUEST['post']); // phpcs:ignore WordPress.Security.NonceVerification
 
-		$url = add_query_arg(
+		return add_query_arg(
 			[
 				'action'    => 'photonic_wizard',
 				'class'     => 'photonic-flow',
@@ -399,7 +394,6 @@ class Admin {
 			],
 			admin_url('admin.php')
 		);
-		return $url;
 	}
 
 	/**
@@ -408,7 +402,7 @@ class Admin {
 	 */
 	private function get_wizard_js_parameters($url): array {
 		global $photonic_alternative_shortcode, $photonic_disable_flow_editor, $photonic_disable_flow_editor_global;
-		$js_array = [
+		return [
 			'flow_url'             => $url,
 			'ajaxurl'              => admin_url('admin-ajax.php'),
 			'shortcode'            => sanitize_text_field($photonic_alternative_shortcode ?: 'gallery'),
@@ -416,7 +410,6 @@ class Admin {
 			'default_gallery_type' => 'default',
 			'plugin_dir'           => plugin_dir_url(__FILE__),
 		];
-		return $js_array;
 	}
 }
 

@@ -574,7 +574,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	 * @param Pagination|null $pagination
 	 * @return array
 	 */
-	public function build_level_2_objects($objects_or_response, array $short_code, array $remove = [], array &$options = [], Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $remove = [], array &$options = [], ?Pagination &$pagination = null): array {
 		$filter    = $short_code['filter'];
 		$filters   = empty($filter) ? [] : explode(',', $filter);
 		$processed = [];

@@ -11,10 +11,13 @@ class Template {
 	public function __construct() {
 		add_filter('the_content', [&$this, 'load_gallery'], 100, 1);
 		add_filter('the_title', [&$this, 'set_header_title'], 10, 2);
-/*		add_filter('wp_title', [&$this, 'set_meta_title'], 10, 3);
+
+		/*
+		add_filter('wp_title', [&$this, 'set_meta_title'], 10, 3);
 		if (current_theme_supports('title-tag')) {
 			add_filter('pre_get_document_title', [&$this, 'set_meta_title'], 10, 1);
-		}*/
+		}
+		*/
 	}
 
 	/**
@@ -28,8 +31,8 @@ class Template {
 		global $photonic_page_title, $photonic_gallery_template_page;
 		if (!empty($id)) {
 			if (!empty($photonic_gallery_template_page) && is_page($photonic_gallery_template_page) && 'replace-if-available' === $photonic_page_title && absint($photonic_gallery_template_page) === absint($id)) {
-				if (isset($_REQUEST['photonic_gallery_title'])) {
-					return wptexturize(stripslashes_deep(wp_kses_post($_REQUEST['photonic_gallery_title'])));
+				if (isset($_REQUEST['photonic_gallery_title'])) { // phpcs:ignore WordPress.Security.NonceVerification
+					return wptexturize(stripslashes_deep(wp_kses_post($_REQUEST['photonic_gallery_title']))); // phpcs:ignore WordPress.Security.NonceVerification
 				}
 			}
 		}
@@ -47,8 +50,8 @@ class Template {
 		global $photonic_page_meta_title, $photonic_gallery_template_page;
 		$id = get_queried_object_id();
 
-		if (!empty($_REQUEST['photonic_gallery_title']) && !empty($photonic_gallery_template_page) && is_page($photonic_gallery_template_page) && 'page' !== $photonic_page_meta_title && absint($photonic_gallery_template_page) === absint($id)) {
-			$album_title = wptexturize(stripslashes_deep(wp_kses_post($_REQUEST['photonic_gallery_title'])));
+		if (!empty($_REQUEST['photonic_gallery_title']) && !empty($photonic_gallery_template_page) && is_page($photonic_gallery_template_page) && 'page' !== $photonic_page_meta_title && absint($photonic_gallery_template_page) === absint($id)) { // phpcs:ignore WordPress.Security.NonceVerification
+			$album_title = wptexturize(stripslashes_deep(wp_kses_post($_REQUEST['photonic_gallery_title']))); // phpcs:ignore WordPress.Security.NonceVerification
 
 			if ('replace-if-available' === $photonic_page_meta_title) {
 				return $album_title;
@@ -74,11 +77,11 @@ class Template {
 		global $photonic_gallery_template_page;
 		if (!empty($photonic_gallery_template_page) && is_page($photonic_gallery_template_page)) {
 			// Cannot check nonce for front-end gallery, but will vet the request fully
-			if (isset($_REQUEST['photonic_gallery'])) {
+			if (isset($_REQUEST['photonic_gallery'])) { // phpcs:ignore WordPress.Security.NonceVerification
 				global $photonic_alternative_shortcode;
 
 				$shortcode_tag = esc_attr($photonic_alternative_shortcode ?: 'gallery');
-				$shortcode = sanitize_text_field($_REQUEST['photonic_gallery']);
+				$shortcode = sanitize_text_field($_REQUEST['photonic_gallery']); // phpcs:ignore WordPress.Security.NonceVerification
 				$shortcode = base64_decode($shortcode); // The `encode` is defined in Core.php's get_gallery_url method. We check this in the following steps.
 
 				// Input is coming via a URL, so we have to ensure it is safe.

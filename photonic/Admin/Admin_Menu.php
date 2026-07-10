@@ -6,8 +6,8 @@ use Photonic_Plugin\Core\Photonic;
 use Photonic_Plugin\Options\Defaults;
 
 class Admin_Menu {
-	private $file;
-	private $core;
+	private string $file;
+	private Photonic $core;
 
 	public function __construct($file, $core) {
 		$this->file = $file;
@@ -70,8 +70,9 @@ class Admin_Menu {
 	 * the Options_Manager at compile-time.
 	 *
 	 * @param $options
+	 * @return array
 	 */
-	public function validate_options($options) {
+	public function validate_options($options): array {
 		require_once 'Options_Manager.php';
 		$options_manager = new Options_Manager($this->file, $this->core);
 		return $options_manager->validate_options($options);

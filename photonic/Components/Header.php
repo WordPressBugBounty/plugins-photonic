@@ -12,67 +12,67 @@ use Photonic_Plugin\Platforms\Base;
  * @package Photonic_Plugin\Components
  */
 class Header implements Printable {
-	public $id; // Used primarily for Flickr collections, to facilitate expansion
+	public string $id = ''; // Used primarily for Flickr collections, to facilitate expansion
 
 	/**
 	 * @var $title string All headers have a title
 	 */
-	public $title;
+	public string $title;
 
 	/**
 	 * @var $description string Some headers have a description
 	 */
-	public $description;
+	public string $description;
 
 	/**
 	 * @var $thumb_url string The URL for the thumbnail to be shown in the header. Exists if the platform provides an album thumbnail
 	 */
-	public $thumb_url;
+	public string $thumb_url = '';
 
 	/**
 	 * @var string $page_url The URL for the level 2 or level 3 object represented by the header
 	 */
-	public $page_url;
+	public string $page_url = '';
 
 	/**
 	 * @var string $header_for Indicates what type of object is being displayed like gallery / photoset / album etc. This is added to the CSS class.
 	 */
-	public $header_for;
+	public string $header_for;
 
 	/**
 	 * @var array $hidden_elements Contains the elements that should be hidden from the header display.
 	 */
-	public $hidden_elements = [];
+	public array $hidden_elements = [];
 
 	/**
 	 * @var array $counters Contains counts of the object that the header represents. In most cases this has just one value. Zenfolio objects have multiple values.
 	 */
-	public $counters = [];
+	public array $counters = [];
 
 	/**
 	 * @var bool $enable_link Should clicking on the thumbnail / title take you anywhere?
 	 */
-	public $enable_link;
+	public bool $enable_link = false;
 
 	/**
 	 * @var string $display_location Is this header in a local, modal, lighbtox or template location?
 	 */
-	public $display_location = 'local';
+	public string $display_location = 'local';
 
 	/**
 	 * @var bool $iterate_level_3 If this is a level 3 header, this field indicates whether an expansion icon should be shown. This is to improve performance for Flickr collections.
 	 */
-	public $iterate_level_3 = true;
+	public bool $iterate_level_3 = true;
 
 	/**
 	 * @var $layout string What layout is this a header for? Also used by Flickr, when the "+" is clicked for a collection
 	 */
-	public $layout;
+	public string $layout = '';
 
 	/**
 	 * {@inheritDoc} - a Header
 	 */
-	public function html(Base $module, Core_Layout $layout = null, $print = false): string {
+	public function html(Base $module, ?Core_Layout $layout = null, $print = false): string {
 		$ret = $layout->generate_header_markup($this, $module);
 		if ($print) {
 			echo wp_kses($ret, Photonic::$safe_tags);

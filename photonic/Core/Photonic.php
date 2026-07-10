@@ -9,13 +9,13 @@ use WP_Error;
 
 class Photonic {
 	public $defaults;
-	public $localized;
-	public $provider_map;
-	public $admin_menu;
-	public static $library;
-	public static $lightbox_replacements;
-	public static $safe_tags;
-	public static $safe_title_tags;
+	public bool $localized;
+	public array $provider_map;
+	public ?Admin_Menu $admin_menu;
+	public static string $library;
+	public static array $lightbox_replacements;
+	public static array $safe_tags;
+	public static array $safe_title_tags;
 
 	public function __construct() {
 		// $start = microtime(true);
@@ -541,7 +541,6 @@ class Photonic {
 			}
 			$css .= ".photonic-panel { " .
 				$front_end->get_bg_css('photonic_flickr_gallery_panel_background') .
-				$front_end->get_border_css('photonic_flickr_set_popup_thumb_border') .
 				" }\n";
 
 			$css .= ".photonic-random-layout .photonic-thumb { padding: " . esc_attr($photonic_tile_spacing) . "px}\n";
@@ -599,7 +598,7 @@ class Photonic {
 		$this->conditionally_add_scripts();
 		$images = $this->get_gallery_images($attr);
 
-		if (isset($images) && !is_array($images)) {
+		if (!is_array($images)) {
 			return wp_kses($images, self::$safe_tags);
 		}
 

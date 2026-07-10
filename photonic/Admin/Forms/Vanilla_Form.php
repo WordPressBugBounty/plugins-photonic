@@ -8,9 +8,9 @@ use Photonic_Plugin\Core\Utilities;
  * Contains all fields required on the add / edit forms for the gallery.
  */
 class Vanilla_Form {
-	private $fields;
-	private $default_layout;
-	private static $instance = null;
+	private array $fields;
+	private string $default_layout;
+	private static ?Vanilla_Form $instance = null;
 
 	private function __construct() {
 		global $photonic_thumbnail_style;
@@ -19,24 +19,24 @@ class Vanilla_Form {
 		$this->fields = [];
 		$this->fields['default'] = $this->get_wp_fields();
 		$this->fields['flickr'] = $this->get_flickr_fields();
-		$this->fields['google'] = $this->get_google_fields();
+		// $this->fields['google'] = $this->get_google_fields();
 		$this->fields['smugmug'] = $this->get_smugmug_fields();
 		$this->fields['zenfolio'] = $this->get_zenfolio_fields();
-		$this->fields['instagram'] = $this->get_instagram_fields();
+		// $this->fields['instagram'] = $this->get_instagram_fields();
 	}
 
-	public static function get_instance() {
+	public static function get_instance(): Vanilla_Form {
 		if (null === self::$instance) {
 			self::$instance = new Vanilla_Form();
 		}
 		return self::$instance;
 	}
 
-	public function get_fields() {
+	public function get_fields(): array {
 		return $this->fields;
 	}
 
-	private function get_wp_fields() {
+	private function get_wp_fields(): array {
 		global $photonic_wp_title_caption;
 		return [
 			'name'   => esc_html__('WP Galleries', 'photonic'),
@@ -174,7 +174,7 @@ class Vanilla_Form {
 		];
 	}
 
-	private function get_flickr_fields() {
+	private function get_flickr_fields(): array {
 		global $photonic_flickr_title_caption, $photonic_flickr_thumb_size, $photonic_flickr_main_size, $photonic_flickr_media;
 		return [
 			'name'    => esc_html__('Flickr', 'photonic'),
@@ -466,7 +466,7 @@ class Vanilla_Form {
 		];
 	}
 
-	private function get_google_fields() {
+	private function get_google_fields(): array {
 		global $photonic_google_media;
 		return [
 			'name'    => esc_html__('Google Photos', 'photonic'),
@@ -673,7 +673,7 @@ class Vanilla_Form {
 		];
 	}
 
-	private function get_smugmug_fields() {
+	private function get_smugmug_fields(): array {
 		global $photonic_smug_title_caption, $photonic_smug_thumb_size, $photonic_smug_main_size, $photonic_smug_media;
 		return [
 			'name'    => esc_html__('SmugMug', 'photonic'),
@@ -919,7 +919,7 @@ class Vanilla_Form {
 		];
 	}
 
-	private function get_zenfolio_fields() {
+	private function get_zenfolio_fields(): array {
 		global $photonic_zenfolio_title_caption, $photonic_zenfolio_thumb_size, $photonic_zenfolio_main_size, $photonic_zenfolio_media;
 		return [
 			'name'    => esc_html__('Zenfolio', 'photonic'),
@@ -1157,7 +1157,7 @@ class Vanilla_Form {
 		];
 	}
 
-	private function get_instagram_fields() {
+	private function get_instagram_fields(): array {
 		global $photonic_instagram_media;
 		return [
 			'name'    => esc_html__('Instagram', 'photonic'),
@@ -1257,7 +1257,7 @@ class Vanilla_Form {
 		];
 	}
 
-	public static function get_image_sizes_selection($element_name, $show_full = false) {
+	public static function get_image_sizes_selection($element_name, $show_full = false): string {
 		$image_sizes = Utilities::get_wp_image_sizes($show_full);
 		$ret = "<select name='$element_name'>";
 		foreach ($image_sizes as $size_name => $size_attrs) {

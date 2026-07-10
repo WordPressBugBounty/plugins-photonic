@@ -1,5 +1,14 @@
 == Changelog ==
 
+= 3.33 =
+
+*	Fixed: Deprecation issues with PHP 8.4
+*	Changed: Minimum PHP version supported now is 7.4
+*	Changed: Improved translation support for blocks
+*	Removed: Option to set the overlaid modal's border
+*	Fixed: Bulk shortcode replacement functionality was broken.
+*	Fixed: Z-Index conflict with Beaver Builder
+
 = 3.32 =
 
 *	Fixed: Bug that was causing an error in the wizard, "Invalid screen value: 6" in some scenarios.

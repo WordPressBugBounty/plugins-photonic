@@ -13,12 +13,12 @@ if (!current_user_can('edit_posts')) {
  * the right arguments for native WP galleries, Flickr, Google Photos, SmugMug, Zenfolio and Instagram.
  */
 class Add_Gallery {
-	private static $instance = null;
+	private static ?Add_Gallery $instance = null;
 
 	private function __construct() {
 	}
 
-	public static function get_instance() {
+	public static function get_instance(): Add_Gallery {
 		if (null === self::$instance) {
 			self::$instance = new Add_Gallery();
 		}
@@ -29,7 +29,7 @@ class Add_Gallery {
 		global $photonic_alternative_shortcode;
 		$shortcode = empty($photonic_alternative_shortcode) ? 'gallery' : $photonic_alternative_shortcode;
 
-		$selected_tab = sanitize_text_field($_GET['photonic-tab'] ?? 'default');
+		$selected_tab = sanitize_text_field($_GET['photonic-tab'] ?? 'default'); // phpcs:ignore WordPress.Security.NonceVerification
 		if (!in_array($selected_tab, ['default', 'flickr', 'google', 'smugmug', 'zenfolio', 'instagram'], true)) {
 			$selected_tab = 'default';
 		}

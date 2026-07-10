@@ -5,8 +5,8 @@ use Photonic_Plugin\Admin\Authentication;
 use Photonic_Plugin\Admin\Helper;
 
 class AJAX {
-	private $core;
-	private static $instance = null;
+	private Photonic $core;
+	private static ?AJAX $instance = null;
 
 	/**
 	 * AJAX constructor.
@@ -59,17 +59,17 @@ class AJAX {
 	 */
 	public function display_level_2_contents() {
 		// Cannot use a nonce here. Users often cache the gallery markup, which would cache the nonce. This would make it impossible to run this call after a certain amount of time.
-		$panel = sanitize_text_field(wp_unslash($_POST['panel_id'] ?? ''));
+		$panel = sanitize_text_field(wp_unslash($_POST['panel_id'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 		$components = explode('-', $panel);
 
 		if (count($components) <= 5) {
 			die();
 		}
 		$panel = implode('-', array_slice($components, 4, 10, true));
-		$query = sanitize_text_field($_POST['query'] ?? '');
+		$query = sanitize_text_field($_POST['query'] ?? ''); // phpcs:ignore WordPress.Security.NonceVerification
 		$query = wp_parse_args($query);
 
-		$popup = sanitize_text_field(wp_unslash($_POST['popup'] ?? ''));
+		$popup = sanitize_text_field(wp_unslash($_POST['popup'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 		if (empty($popup)) {
 			$location = 'lightbox';
 		}
@@ -84,9 +84,9 @@ class AJAX {
 			'display'    => $location,
 			'layout'     => 'square',
 			'panel'      => $panel,
-			'password'   => !empty($_POST['password']) ? sanitize_text_field($_POST['password']) : '',
-			'count'      => sanitize_text_field($_POST['photo_count']),
-			'photo_more' => sanitize_text_field($_POST['photo_more']),
+			'password'   => !empty($_POST['password']) ? sanitize_text_field($_POST['password']) : '', // phpcs:ignore WordPress.Security.NonceVerification
+			'count'      => sanitize_text_field($_POST['photo_count']), // phpcs:ignore WordPress.Security.NonceVerification
+			'photo_more' => sanitize_text_field($_POST['photo_more']), // phpcs:ignore WordPress.Security.NonceVerification
 			'main_size'  => $query['main_size'],
 			'type'       => $components[1]
 		];
@@ -101,18 +101,18 @@ class AJAX {
 			elseif ('zenfolio' === $provider) {
 				$args['view'] = 'photosets';
 				$args['object_id'] = $components[4];
-				$args['thumb_size'] = sanitize_text_field($_POST['overlay_size']);
-				$args['video_size'] = sanitize_text_field($_POST['overlay_video_size']);
-				if (isset($_POST['realm_id'])) {
-					$args['realm_id'] = sanitize_text_field($_POST['realm_id']);
+				$args['thumb_size'] = sanitize_text_field($_POST['overlay_size']); // phpcs:ignore WordPress.Security.NonceVerification
+				$args['video_size'] = sanitize_text_field($_POST['overlay_video_size']); // phpcs:ignore WordPress.Security.NonceVerification
+				if (isset($_POST['realm_id'])) { // phpcs:ignore WordPress.Security.NonceVerification
+					$args['realm_id'] = sanitize_text_field($_POST['realm_id']); // phpcs:ignore WordPress.Security.NonceVerification
 				}
 			}
 			elseif ('google' === $provider) {
 				$args['view'] = 'photos';
 				$args['album_id'] = implode('-', array_slice($components, 4, (count($components) - 1) - 4));
-				$args['thumb_size'] = sanitize_text_field($_POST['overlay_size']);
-				$args['video_size'] = sanitize_text_field($_POST['overlay_video_size']);
-				$args['crop_thumb'] = sanitize_text_field($_POST['overlay_crop']);
+				$args['thumb_size'] = sanitize_text_field($_POST['overlay_size']); // phpcs:ignore WordPress.Security.NonceVerification
+				$args['video_size'] = sanitize_text_field($_POST['overlay_video_size']); // phpcs:ignore WordPress.Security.NonceVerification
+				$args['crop_thumb'] = sanitize_text_field($_POST['overlay_crop']); // phpcs:ignore WordPress.Security.NonceVerification
 			}
 			elseif ('flickr' === $provider) {
 				if ('gallery' === $type) {
@@ -122,8 +122,8 @@ class AJAX {
 				elseif ('set' === $type) {
 					$args['photoset_id'] = $components[4];
 				}
-				$args['thumb_size'] = sanitize_text_field($_POST['overlay_size']);
-				$args['video_size'] = sanitize_text_field($_POST['overlay_video_size']);
+				$args['thumb_size'] = sanitize_text_field($_POST['overlay_size']); // phpcs:ignore WordPress.Security.NonceVerification
+				$args['video_size'] = sanitize_text_field($_POST['overlay_video_size']); // phpcs:ignore WordPress.Security.NonceVerification
 			}
 
 			$gallery = new Gallery($args);
@@ -138,7 +138,7 @@ class AJAX {
 	 */
 	public function display_level_3_contents() {
 		// Cannot use a nonce here. Users often cache the gallery markup, which would cache the nonce. This would make it impossible to run this call after a certain amount of time.
-		$node = sanitize_text_field(wp_unslash($_POST['node'] ?? ''));
+		$node = sanitize_text_field(wp_unslash($_POST['node'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 		$components = explode('-', $node);
 
 		if (count($components) <= 3) {
@@ -148,8 +148,8 @@ class AJAX {
 		$args = [
 			'display' => 'local',
 			'headers' => '',
-			'layout' => sanitize_text_field($_POST['layout'] ?? null),
-			'stream' => sanitize_text_field(wp_unslash($_POST['stream'] ?? ''))
+			'layout' => sanitize_text_field($_POST['layout'] ?? null), // phpcs:ignore WordPress.Security.NonceVerification
+			'stream' => sanitize_text_field(wp_unslash($_POST['stream'] ?? '')) // phpcs:ignore WordPress.Security.NonceVerification
 		];
 
 		$provider = $components[0];
@@ -166,8 +166,8 @@ class AJAX {
 
 	public function load_more() {
 		// Cannot use a nonce here. Users often cache the gallery markup, which would cache the nonce. This would make it impossible to run this call after a certain amount of time.
-		$provider = sanitize_text_field(wp_unslash($_POST['provider'] ?? ''));
-		$query = sanitize_text_field($_POST['query'] ?? '');
+		$provider = sanitize_text_field(wp_unslash($_POST['provider'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
+		$query = sanitize_text_field($_POST['query'] ?? ''); // phpcs:ignore WordPress.Security.NonceVerification
 		$attr = wp_parse_args($query);
 
 		$attr['type'] = $provider;
@@ -198,7 +198,7 @@ class AJAX {
 		// $_POST['shortcode'] only contains the parameters of a URL, to be passed to photonic after being broken down. Sanitization functions are killing
 		// characters such as "@" (used in Flickr user ids) or its escaped form. So we use esc_url_raw.
 		// However, esc_url_raw needs a domain, so we prepend a random one, sanitize it, then pull out only the 'query' part from it.
-		$shortcode = esc_url_raw('https://randomurl.com?' . ($_POST['shortcode'] ?? ''));
+		$shortcode = esc_url_raw('https://randomurl.com?' . ($_POST['shortcode'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 		$shortcode_parse = wp_parse_url($shortcode);
 		$attr = [];
 		parse_str($shortcode_parse['query'], $attr);
@@ -210,13 +210,13 @@ class AJAX {
 	}
 
 	public function helper_shortcode_more() {
-		if (!empty($_POST['provider'])) {
-			$provider = sanitize_text_field(wp_unslash($_POST['provider']));
+		if (!empty($_POST['provider'])) { // phpcs:ignore WordPress.Security.NonceVerification
+			$provider = sanitize_text_field(wp_unslash($_POST['provider'])); // phpcs:ignore WordPress.Security.NonceVerification
 			if (in_array($provider, ['google'], true)) {
 				$attr = ['type' => $provider];
 				if ('google' === $provider) {
-					$attr['nextPageToken'] = sanitize_text_field(wp_unslash($_POST['nextPageToken'] ?? ''));
-					$attr['album_type'] = sanitize_text_field(wp_unslash($_POST['access'] ?? ''));
+					$attr['nextPageToken'] = sanitize_text_field(wp_unslash($_POST['nextPageToken'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
+					$attr['album_type'] = sanitize_text_field(wp_unslash($_POST['access'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 					$gallery = new Gallery($attr);
 					echo wp_kses($gallery->get_helper_contents(), Photonic::$safe_tags);
 				}

@@ -2,7 +2,7 @@
 namespace Photonic_Plugin\Core;
 
 class Front_End {
-	private static $instance = null;
+	private static ?Front_End $instance = null;
 
 	private function __construct() {
 		// Blank constructor, for now. Setting it up for singleton.
@@ -306,7 +306,7 @@ class Front_End {
 
 				if (isset($option_val['trans'])) {
 					$bg_rgba_string = $bg_string;
-					$transparency = (int)$option_val['trans'];
+					$transparency = (int) $option_val['trans'];
 					if (0 !== $transparency) {
 						$trans_dec = $transparency / 100;
 						$rgba_string = implode(',', $rgb_array);
@@ -335,78 +335,5 @@ class Front_End {
 			}
 		}
 		return $bg_string;
-	}
-
-	/**
-	 * Generates the CSS for borders. Each border, top, right, bottom and left is generated as a separate line.
-	 *
-	 * @param $option
-	 * @return string
-	 */
-	public function get_border_css($option): string {
-		global ${$option};
-		$option_val = ${$option};
-		if (!is_array($option_val)) {
-			$option_val = stripslashes($option_val);
-			$edge_array = $this->build_edge_array($option_val);
-			$option_val = $edge_array;
-		}
-		$border_string = '';
-		foreach ($option_val as $edge => $selections) {
-			$border_string .= "\tborder-$edge: ";
-			if (!isset($selections['style'])) {
-				$selections['style'] = 'none';
-			}
-			if ('none' === $selections['style']) {
-				$border_string .= "none";
-			}
-			else {
-				if (isset($selections['border-width'])) {
-					$border_string .= $selections['border-width'];
-				}
-				if (isset($selections['border-width-type'])) {
-					$border_string .= $selections['border-width-type'];
-				}
-				else {
-					$border_string .= "px";
-				}
-				$border_string .= " " . $selections['style'] . " ";
-				if ('transparent' === $selections['colortype']) {
-					$border_string .= "transparent";
-				}
-				else {
-					if ('#' === substr($selections['color'], 0, 1)) {
-						$border_string .= $selections['color'];
-					}
-					else {
-						$border_string .= '#' . $selections['color'];
-					}
-				}
-			}
-			$border_string .= ";\n";
-		}
-		return "\n" . $border_string;
-	}
-
-	private function build_edge_array($option_val): array {
-		$edge_array = [];
-		$edges = explode('||', $option_val);
-		foreach ($edges as $edge_val) {
-			if ('' !== trim($edge_val)) {
-				$edge_options = explode('::', trim($edge_val));
-				if (is_array($edge_options) && count($edge_options) > 1) {
-					$val_array = [];
-					$vals = explode(';', $edge_options[1]);
-					foreach ($vals as $val) {
-						$pair = explode('=', $val);
-						if (is_array($pair) && count($pair) > 1) {
-							$val_array[$pair[0]] = $pair[1];
-						}
-					}
-					$edge_array[$edge_options[0]] = $val_array;
-				}
-			}
-		}
-		return $edge_array;
 	}
 }

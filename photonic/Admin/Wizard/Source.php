@@ -3,15 +3,15 @@
 namespace Photonic_Plugin\Admin\Wizard;
 
 abstract class Source {
-	protected $default_under;
-	protected $default_from_settings;
-	protected $allowed_image_sizes;
-	protected $column_options;
-	protected $provider;
-	protected $error_not_found;
-	protected $error_mandatory;
-	protected $error_unauthorized;
-	public $api_base;
+	protected string $default_under;
+	protected string $default_from_settings;
+	protected array $allowed_image_sizes;
+	protected array $column_options;
+	protected string $provider;
+	protected string $error_not_found;
+	protected string $error_mandatory;
+	protected string $error_unauthorized;
+	public ?string $api_base;
 
 	protected function __construct() {
 		$this->default_under = esc_html__('Default settings can be configured under: %s', 'photonic');

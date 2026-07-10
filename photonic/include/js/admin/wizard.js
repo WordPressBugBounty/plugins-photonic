@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		function handleMessageFromParent(event) {
 			if (event.data.type === 'photonicShortcode' || event.data.type === 'photonicMCENode' || event.data.type === 'photonicWidget' || event.data.type === 'photonicBlock') {
-				setParentShortcode(event);
+				receiveEditorShortcode(event);
 			}
 			else if (event.data.type === 'photonicReceiveMediaLibrarySelections') {
 				receiveMediaLibrarySelections(event.data.selection, event.data.options);
 			}
 		}
 
-		function setParentShortcode(event) {
+		function receiveEditorShortcode(event) {
 			let selection = event.data.object;
 			// Selection = null if something went wrong
 			// Selection = shortcode object if valid shortcode

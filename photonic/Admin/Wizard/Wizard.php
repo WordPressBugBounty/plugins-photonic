@@ -13,22 +13,22 @@ use Photonic_Plugin\Core\Photonic;
  * @since 2.00
  */
 class Wizard {
-	private $flow_fields;
-	private $display_types;
-	private $shortcode_attributes;
-	private $aka_attributes;
-	private $date_parts;
-	private $date_part_hints;
-	private $error_mandatory;
-	private $error_no_response;
-	private $error_not_found;
-	public $error_no_data_returned;
-	private $error_not_permitted;
-	private $error_authentication;
-	private $error_missing_api;
-	private $force_next_screen;
-	private $force_previous_screen;
-	private $is_gutenberg;
+	private Screen_Fields $flow_fields;
+	private array $display_types;
+	private array $shortcode_attributes;
+	private array $aka_attributes;
+	private array $date_parts;
+	private array $date_part_hints;
+	private string $error_mandatory;
+	private string $error_no_response;
+	private string $error_not_found;
+	public string $error_no_data_returned;
+	private string $error_not_permitted;
+	private string $error_authentication;
+	private string $error_missing_api;
+	private int $force_next_screen;
+	private int $force_previous_screen;
+	private bool $is_gutenberg = false;
 
 	public function __construct() {
 		require_once "Screen_Fields.php";

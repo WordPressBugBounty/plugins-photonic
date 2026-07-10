@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 require_once 'Admin_Page.php';
 
 class Getting_Started extends Admin_Page {
-	private static $instance;
+	private static ?Getting_Started $instance = null;
 
 	private function __construct() {
 		// Empty

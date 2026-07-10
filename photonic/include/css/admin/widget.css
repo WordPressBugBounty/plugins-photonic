@@ -16,3 +16,4 @@
 
 #TB_window.photonic-tb { z-index: 559999; }
 #wp-media-modal.media-modal { z-index: 560000; }
+.fl-builder-edit .media-modal { z-index: 9999991 !important; }

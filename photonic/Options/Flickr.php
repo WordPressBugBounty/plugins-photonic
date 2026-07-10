@@ -184,7 +184,7 @@ class Flickr extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/Flickr-5.png' style='max-width: 600px;' alt='Collections'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='flickr' user_id='abc' view='collections']</code> 
 			or <code>[gallery type='flickr' user_id='abc' collection_id='xyz']</code>. They are used to control the collection's thumbnail display.",
@@ -233,7 +233,7 @@ class Flickr extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/Flickr-3.png' style='max-width: 600px;' alt='Albums'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='flickr' user_id='abc' view='photosets']</code> or <code>[gallery type='flickr' user_id='abc' collection_id='xyz']</code> 
 			or <code>[gallery type='flickr' user_id='abc' view='collections']</code>. They are used to control the Photoset's thumbnail display",
@@ -288,7 +288,7 @@ class Flickr extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/Flickr-4.png' style='max-width: 600px;' alt='Individual albums'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='flickr' user_id='abc' photoset_id='xyz']</code> to show its contents on the page,
 			 or if you use <code>[gallery type='flickr' user_id='abc' view='photosets']</code> and click on a thumbnail to open the included images in a popup.",
@@ -329,7 +329,7 @@ class Flickr extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/Flickr-6.png' style='max-width: 600px;' alt='Galleries'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='flickr' user_id='abc' view='galleries']</code>. They are used to control the Gallery's thumbnail display",
 				'grouping' => 'flickr-galleries',
@@ -383,7 +383,7 @@ class Flickr extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/Flickr-7.png' style='max-width: 600px;' alt='Individual galleries'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='flickr' user_id='abc' gallery_id='xyz']</code> to show its contents on the page, or if you use <code>[gallery type='flickr' user_id='abc' view='galleries']</code> and click on a thumbnail to open the included images in a popup.",
 				'grouping' => 'flickr-gallery',
@@ -423,7 +423,7 @@ class Flickr extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/Flickr-2.png' style='max-width: 600px;' alt='Photostream'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='flickr' user_id='abc' photoset_id='xyz']</code> 
 			or <code>[gallery type='flickr' user_id='abc' view='photos']</code>. In other words, the photos are printed directly on the page.",

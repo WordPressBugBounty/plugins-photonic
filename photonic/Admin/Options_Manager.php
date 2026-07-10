@@ -21,19 +21,17 @@ use Photonic_Plugin\Options\Zenfolio;
 require_once 'Admin_Page.php';
 
 class Options_Manager extends Admin_Page {
-	private $options;
-	private $tab;
-	private $tab_options;
-	private $reverse_options;
-	private $shown_options;
-	private $option_defaults;
-	private $allowed_values;
+	private string $tab;
+	private array $tab_options;
+	private array $reverse_options;
+	private array $option_defaults;
+	private array $allowed_values;
 	private $hidden_options;
-	private $nested_options;
-	private $displayed_sections;
+	private array $nested_options;
+	private int $displayed_sections;
 	private $option_structure;
-	private $previous_displayed_section;
-	private $file;
+	private string $previous_displayed_section;
+	private string $file;
 	private $tab_name;
 	private $core;
 
@@ -70,17 +68,18 @@ class Options_Manager extends Admin_Page {
 		$this->core = $core;
 		$this->file = $file;
 		$this->tab = 'Generic.php';
-		if (isset($_REQUEST['tab']) && array_key_exists($_REQUEST['tab'], $tab_name_array)) {
-			$this->tab = sanitize_text_field($_REQUEST['tab']);
+		if (isset($_REQUEST['tab']) && array_key_exists($_REQUEST['tab'], $tab_name_array)) { // phpcs:ignore WordPress.Security.NonceVerification
+			$this->tab = sanitize_text_field($_REQUEST['tab']); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		$this->tab_options = $options_page_array[$this->tab];
 		$this->tab_name = $tab_name_array[$this->tab];
-		$this->options = $photonic_setup_options;
 		$this->reverse_options = [];
 		$this->nested_options = [];
 		$this->displayed_sections = 0;
 		$this->option_structure = $this->get_option_structure();
+		$this->option_defaults = [];
+		$this->allowed_values = [];
 
 		$all_options = get_option('photonic_options');
 		if (!isset($all_options)) {
@@ -92,7 +91,6 @@ class Options_Manager extends Admin_Page {
 
 		foreach ($this->tab_options as $option) {
 			if (isset($option['id'])) {
-				$this->shown_options[] = $option['id'];
 				if (isset($this->hidden_options[$option['id']])) {
 					unset($this->hidden_options[$option['id']]);
 				}
@@ -135,7 +133,7 @@ class Options_Manager extends Admin_Page {
 
 	public function render_content() {
 		$saved_options = get_option('photonic_options');
-		if (isset($saved_options) && !empty($saved_options) && current_user_can('edit_theme_options')) {
+		if (!empty($saved_options) && current_user_can('edit_theme_options')) {
 			$generated_css = $this->core->generate_css(false);
 			update_option('photonic_css', $generated_css);
 			if (!empty($saved_options['css_in_file'])) {
@@ -162,7 +160,7 @@ class Options_Manager extends Admin_Page {
 						   id='photonic-options-zenfolio'
 						   href='?page=photonic-options-manager&amp;tab=Zenfolio.php'><span class="icon">&nbsp;</span>
 							Zenfolio</a>
-<!--						<a class='nav-tab <?php /*echo ('DeviantArt.php' === $this->tab) ? 'nav-tab-active' : ''; */?>'
+<!--						<a class='nav-tab <?php /*echo ('DeviantArt.php' === $this->tab) ? 'nav-tab-active' : ''; */ ?>'
 						   id='photonic-options-deviantart'
 						   href='?page=photonic-options-manager&amp;tab=DeviantArt.php'><span class="icon">&nbsp;</span>
 							DeviantArt</a>
@@ -223,7 +221,7 @@ class Options_Manager extends Admin_Page {
 		}
 	}
 
-	public function validate_options($options) {
+	public function validate_options($options): array {
 		foreach ($options as $option => $option_value) {
 			if (isset($this->reverse_options[$option])) {
 				// Sanitize options
@@ -254,18 +252,6 @@ class Options_Manager extends Admin_Page {
 						$final_selections = [];
 						foreach ($selections as $selection) {
 							if (array_key_exists($selection, $this->allowed_values[$option])) {
-								$final_selections[] = $selection;
-							}
-						}
-						$options[$option] = implode(',', $final_selections);
-						break;
-
-					case "sortable-list":
-						$selections = explode(',', $option_value);
-						$final_selections = [];
-						$master_list = $this->option_defaults[$option]; // Sortable lists don't have their values in ['options']
-						foreach ($selections as $selection) {
-							if (array_key_exists($selection, $master_list)) {
 								$final_selections[] = $selection;
 							}
 						}
@@ -323,7 +309,7 @@ class Options_Manager extends Admin_Page {
 					unset($options['submit-' . $section]);
 				}
 				elseif ('Delete' === substr($options['submit-' . $section], 0, 6)) {
-					return;
+					return [];
 				}
 				break;
 			}
@@ -401,10 +387,6 @@ class Options_Manager extends Admin_Page {
 
 				case "checkbox":
 					add_settings_field($value['id'], $value['name'], [&$this, "create_section_for_checkbox"], $page, $value['grouping'], $value);
-					break;
-
-				case "border":
-					add_settings_field($value['id'], $value['name'], [&$this, "create_section_for_border"], $page, $value['grouping'], $value);
 					break;
 
 				case "background":
@@ -591,12 +573,12 @@ class Options_Manager extends Admin_Page {
 		 * We are registering the same setting across multiple pages, hence we need to pass the "page" parameter to options.php.
 		 * Otherwise options.php returns an error saying "Options page not found"
 		 */
-		echo "<input type='hidden' name='page' value='" . esc_attr(sanitize_text_field($_REQUEST['page'] ?? '')) . "' />\n";
-		if (!isset($_REQUEST['tab'])) {
+		echo "<input type='hidden' name='page' value='" . esc_attr(sanitize_text_field($_REQUEST['page'] ?? '')) . "' />\n"; // phpcs:ignore WordPress.Security.NonceVerification
+		if (!isset($_REQUEST['tab'])) { // phpcs:ignore WordPress.Security.NonceVerification
 			$tab = 'Generic.php';
 		}
 		else {
-			$tab = sanitize_text_field($_REQUEST['tab']);
+			$tab = sanitize_text_field($_REQUEST['tab']); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 		echo "<input type='hidden' name='tab' value='" . esc_attr($tab) . "' />\n";
 
@@ -624,163 +606,6 @@ class Options_Manager extends Admin_Page {
 		}
 		$this->create_opening_tag($value);
 		echo '<label><input type="checkbox" name="photonic_options[' . esc_attr($value['id']) . ']" ' . esc_attr($checked) . "/>" . wp_kses_post($value['desc']) . "</label>\n";
-		$this->create_closing_tag();
-	}
-
-	/**
-	 * Renders an option whose type is "border". Invoked by add_settings_field.
-	 *
-	 * @param  $value
-	 * @return void
-	 */
-	public function create_section_for_border($value) {
-		global $photonic_options;
-		$defaults = Defaults::get_options();
-		$this->create_opening_tag($value);
-		$original = $defaults[$value['id']];
-		if (!isset($photonic_options[$value['id']])) {
-			$default = $defaults[$value['id']];
-			$default_txt = "";
-			foreach ($default as $edge => $edge_val) {
-				$default_txt .= $edge . '::';
-				foreach ($edge_val as $opt => $opt_val) {
-					$default_txt .= $opt . "=" . $opt_val . ";";
-				}
-				$default_txt .= "||";
-			}
-		}
-		else {
-			$default_txt = $photonic_options[$value['id']];
-			$default = $default_txt;
-			$edge_array = explode('||', $default);
-			$default = [];
-			if (is_array($edge_array)) {
-				foreach ($edge_array as $edge_vals) {
-					if ('' !== trim($edge_vals)) {
-						$edge_val_array = explode('::', $edge_vals);
-						if (is_array($edge_val_array) && count($edge_val_array) > 1) {
-							$vals = explode(';', $edge_val_array[1]);
-							$default[$edge_val_array[0]] = [];
-							foreach ($vals as $val) {
-								$pair = explode("=", $val);
-								if (isset($pair[0]) && isset($pair[1])) {
-									$default[$edge_val_array[0]][$pair[0]] = $pair[1];
-								}
-								elseif (isset($pair[0]) && !isset($pair[1])) {
-									$default[$edge_val_array[0]][$pair[0]] = "";
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		$edges = ['top' => 'Top', 'right' => 'Right', 'bottom' => 'Bottom', 'left' => 'Left'];
-		$styles = [
-			"none"   => "No border",
-			"hidden" => "Hidden",
-			"dotted" => "Dotted",
-			"dashed" => "Dashed",
-			"solid"  => "Solid",
-			"double" => "Double",
-			"groove"  => "Groove",
-			"ridge"  => "Ridge",
-			"inset"  => "Inset",
-			"outset" => "Outset"
-		];
-
-		$border_width_units = ["px" => "Pixels (px)", "em" => "Em"];
-
-		foreach ($value['options'] as $option_value => $option_text) {
-			if (isset($photonic_options[$value['id']])) {
-				$checked = checked($photonic_options[$value['id']], $option_value, false);
-			}
-			else {
-				$checked = checked($defaults[$value['id']], $option_value, false);
-			}
-			echo '<div class="photonic-radio"><input type="radio" name="' . esc_attr($value['id']) . '" value="' . esc_attr($option_value) . '" ' . esc_attr($checked) . "/>" . wp_kses_post($option_text) . "</div>\n";
-		}
-		?>
-		<div class='photonic-border-options'>
-			<p>For any edge set style to "No Border" if you don't want a border.</p>
-			<table class='opt-sub-table-5'>
-				<col class='opt-sub-table-col-51'/>
-				<col class='opt-sub-table-col-5'/>
-				<col class='opt-sub-table-col-5'/>
-				<col class='opt-sub-table-col-5'/>
-				<col class='opt-sub-table-col-5'/>
-
-				<tr>
-					<th scope="col">&nbsp;</th>
-					<th scope="col">Border Style</th>
-					<th scope="col">Color</th>
-					<th scope="col">Border Width</th>
-					<th scope="col">Border Width Units</th>
-				</tr>
-
-				<?php
-				foreach ($edges as $edge => $edge_text) {
-					?>
-					<tr>
-						<th scope="row"><?php echo wp_kses_post($edge_text); ?></th>
-						<td style='vertical-align: top'>
-							<select name="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-style"
-									id="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-style">
-								<?php
-								foreach ($styles as $option_value => $option_text) {
-									echo "<option ";
-									if (isset($default[$edge]) && isset($default[$edge]['style'])) {
-										selected($default[$edge]['style'], $option_value);
-									}
-									echo " value='" . esc_attr($option_value) . "' >" . esc_attr($option_text) . "</option>\n";
-								}
-								?>
-							</select>
-						</td>
-
-						<td style='vertical-align: top'>
-							<div class="color-picker-group">
-								<input type="radio" name="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-colortype"
-									   value="transparent" <?php checked($default[$edge]['colortype'], 'transparent'); ?> />
-								Transparent / No color<br/>
-								<input type="radio" name="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-colortype"
-									   value="custom" <?php checked($default[$edge]['colortype'], 'custom'); ?>/> Custom
-								<input type="text" id="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-color"
-									   name="<?php echo esc_attr($value['id']); ?>-color"
-									   value="<?php echo esc_attr($default[$edge]['color']); ?>"
-									   data-photonic-default-color="<?php echo esc_attr($original[$edge]['color']); ?>"
-									   class="color"/><br/>
-								Default: <span> <?php echo esc_attr($original[$edge]['color']); ?> </span>
-							</div>
-						</td>
-
-						<td style='vertical-align: top'>
-							<input type="text" id="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-border-width"
-								   name="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-border-width"
-								   value="<?php echo esc_attr($default[$edge]['border-width']); ?>"/><br/>
-						</td>
-
-						<td style='vertical-align: top'>
-							<select name="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-border-width-type"
-									id="<?php echo esc_attr($value['id'] . '-' . $edge); ?>-border-width-type">
-								<?php
-								foreach ($border_width_units as $option_value => $option_text) {
-									echo "<option ";
-									selected($default[$edge]['border-width-type'], $option_value);
-									echo " value='" . esc_attr($option_value) . "' >" . esc_attr($option_text) . "</option>\n";
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<?php
-				}
-				?>
-			</table>
-			<input type='hidden' id="<?php echo esc_attr($value['id']); ?>" name="photonic_options[<?php echo esc_attr($value['id']); ?>]"
-				   value="<?php echo esc_attr($default_txt); ?>"/>
-		</div>
-		<?php
 		$this->create_closing_tag();
 	}
 
@@ -986,7 +811,7 @@ class Options_Manager extends Admin_Page {
 	 * @return bool
 	 */
 	public function save_css_to_file($custom_css): bool {
-		if (!isset($_GET['settings-updated'])) {
+		if (!isset($_GET['settings-updated'])) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
 

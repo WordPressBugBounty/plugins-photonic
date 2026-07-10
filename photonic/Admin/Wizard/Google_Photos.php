@@ -6,7 +6,7 @@ use Photonic_Plugin\Core\Photonic;
 use Photonic_Plugin\Core\Utilities;
 
 class Google_Photos extends Source {
-	private static $instance;
+	private static ?Google_Photos $instance = null;
 
 	private $notice;
 

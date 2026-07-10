@@ -3,19 +3,19 @@
 namespace Photonic_Plugin\Admin\Forms;
 
 class Edit_Gallery_Templates {
-	private $fields;
-	private $providers;
-	private static $instance = null;
+	private array $fields;
+	private array $providers;
+	private static ?Edit_Gallery_Templates $instance = null;
 
 	private function __construct() {
 		require_once PHOTONIC_PATH . '/Admin/Forms/Vanilla_Form.php';
 		$form = Vanilla_Form::get_instance();
 		$this->fields = $form->get_fields();
 
-		$this->providers = ['default', 'flickr', 'google', 'smugmug', 'zenfolio', 'instagram'];
+		$this->providers = ['default', 'flickr', 'smugmug', 'zenfolio'];
 	}
 
-	public static function get_instance() {
+	public static function get_instance(): Edit_Gallery_Templates {
 		if (null === self::$instance) {
 			self::$instance = new Edit_Gallery_Templates();
 		}

@@ -6,9 +6,9 @@ use Photonic_Plugin\Core\Photonic;
 use WP_Widget;
 
 class Widget extends WP_Widget {
-	private $empty_shortcode;
-	public $invalid_shortcode;
-	public $edit_shortcode;
+	private string $empty_shortcode;
+	public string $invalid_shortcode;
+	public string $edit_shortcode;
 
 	public function __construct() {
 		$widget_ops = [

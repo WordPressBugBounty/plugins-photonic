@@ -9,18 +9,18 @@ use Photonic_Plugin\Platforms\Base;
 require_once 'Grid_Anchor.php';
 
 class Grid_Figure implements Printable {
-	public $id;
-	public $classes = [];
-	public $data = [];
-	public $styles = [];
-	public $video_markup = '';
-	public $prompter_markup = '';
-	public $indent = '';
+	public string $id = '';
+	public array $classes = [];
+	public array $data = [];
+	public array $styles = [];
+	public string $video_markup = '';
+	public string $prompter_markup = '';
+	public string $indent = '';
 
 	/**
 	 * @var Grid_Anchor $anchor
 	 */
-	public $anchor;
+	public Grid_Anchor $anchor;
 
 	public function html(Base $module, Core_Layout $layout, $print = false): string {
 		$classes = esc_attr(implode(' ', $this->classes));

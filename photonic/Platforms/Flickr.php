@@ -842,7 +842,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		return $photo_objects;
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
 		global $photonic_gallery_template_page;
 
 		$main_size = sanitize_text_field('none' === $short_code['main_size'] ? '' : $short_code['main_size']);
@@ -1075,11 +1075,12 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 					$counters['sets'] = count($photosets);
 				}
 
-				$header            = new Header();
-				$header->id        = $id . '-' . $short_code['user_id'];
-				$header->title     = wp_kses_post($collection->title);
-				$header->thumb_url = $thumb;
-				$header->page_url  = "https://www.flickr.com/photos/{$short_code['user_id']}/collections/$url_id";
+				$header              = new Header();
+				$header->id          = $id . '-' . $short_code['user_id'];
+				$header->title       = wp_kses_post($collection->title);
+				$header->description = wp_kses_post($collection->description ?? '');
+				$header->thumb_url   = $thumb;
+				$header->page_url    = "https://www.flickr.com/photos/{$short_code['user_id']}/collections/$url_id";
 
 				$header->header_for      = 'collection';
 				$header->hidden_elements = $this->get_hidden_headers($short_code['header_display'], $hidden);
@@ -1268,7 +1269,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		$pagination           = new Pagination();
 		$pagination->total    = $entity->total;
 		$pagination->start    = ($entity->page - 1) * $per_page + 1;
-		$pagination->end      = $entity->page * $per_page > $entity->total ? $entity->total : $entity->page * $per_page;
+		$pagination->end      = min($entity->page * $per_page, $entity->total);
 		$pagination->per_page = $per_page;
 
 		return $pagination;

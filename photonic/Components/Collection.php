@@ -8,22 +8,22 @@ use Photonic_Plugin\Platforms\Base;
 
 class Collection implements Printable {
 	/**
-	 * @var Header $header
+	 * @var Header|null $header
 	 */
-	public $header;
+	public ?Header $header = null;
 
 	/**
-	 * @var Album_List $album_list
+	 * @var Album_List|null $album_list
 	 */
-	public $album_list;
+	public ?Album_List $album_list = null;
 
 	/**
 	 * @var array
 	 */
-	public $collections = [];
+	public array $collections = [];
 
-	public $indent;
-	public $strip_top_level; // Specifically for Flickr, when you do lazy loading
+	public string $indent = '';
+	public bool $strip_top_level = false; // Specifically for Flickr, when you do lazy loading
 
 	/**
 	 * {@inheritDoc} - a Collection

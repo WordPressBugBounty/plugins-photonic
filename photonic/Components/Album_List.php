@@ -9,24 +9,24 @@ use Photonic_Plugin\Platforms\Base;
 require_once 'Pagination.php';
 
 class Album_List implements Printable {
-	public $albums = [];
+	public array $albums = [];
 
-	public $title_position;
-	public $row_constraints = [];
-	public $indent = '';
-	public $short_code = [];
+	public string $title_position;
+	public array $row_constraints = [];
+	public string $indent = '';
+	public array $short_code = [];
 
 	/**
 	 * @var Pagination $pagination
 	 */
-	public $pagination;
+	public Pagination $pagination;
 
-	public $type;
-	public $singular_type;
+	public string $type = '';
+	public string $singular_type = '';
 	public $level_1_count_display;
-	public $album_opens_gallery = false;
+	public bool $album_opens_gallery = false;
 
-	public $gallery_attributes = [];
+	public array $gallery_attributes = [];
 
 	public function __construct(array $short_code) {
 		$this->pagination = new Pagination();

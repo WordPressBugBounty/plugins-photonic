@@ -19,7 +19,7 @@ use Photonic_Plugin\Platforms\DeviantArt;
 require_once 'Admin_Page.php';
 
 class Authentication extends Admin_Page {
-	private static $instance;
+	private static ?Authentication $instance = null;
 
 	private function __construct() {
 		require_once PHOTONIC_PATH . '/Platforms/Zenfolio.php';
@@ -183,12 +183,10 @@ class Authentication extends Admin_Page {
 	}
 
 	/**
-	 * @param $auth array
+	 * @param $auth     array
 	 * @param $provider string
-	 * @return array
 	 */
-	private function show_token_section_header($auth, $provider) {
-		$ret = [];
+	private function show_token_section_header(array $auth, string $provider): void {
 		echo "<div class=\"photonic-token-header\">\n";
 
 		if ('Instagram' === $provider) {
@@ -223,13 +221,11 @@ class Authentication extends Admin_Page {
 					$this->print_auth_done_all_good();
 				}
 			}
-			$ret['deletion'] = true;
 		}
 		elseif (!empty($auth['token'])) {
 			$this->print_auth_done_all_good();
 		}
 		echo "</div>\n";
-		return $ret;
 	}
 
 	/**

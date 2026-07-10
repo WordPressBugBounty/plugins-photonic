@@ -3,7 +3,7 @@
 namespace Photonic_Plugin\Core;
 
 class Utilities {
-	public static function get_formatted_post_type_array() {
+	public static function get_formatted_post_type_array(): array {
 		global $photonic_post_type_array;
 		$ret = [];
 
@@ -18,7 +18,7 @@ class Utilities {
 		return $ret;
 	}
 
-	public static function get_pages() {
+	public static function get_pages(): array {
 		$pages = get_pages();
 		$output = [
 			'' => '',
@@ -29,7 +29,7 @@ class Utilities {
 		return $output;
 	}
 
-	public static function title_caption_options($blank = false, $selection = false, $alt = false) {
+	public static function title_caption_options($blank = false, $selection = false, $alt = false): array {
 		$ret = [
 			''           => esc_html__('Default from settings', 'photonic'),
 			'none'       => esc_html__('No title / caption / description', 'photonic'),
@@ -60,7 +60,7 @@ class Utilities {
 		return $ret;
 	}
 
-	public static function layout_options($show_blank = false, $blank_text = '') {
+	public static function layout_options($show_blank = false, $blank_text = ''): array {
 		$ret = [];
 		if ($show_blank) {
 			$ret[''] = $blank_text;
@@ -81,7 +81,7 @@ class Utilities {
 		);
 	}
 
-	public static function media_options($blank = false, $selection = false) {
+	public static function media_options($blank = false, $selection = false): array {
 		$options = [
 			''       => esc_html__('Default from settings', 'photonic'),
 			'photos' => esc_html__('Photos only', 'photonic'),
@@ -104,7 +104,7 @@ class Utilities {
 	 * @param bool $return_formatted
 	 * @return array
 	 */
-	public static function get_wp_image_sizes($show_full, $return_formatted = false) {
+	public static function get_wp_image_sizes($show_full, bool $return_formatted = false): array {
 		global $_wp_additional_image_sizes;
 		$image_sizes = [];
 		$standard_sizes = ['thumbnail', 'medium', 'large'];

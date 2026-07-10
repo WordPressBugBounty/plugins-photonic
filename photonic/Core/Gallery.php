@@ -15,12 +15,12 @@ use Photonic_Plugin\Platforms\Zenfolio;
 use Photonic_Plugin\Platforms\DeviantArt;
 
 class Gallery {
-	private $attr;
+	private array $attr;
 	/** @var Base */
-	private $module;
+	private Base $module;
 
 	/** @var Core_Layout */
-	private $layout;
+	private Core_Layout $layout;
 
 	public function __construct($attr) {
 		$this->attr = $attr;

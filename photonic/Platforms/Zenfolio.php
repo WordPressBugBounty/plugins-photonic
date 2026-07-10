@@ -631,9 +631,9 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 			}
 
 			$photonic_photo->download    = esc_url($photonic_photo->main_image . '?' . implode('&', $appendage));
-			$photonic_photo->title       = wp_kses_post($photo->Title);
+			$photonic_photo->title       = wp_kses_post($photo->Title ?? '');
 			$photonic_photo->alt_title   = $photonic_photo->title;
-			$photonic_photo->description = wp_kses_post($photo->Caption);
+			$photonic_photo->description = wp_kses_post($photo->Caption ?? '');
 			$photonic_photo->main_page   = esc_url($photo->PageUrl);
 			$photonic_photo->id          = $photo->Id;
 
@@ -651,7 +651,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 		return $photo_objects;
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
 		global $photonic_zenfolio_hide_password_protected_thumbnail, $photonic_gallery_template_page;
 		$tile_size = (empty($short_code['tile_size']) || 'same' === $short_code['tile_size']) ? $short_code['main_size'] : $short_code['tile_size'];
 

@@ -534,6 +534,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 
 				$header                  = new Header();
 				$header->title           = wp_kses_post($node->Name);
+				$header->description     = wp_kses_post($node->Description ?? '');
 				$header->header_for      = 'folder';
 				$header->hidden_elements = $this->get_hidden_headers($short_code['header_display'], $hidden);
 				$header->enable_link     = false;
@@ -732,7 +733,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 		return $photo_objects;
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
 		global $photonic_smug_hide_password_protected_thumbnail, $photonic_gallery_template_page;
 
 		$named_albums = $filter_list;

@@ -22,5 +22,5 @@ class Album {
 	public $classes = [];
 	public $passworded;
 	public $realm_id;
-	public $data_attributes = [];
+	public array $data_attributes = [];
 }

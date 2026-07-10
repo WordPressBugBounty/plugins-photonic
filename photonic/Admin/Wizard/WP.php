@@ -5,7 +5,7 @@ namespace Photonic_Plugin\Admin\Wizard;
 use Photonic_Plugin\Core\Utilities;
 
 class WP extends Source {
-	private static $instance;
+	private static ?WP $instance = null;
 
 	protected function __construct() {
 		parent::__construct();

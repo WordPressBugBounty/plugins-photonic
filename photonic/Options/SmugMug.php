@@ -189,7 +189,7 @@ class SmugMug extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/SmugMug-2.png' style='max-width: 600px;' alt='Albums'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='smugmug' nick_name='abc']</code> or 
 			<code>[gallery type='smugmug' nick_name='abc' view='albums']</code> or <code>[gallery type='smugmug' nick_name='abc' view='tree']</code>. 
@@ -267,7 +267,7 @@ class SmugMug extends Option_Tab {
 
 			[
 				'name'     => "What is this section?",
-				'desc'     => "Options in this section are in effect when you pick the following gallery creation options:<br/><br/>
+				'desc'     => "Options in this section are in effect when you pick the following wizard options:<br/><br/>
 			<img src='" . PHOTONIC_URL . "Options/screenshots/SmugMug-3.png' style='max-width: 600px;' alt='Photos'/><br/><br/>
 			If you are using the shortcode, the settings kick in for <code>[gallery type='smugmug' nick_name='abc' view='album' album='pqr']</code>
 			or <code>[gallery type='smugmug' nick_name='abc' view='images' album='pqr']</code>. In other words, the photos are printed directly on the page.",

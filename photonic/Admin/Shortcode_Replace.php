@@ -14,9 +14,9 @@ if (!current_user_can('edit_posts')) {
 require_once 'Admin_Page.php';
 
 class Shortcode_Replace extends Admin_Page {
-	private static $instance;
+	private static ?Shortcode_Replace $instance = null;
 
-	public static function get_instance() {
+	public static function get_instance(): Shortcode_Replace {
 		if (null === self::$instance) {
 			self::$instance = new Shortcode_Replace();
 		}
@@ -95,6 +95,7 @@ class Shortcode_Replace extends Admin_Page {
 						$usage->prepare_items();
 						$usage->display();
 						?>
+
 					</div>
 					<?php
 				}

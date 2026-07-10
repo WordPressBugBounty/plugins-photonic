@@ -6,21 +6,21 @@ use Photonic_Plugin\Layouts\Core_Layout;
 use Photonic_Plugin\Platforms\Base;
 
 class Error implements Printable {
-	private $message;
+	private string $message;
 
 	/**
 	 * Error constructor.
 	 *
 	 * @param String $message
 	 */
-	public function __construct($message) {
+	public function __construct(string $message) {
 		$this->message = $message;
 	}
 
 	/**
 	 * {@inheritDoc} - an Error
 	 */
-	public function html(Base $module, Core_Layout $layout = null, $print = false): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	public function html(Base $module, ?Core_Layout $layout = null, $print = false): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		$ret = "
 <div class='photonic-error photonic-{$module->provider}-error' id='photonic-{$module->provider}-error-{$module->gallery_index}'>
 	<span class='photonic-error-icon photonic-icon'>&nbsp;</span>
