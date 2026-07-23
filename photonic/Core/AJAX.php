@@ -212,10 +212,13 @@ class AJAX {
 	public function helper_shortcode_more() {
 		if (!empty($_POST['provider'])) { // phpcs:ignore WordPress.Security.NonceVerification
 			$provider = sanitize_text_field(wp_unslash($_POST['provider'])); // phpcs:ignore WordPress.Security.NonceVerification
-			if (in_array($provider, ['google'], true)) {
+
+			$tokenized_pagination_platforms = ['google'];
+
+			if (in_array($provider, $tokenized_pagination_platforms, true)) {
 				$attr = ['type' => $provider];
 				if ('google' === $provider) {
-					$attr['nextPageToken'] = sanitize_text_field(wp_unslash($_POST['nextPageToken'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
+					$attr['next_page_token'] = sanitize_text_field(wp_unslash($_POST['nextPageToken'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 					$attr['album_type'] = sanitize_text_field(wp_unslash($_POST['access'] ?? '')); // phpcs:ignore WordPress.Security.NonceVerification
 					$gallery = new Gallery($attr);
 					echo wp_kses($gallery->get_helper_contents(), Photonic::$safe_tags);
@@ -297,9 +300,9 @@ class AJAX {
 
 	/**
 	 * @param string $provider
-	 * @param array $auth_token
+	 * @param array  $auth_token
 	 */
-	private static function save_provider_authentication($provider, $auth_token) {
+	private static function save_provider_authentication(string $provider, array $auth_token) {
 		if (current_user_can('edit_theme_options')) { // Method is private, and is only called from save_token_in_options, where there is a nonce check
 			$photonic_authentication = get_option('photonic_authentication');
 			if (empty($photonic_authentication)) {

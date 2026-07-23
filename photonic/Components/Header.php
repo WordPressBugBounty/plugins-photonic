@@ -72,7 +72,7 @@ class Header implements Printable {
 	/**
 	 * {@inheritDoc} - a Header
 	 */
-	public function html(Base $module, ?Core_Layout $layout = null, $print = false): string {
+	public function html(Base $module, ?Core_Layout $layout, bool $print = false): string {
 		$ret = $layout->generate_header_markup($this, $module);
 		if ($print) {
 			echo wp_kses($ret, Photonic::$safe_tags);

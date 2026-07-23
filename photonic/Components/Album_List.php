@@ -56,7 +56,7 @@ class Album_List implements Printable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function html(Base $module, Core_Layout $layout, $print = false): string {
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string {
 		$ret = '';
 
 		$this->custom_sort($module);

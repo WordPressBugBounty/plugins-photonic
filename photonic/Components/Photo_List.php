@@ -10,18 +10,18 @@ require_once 'Header.php';
 require_once 'Pagination.php';
 
 class Photo_List implements Printable {
-	public $photos = [];
+	public array $photos = [];
 
-	public $title_position;
-	public $row_constraints = [];
-	public $parent = 'stream';
-	public $indent = "\t";
-	public $short_code = [];
+	public string $title_position = 'tooltip';
+	public array $row_constraints = [];
+	public string $parent = 'stream';
+	public string $indent = "\t";
+	public array $short_code = [];
 
 	/**
 	 * @var Pagination $pagination
 	 */
-	public $pagination;
+	public Pagination $pagination;
 
 	public function __construct(array $short_code) {
 		$this->short_code = $short_code;
@@ -32,7 +32,7 @@ class Photo_List implements Printable {
 		$this->photos = apply_filters('photonic_custom_sort_photos', $this->photos, $module->provider);
 	}
 
-	public function html(Base $module, Core_Layout $layout, $print = false): string {
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string {
 		$ret = '';
 
 		$this->custom_sort($module);

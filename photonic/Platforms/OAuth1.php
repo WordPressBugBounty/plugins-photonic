@@ -157,16 +157,12 @@ abstract class OAuth1 extends Base {
 			'oauth_signature'        => $signature,
 		];
 
-		$end_point = $this->request_token_URL();
-		if ('GET' === $method) {
-			$end_point  .= '?' . self::build_query($parameters);
-			$parameters = null;
-		}
+		$end_point  = $this->request_token_URL();
+		$end_point  .= '?' . self::build_query($parameters);
+		$parameters = null;
 
 		$response = Photonic::http($end_point, $method, $parameters);
-		$token    = $this->parse_token($response);
-
-		return $token;
+		return $this->parse_token($response);
 	}
 
 	/**
@@ -192,17 +188,12 @@ abstract class OAuth1 extends Base {
 			$parameters['oauth_verifier'] = $request_token['oauth_verifier'];
 		}
 
-		$end_point = $this->access_token_URL();
-
-		if ('GET' === $method) {
-			$end_point  .= '?' . self::build_query($parameters);
-			$parameters = null;
-		}
+		$end_point  = $this->access_token_URL();
+		$end_point  .= '?' . self::build_query($parameters);
+		$parameters = null;
 
 		$response = Photonic::http($end_point, $method, $parameters);
-		$token    = $this->parse_token($response);
-
-		return $token;
+		return $this->parse_token($response);
 	}
 
 	/**

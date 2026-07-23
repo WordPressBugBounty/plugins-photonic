@@ -2,8 +2,6 @@
 
 namespace Photonic_Plugin\Options;
 
-use Photonic_Plugin\Core\Utilities;
-
 class DeviantArt extends Option_Tab {
 	protected function __construct() {
 		$this->options = [

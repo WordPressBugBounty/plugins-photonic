@@ -568,6 +568,7 @@ var Tooltip = function Tooltip(selector, tooltip_element) {
 
   function create(tooltip, elm) {
     var tooltipText = elm.getAttribute('data-photonic-tooltip');
+    tooltipText = strip_tags(tooltipText, '<br><strong><em><b><i><p>');
 
     if (tooltipText !== '') {
       elm.setAttribute('title', ''); // Blank out the regular title
@@ -575,9 +576,9 @@ var Tooltip = function Tooltip(selector, tooltip_element) {
 
       elemEdges = elm.getBoundingClientRect();
       var tooltipTextNode = document.createTextNode(tooltipText);
-      tooltip.innerHTML = ''; // Reset, or upon refresh the node gets repeated
-
-      tooltip.appendChild(tooltipTextNode); // Remove no-display + set the correct classname based on the position
+      tooltip.innerHTML = tooltipText; // ''; // Reset, or upon refresh the node gets repeated
+      // tooltip.appendChild(tooltipTextNode);
+      // Remove no-display + set the correct classname based on the position
       // of the elm.
 
       if (elemEdges.left > window.innerWidth - 100) {
@@ -926,7 +927,7 @@ exports.Core = Core;
   var thumbs = document.querySelectorAll('.photonic-stream a, a.photonic-level-2-thumb');
   thumbs.forEach(thumb => {
     if (!thumb.parentNode.classList.contains('photonic-header-title')) {
-      var title = thumb.getAttribute('title'); // Not doing a Util.getText, which uses innerHTML, which is susceptible to XSS
+      var title = thumb.getAttribute('title'); // Not doing innerHTML, which is susceptible to XSS
 
       thumb.setAttribute('title', Util.getText(title));
       var dataTitle = thumb.getAttribute('data-title');
@@ -3318,12 +3319,6 @@ exports.getElement = getElement;
 
 var getText = value => {
   // Not using innerHTML because of vulnerability to XSS
-
-  /*
-         const txt = document.createElement("div");
-         txt.innerHTML = value;
-         return txt.innerText;
-     */
   if (value == null) {
     return '';
   }

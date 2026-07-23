@@ -400,7 +400,6 @@ class Lightbox extends Option_Tab {
 				'type'     => 'checkbox',
 			],
 
-
 			[
 				'name'     => 'PrettyPhoto',
 				'desc'     => 'PrettyPhoto Settings',

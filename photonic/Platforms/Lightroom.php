@@ -10,8 +10,6 @@ require_once 'Level_One_Module.php';
 require_once 'Level_Two_Module.php';
 
 class Lightroom extends OAuth2 implements Level_One_Module, Level_Two_Module {
-	private static $instance = null;
-
 	protected function __construct() {
 		parent::__construct();
 		global $photonic_google_client_secret, $photonic_google_refresh_token;
@@ -60,7 +58,10 @@ class Lightroom extends OAuth2 implements Level_One_Module, Level_Two_Module {
 				'client_secret' => $this->client_secret,
 				'refresh_token' => $refresh_token,
 				'grant_type'    => 'refresh_token'
-			]
+			],
+			$this->user_agent,
+			90,
+			PHOTONIC_SSL_VERIFY
 		);
 
 		if (!is_wp_error($response)) {
@@ -70,7 +71,7 @@ class Lightroom extends OAuth2 implements Level_One_Module, Level_Two_Module {
 			}
 			set_transient('photonic_' . $this->provider . '_token', $token, $token['oauth_token_expires']);
 			if (empty($token)) {
-				$error = print_r(wp_remote_retrieve_body($response), true);
+				$error = print_r(wp_remote_retrieve_body($response), true); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			}
 		}
 		else {
@@ -94,7 +95,7 @@ class Lightroom extends OAuth2 implements Level_One_Module, Level_Two_Module {
 		return [];
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array $options = [], ?Pagination &$pagination = null): array {
 		return [];
 	}
 }

@@ -224,7 +224,7 @@ export class Core {
 		thumbs.forEach((thumb) => {
 			if (!thumb.parentNode.classList.contains('photonic-header-title')) {
 				const title = thumb.getAttribute('title');
-				// Not doing a Util.getText, which uses innerHTML, which is susceptible to XSS
+				// Not doing innerHTML, which is susceptible to XSS
 				thumb.setAttribute('title', Util.getText(title));
 				const dataTitle = thumb.getAttribute('data-title')
 				thumb.setAttribute('data-title', Util.HTMLSanitizer.SanitizeHTML(dataTitle));

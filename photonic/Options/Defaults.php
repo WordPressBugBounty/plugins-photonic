@@ -5,7 +5,7 @@ namespace Photonic_Plugin\Options;
 use Photonic_Plugin\Core\Photonic;
 
 class Defaults {
-	public static function get_options() {
+	public static function get_options(): array {
 		return [
 			// Generic - Generic
 			'alternative_shortcode'                           => '',
@@ -292,7 +292,7 @@ class Defaults {
 		];
 	}
 
-	public static function get_options_pages() {
+	public static function get_options_pages(): array {
 		return [
 			// Generic
 			'generic-how-to',
@@ -355,7 +355,7 @@ class Defaults {
 		];
 	}
 
-	public static function get_migrated_options() {
+	public static function get_migrated_options(): array {
 		return [
 			'slideshow_library' => Photonic::$lightbox_replacements
 		];

@@ -4,9 +4,9 @@ Donate link: https://aquoid.com/plugins/photonic/
 Tags: flickr, smugmug, zenfolio, gallery, lightbox
 Text Domain: photonic
 Requires at least: 6.2
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.33
+Stable tag: 3.34
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -73,7 +73,7 @@ For demos of Flickr support visit the <a href='https://aquoid.com/plugins/photon
 
 #### Google Photos
 
-Google API Change: **With effect from 31st March 2025, Google's Photos API is discontinued (see <a href='https://developers.google.com/photos/support/updates'>here for Google's official announcement</a>). Consequently, Photonic will stop working for Google Photos**. For more details, see <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a>. Note that while Google's official announcement says otherwise, as of 20th April 2025 the API is still working, so older versions of Photonic will seem to work. However, there is no guarantee about when Google will truly shut it off.
+Google API Change: **With effect from 31st March 2025, Google's Photos API is discontinued (see <a href='https://developers.google.com/photos/support/updates'>here for Google's official announcement</a>). Consequently, Photonic no longer works for Google Photos**. For more details, see <a href='https://wordpress.org/support/topic/potential-shutdown-of-google-photos-support-from-march-2025/'>this thread</a>. Note that while Google's official announcement says otherwise, as of 20th April 2025 the API is still working, so older versions of Photonic will seem to work. However, there is no guarantee about when Google will truly shut it off.
 
 #### SmugMug
 
@@ -212,9 +212,9 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-*	Fixed: Deprecation issues with PHP 8.4
-*	Changed: Minimum PHP version supported now is 7.4
-*	Changed: Improved translation support for blocks
-*	Removed: Option to set the overlaid modal's border
-*	Fixed: Bulk shortcode replacement functionality was broken.
-*	Fixed: Z-Index conflict with Beaver Builder
+= 3.34 =
+
+*	Changed: Security hardening of blocks against XSS
+*	Changed: Added more features for PHP 7.4+
+*	Changed: Improved formatting of captions in tooltips and slide-ups.
+*	Removed: StripJS, which is archived and not maintained any more

@@ -36,7 +36,7 @@ class Flickr extends Option_Tab {
 				'name'     => "Flickr API Key",
 				'desc'     => "To make use of the Flickr functionality you have to use your Flickr API Key.
 					You can <a href='https://www.flickr.com/services/api/misc.api_keys.html'>obtain a key online</a> if you don't have one.
-					Note that you are responsible for following all of the Flickr API's <a href='https://www.flickr.com/services/api/tos/'>Terms of Service</a>",
+					Note that you are responsible for following the Flickr API's <a href='https://www.flickr.com/services/api/tos/'>Terms of Service</a>",
 				'id'       => 'flickr_api_key',
 				'grouping' => 'flickr-settings',
 				'type'     => 'text'
@@ -46,7 +46,7 @@ class Flickr extends Option_Tab {
 				'name'     => "Flickr API Secret",
 				'desc'     => "To make use of authenticated Flickr functionality you have to use your Flickr API secret.
 					You can <a href='https://www.flickr.com/services/api/misc.api_keys.html'>obtain a key online</a> if you don't have one.
-					Note that you are responsible for following all of the Flickr API's <a href='https://www.flickr.com/services/api/tos/'>Terms of Service</a>",
+					Note that you are responsible for following the Flickr API's <a href='https://www.flickr.com/services/api/tos/'>Terms of Service</a>",
 				'id'       => 'flickr_api_secret',
 				'grouping' => 'flickr-settings',
 				'type'     => 'text'

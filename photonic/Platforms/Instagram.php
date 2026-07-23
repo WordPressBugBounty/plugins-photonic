@@ -24,7 +24,6 @@ class Instagram extends OAuth2 implements Level_One_Module {
 	public $cached_token;
 	public $field_list;
 	public $token_valid;
-	private static $instance = null;
 
 	protected function __construct() {
 		parent::__construct();
@@ -208,7 +207,7 @@ class Instagram extends OAuth2 implements Level_One_Module {
 						else {
 							$this->pop_from_stack(); // 'Process response'
 							$this->pop_from_stack(); // 'Make call'
-							$single_photo = new Single_Photo($body->media_url, $body->permalink, '', isset($body->caption) ? $body->caption : '');
+							$single_photo = new Single_Photo($body->media_url, $body->permalink, '', $body->caption ?? '');
 							$components[] = $single_photo;
 							return $components;
 						}

@@ -75,7 +75,6 @@ class Generic extends Option_Tab {
 							'featherlight'  => "<a href='https://noelboss.github.io/featherlight/'>Featherlight</a> &ndash; ~13KB JS, ~5KB CSS: Released under the MIT license.",
 							'imagelightbox' => "<a href='https://osvaldas.info/image-lightbox-responsive-touch-friendly'>Image Lightbox</a> &ndash; ~6KB JS, ~5KB CSS: Released under the MIT license. No video support.",
 							'lightcase'     => "<a href='https://cornel.bopp-art.com/lightcase/'>LightCase</a> &ndash; ~26KB JS, ~14KB CSS: Released under the GPL license.",
-							'strip'         => "<a href='http://www.stripjs.com/'>Strip</a> &ndash; ~39KB JS, ~9KB CSS: Released under the CC-BY 4.0 license. YouTube and Vimeo supported, but no support for videos from Flickr etc.",
 							'swipebox'      => "<a href='https://brutaldesign.github.io/swipebox/'>Swipebox</a> &ndash; ~12KB, ~5KB CSS: Released under the MIT license.",
 							'thickbox'      => "Thickbox &ndash; ~12KB: Released under the MIT license. No video support.",
 						],
@@ -112,9 +111,10 @@ class Generic extends Option_Tab {
 						'description' => "<p>The developers of the following have not updated these libraries for several years. It is possible that your theme or another plugin is offering it, or you may download them off the web.  
 									<strong style='color: red'>However, it is strongly recommended that you don't use these due to potential security concerns.</strong> Use the suggested alternatives instead.</p><br/>",
 						'options'     => [
-							'fancybox'    => "<a href='http://fancybox.net/'>FancyBox 1</a> &ndash; ~15KB JS, ~4KB CSS: MIT / GPL licenses. <strong style='color: red'>No update since November 2010;</strong> use Fancybox 3 instead.",
-							'magnific'    => "<a href='http://dimsemenov.com/plugins/magnific-popup/'>Magnific Popup</a> &ndash; ~20KB JS, ~7KB CSS: MIT license. <strong style='color: red'>No update since Feb 2016;</strong> use VenoBox instead.",
+							'fancybox'    => "<a href='https://fancybox.net/'>FancyBox 1</a> &ndash; ~15KB JS, ~4KB CSS: MIT / GPL licenses. <strong style='color: red'>No update since November 2010;</strong> use Fancybox 3 instead.",
+							'magnific'    => "<a href='https://dimsemenov.com/plugins/magnific-popup/'>Magnific Popup</a> &ndash; ~20KB JS, ~7KB CSS: MIT license. <strong style='color: red'>No update since Feb 2016;</strong> use VenoBox instead.",
 							'prettyphoto' => "<a href='http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/'>PrettyPhoto</a> &ndash; ~18KB JS, ~22KB CSS: GPL v2.0 license. YouTube and Vimeo supported, but no support for videos from Flickr etc. <strong style='color: red'>No update since May 2015;</strong> use Spotlight instead.",
+							'strip'       => "<a href='https://github.com/staaky/strip'>Strip</a> &ndash; ~39KB JS, ~9KB CSS: Released under the CC-BY 4.0 license. YouTube and Vimeo supported, but no support for videos from Flickr etc. <strong style='color: red'>No update since September 2021 and the GitHub repository is archived;</strong> use Venobox instead.",
 						],
 					],
 				]
@@ -123,7 +123,7 @@ class Generic extends Option_Tab {
 			[
 				'name'     => "Non-bundled Lightbox JS",
 				'desc'     => "If you have chosen a custom lightbox library from the above, enter the full URLs of the JS files for each of them.
-			<strong>Please enter one URL per line</strong>. Note that your URL should start with <code>http://...</code> or <code>https://...</code>, and you should be able to visit that entry in a browser",
+			<strong>Please enter one URL per line</strong>. Note that your URL should start with <code>https://...</code> or <code>https://...</code>, and you should be able to visit that entry in a browser",
 				'id'       => 'custom_lightbox_js',
 				'grouping' => 'generic-settings',
 				'type'     => 'textarea'
@@ -132,7 +132,7 @@ class Generic extends Option_Tab {
 			[
 				'name'     => "Custom Lightbox CSS",
 				'desc'     => "If you have chosen a custom lightbox library from the above, enter the full URLs of the CSS files for each of them.
-			<strong>Please enter one URL per line</strong>. Note that your URL should start with <code>http://...</code> or <code>https://...</code>, and you should be able to visit that entry in a browser",
+			<strong>Please enter one URL per line</strong>. Note that your URL should start with <code>https://...</code> or <code>https://...</code>, and you should be able to visit that entry in a browser",
 				'id'       => 'custom_lightbox_css',
 				'grouping' => 'generic-settings',
 				'type'     => 'textarea'
@@ -540,7 +540,8 @@ class Generic extends Option_Tab {
 				]
 			],
 
-/*			[
+			/*
+			[
 				'name'     => 'Page Meta Title display',
 				'desc'     => "Set the title to be displayed on the title bar of gallery page",
 				'id'       => 'page_meta_title',
@@ -552,7 +553,8 @@ class Generic extends Option_Tab {
 					'append-if-available'   => "Append album title to the page title if available, otherwise show the title of the WordPress page",
 					'page'                  => "Show the title of the WordPress page",
 				]
-			],*/
+			],
+			*/
 
 			[
 				'name'     => 'Page content display',

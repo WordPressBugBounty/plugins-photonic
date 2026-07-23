@@ -22,7 +22,8 @@ class Instagram extends Option_Tab {
 				'type'     => 'blurb',
 			],
 
-/*			[
+			/*
+			[
 				'name'     => 'Instagram Access Token',
 				'desc'     => "Enter your Instagram Access Token. You can get this from <em>Photonic &rarr; Authentication</em> by clicking on <em>Login and get Access Token</em>",
 				'id'       => 'instagram_access_token',
@@ -67,7 +68,8 @@ class Instagram extends Option_Tab {
 				'grouping' => 'instagram-settings',
 				'type'     => 'radio',
 				'options'  => $this->title_styles()
-			],*/
+			],
+			*/
 		];
 	}
 }

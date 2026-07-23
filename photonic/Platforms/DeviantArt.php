@@ -252,7 +252,7 @@ class DeviantArt extends OAuth2 implements Level_One_Module, Level_Two_Module, P
 		// TODO: Implement build_level_1_objects() method.
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array $options = [], ?Pagination &$pagination = null): array {
 		// TODO: Implement build_level_2_objects() method.
 	}
 
@@ -288,7 +288,7 @@ class DeviantArt extends OAuth2 implements Level_One_Module, Level_Two_Module, P
 			set_transient('photonic_' . $this->provider . '_token', $token, $token['oauth_token_expires']);
 			set_transient('photonic_deviantart_refresh_token_' . $this->client_id, $token['oauth_refresh_token'], 90 * 24 * 3600);
 			if (empty($token)) {
-				$error = print_r(wp_remote_retrieve_body($response), true);
+				$error = print_r(wp_remote_retrieve_body($response), true); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			}
 		}
 		else {

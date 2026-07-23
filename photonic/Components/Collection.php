@@ -28,7 +28,7 @@ class Collection implements Printable {
 	/**
 	 * {@inheritDoc} - a Collection
 	 */
-	public function html(Base $module, Core_Layout $layout, $print = false): string {
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string {
 		$start = empty($this->strip_top_level) ? $this->indent . "<div class='photonic-tree'>\n" : '';
 		$out = $start;
 

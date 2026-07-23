@@ -17,7 +17,9 @@ export const Tooltip = function (selector, tooltip_element) {
 	}
 
 	function create(tooltip, elm) {
-		const tooltipText = elm.getAttribute('data-photonic-tooltip');
+		let tooltipText = elm.getAttribute('data-photonic-tooltip');
+		tooltipText = strip_tags(tooltipText, '<br><strong><em><b><i><p>');
+
 		if (tooltipText !== '') {
 			elm.setAttribute('title', ''); // Blank out the regular title
 
@@ -25,8 +27,8 @@ export const Tooltip = function (selector, tooltip_element) {
 			elemEdges = elm.getBoundingClientRect();
 
 			const tooltipTextNode = document.createTextNode(tooltipText);
-			tooltip.innerHTML = ''; // Reset, or upon refresh the node gets repeated
-			tooltip.appendChild(tooltipTextNode);
+			tooltip.innerHTML = tooltipText; // ''; // Reset, or upon refresh the node gets repeated
+			// tooltip.appendChild(tooltipTextNode);
 
 			// Remove no-display + set the correct classname based on the position
 			// of the elm.

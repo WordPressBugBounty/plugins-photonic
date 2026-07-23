@@ -81,24 +81,21 @@ class Gallery {
 		$contents = $this->module->get_gallery_images($this->attr);
 
 		$output = '';
-		if (is_array($contents)) {
-			foreach ($contents as $component) {
-				if (method_exists($component, 'html')) {
-					$output .= $component->html($this->module, $this->layout);
-				}
-				else {
-					$output .= $component;
-				}
+		foreach ($contents as $component) {
+			if (method_exists($component, 'html')) {
+				$output .= $component->html($this->module, $this->layout);
 			}
-
-			// Special case --> when a native gallery is called with no <code>style</code> attribute, or if <code>style='default'</code>...
-			if (empty($output)) {
-				return '';
+			else {
+				$output .= $component;
 			}
-
-			return $this->finalize_markup($output);
 		}
-		return $output;
+
+		// Special case --> when a native gallery is called with no <code>style</code> attribute, or if <code>style='default'</code>...
+		if (empty($output)) {
+			return '';
+		}
+
+		return $this->finalize_markup($output);
 	}
 
 	public function get_helper_contents(): string {
@@ -115,10 +112,10 @@ class Gallery {
 		if ('modal' !== $this->attr['display']) {
 			$additional_classes = '';
 			if (!empty($this->attr['custom_classes'])) {
-				$additional_classes = $this->attr['custom_classes'];
+				$additional_classes = esc_attr($this->attr['custom_classes']);
 			}
 			if (!empty($this->attr['alignment'])) {
-				$additional_classes .= ' align' . $this->attr['alignment'];
+				$additional_classes .= ' align' . esc_attr($this->attr['alignment']);
 			}
 			$ret = "<div class='photonic-{$this->module->provider}-stream photonic-stream $additional_classes' id='photonic-{$this->module->provider}-stream-{$this->module->gallery_index}'>\n";
 		}

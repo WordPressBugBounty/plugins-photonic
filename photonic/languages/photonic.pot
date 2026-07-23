@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Photonic Gallery & Lightbox for Flickr, SmugMug & "
 "Others 3.33\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/photonic\n"
-"POT-Creation-Date: 2026-04-22 14:30:29+00:00\n"
+"POT-Creation-Date: 2026-07-13 20:21:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -100,7 +100,7 @@ msgstr ""
 msgid "%1$sHint:%2$s To edit an existing Photonic block simply click on the block."
 msgstr ""
 
-#: Admin/Admin_Menu.php:97 Admin/Authentication.php:156
+#: Admin/Admin_Menu.php:98 Admin/Authentication.php:156
 #: Admin/Authentication.php:166
 msgid "Step 2: Obtain Token"
 msgstr ""
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Next, you have to obtain the token."
 msgstr ""
 
-#: Admin/Authentication.php:195
+#: Admin/Authentication.php:193
 msgid ""
 "Unfortunately Instagram is no longer supported in Photonic. This is due to "
 "a change in Meta's Terms and Conditions, that only allow businesses to "
@@ -153,50 +153,50 @@ msgid ""
 "longer accessible to the developer."
 msgstr ""
 
-#: Admin/Authentication.php:199
+#: Admin/Authentication.php:197
 #. Translators: 1: Platform 2: Menu location
 msgid "Please set up your %1$s API key under %2$s."
 msgstr ""
 
-#: Admin/Authentication.php:207
+#: Admin/Authentication.php:205
 msgid ""
 "Your authentication credentials are for the old Instagram API. Please "
 "reauthenticate to keep Photonic working."
 msgstr ""
 
-#: Admin/Authentication.php:210
+#: Admin/Authentication.php:208
 msgid ""
 "Your authentication credentials are expiring soon. Please reauthenticate to "
 "keep Photonic working."
 msgstr ""
 
-#: Admin/Authentication.php:213
+#: Admin/Authentication.php:211
 msgid ""
 "Your authentication credentials have expired! Please reauthenticate to keep "
 "Photonic working."
 msgstr ""
 
-#: Admin/Authentication.php:220
+#: Admin/Authentication.php:218
 #. Translators: 1: User in <code> tags
 msgid "You are logged in as %1$s."
 msgstr ""
 
-#: Admin/Authentication.php:267
+#: Admin/Authentication.php:263
 msgid "Save Token"
 msgstr ""
 
-#: Admin/Authentication.php:275
+#: Admin/Authentication.php:271
 msgid ""
 "You have already set up your authentication. Unless you wish to regenerate "
 "the token this step is not required. "
 msgstr ""
 
-#: Admin/Authentication.php:284
+#: Admin/Authentication.php:280
 #. Translators: 1: Platform, untranslated
 msgid "Login and get Access Token from %s"
 msgstr ""
 
-#: Admin/Authentication.php:324
+#: Admin/Authentication.php:320
 msgid ""
 "Authentication successful! All your galleries will be displayed with "
 "Authentication in place."
@@ -377,7 +377,7 @@ msgstr ""
 #: Admin/Forms/Vanilla_Form.php:652 Admin/Forms/Vanilla_Form.php:898
 #: Admin/Forms/Vanilla_Form.php:1136 Admin/Forms/Vanilla_Form.php:1236
 #: Admin/Wizard/Source.php:168 Core/Front_End.php:69
-#: Layouts/Core_Layout.php:138
+#: Layouts/Core_Layout.php:137
 msgid "Show"
 msgstr ""
 
@@ -1349,15 +1349,15 @@ msgid "Group ID:"
 msgstr ""
 
 #: Admin/Helper.php:381 Admin/Wizard/Wizard.php:1068
-#: Platforms/Google_Photos.php:884
+#: Platforms/Google_Photos.php:890
 msgid "Load More"
 msgstr ""
 
-#: Admin/Helper.php:391 Platforms/Google_Photos.php:894
+#: Admin/Helper.php:391 Platforms/Google_Photos.php:900
 msgid "No albums found"
 msgstr ""
 
-#: Admin/Helper.php:416 Platforms/Base.php:186
+#: Admin/Helper.php:416 Platforms/Base.php:188
 msgid "%s Message:"
 msgid_plural "%s Messages:"
 msgstr[0] ""
@@ -1391,7 +1391,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: Admin/Shortcode_Usage.php:155 Lightboxes/Lightbox.php:24
+#: Admin/Shortcode_Usage.php:155 Lightboxes/Lightbox.php:22
 msgid "View"
 msgstr ""
 
@@ -1407,23 +1407,23 @@ msgstr ""
 msgid "Replace Shortcode"
 msgstr ""
 
-#: Admin/Shortcode_Usage.php:191
+#: Admin/Shortcode_Usage.php:190
 msgid ""
 "Cannot update the posts because a custom shortcode has not been set up "
 "under %s."
 msgstr ""
 
-#: Admin/Shortcode_Usage.php:252
+#: Admin/Shortcode_Usage.php:251
 msgid "Failed to replace shortcodes due to an error. Please open a support ticket."
 msgstr ""
 
-#: Admin/Shortcode_Usage.php:256
+#: Admin/Shortcode_Usage.php:255
 msgid ""
 "0 replacements made. If this is not what you were expecting please open a "
 "support ticket."
 msgstr ""
 
-#: Admin/Shortcode_Usage.php:262
+#: Admin/Shortcode_Usage.php:261
 msgid "%d post updated with the shortcode replacement."
 msgid_plural "%d posts updated with the shortcode replacement."
 msgstr[0] ""
@@ -1697,14 +1697,14 @@ msgid ""
 msgstr ""
 
 #: Admin/Wizard/Flickr.php:563 Admin/Wizard/Flickr.php:582
-#: Layouts/Core_Layout.php:157
+#: Layouts/Core_Layout.php:156
 msgid "%s photo"
 msgid_plural "%s photos"
 msgstr[0] ""
 msgstr[1] ""
 
 #: Admin/Wizard/Flickr.php:566 Admin/Wizard/Flickr.php:585
-#: Layouts/Core_Layout.php:160
+#: Layouts/Core_Layout.php:159
 msgid "%s video"
 msgid_plural "%s videos"
 msgstr[0] ""
@@ -1913,7 +1913,7 @@ msgid "No overlay"
 msgstr ""
 
 #: Admin/Wizard/Screen_Fields.php:111 Options/Generic.php:476
-#: Options/Generic.php:523
+#: Options/Generic.php:514
 msgid "No overlay - start showing photos in a lightbox"
 msgstr ""
 
@@ -1922,7 +1922,7 @@ msgid "Show - show photos in a modal overlay first"
 msgstr ""
 
 #: Admin/Wizard/Screen_Fields.php:113 Options/Generic.php:478
-#: Options/Generic.php:525
+#: Options/Generic.php:516
 msgid "Page - Show photos in a separate page"
 msgstr ""
 
@@ -2515,13 +2515,13 @@ msgid ""
 "Shortcode block:"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:1081 Platforms/Flickr.php:1247
-#: Platforms/Google_Photos.php:899
+#: Admin/Wizard/Wizard.php:1081 Platforms/Flickr.php:1243
+#: Platforms/Google_Photos.php:905
 msgid "No data returned. Error code %s"
 msgstr ""
 
-#: Admin/Wizard/Wizard.php:1086 Platforms/Flickr.php:1252
-#: Platforms/Google_Photos.php:904
+#: Admin/Wizard/Wizard.php:1086 Platforms/Flickr.php:1248
+#: Platforms/Google_Photos.php:910
 msgid "No data returned. Empty response, or empty error code."
 msgstr ""
 
@@ -2665,7 +2665,7 @@ msgid ""
 "dashboard (%4$s).%5$s"
 msgstr ""
 
-#: Core/Front_End.php:67 Layouts/Core_Layout.php:29 Platforms/Base.php:52
+#: Core/Front_End.php:67 Layouts/Core_Layout.php:28 Platforms/Base.php:54
 msgid "This album is password-protected. Please provide a valid password."
 msgstr ""
 
@@ -2673,25 +2673,15 @@ msgstr ""
 msgid "Incorrect password."
 msgstr ""
 
-#: Core/Front_End.php:180
-msgid ""
-"Google has deprecated the Picasa API. Please consider switching over to "
-"Google Photos"
-msgstr ""
-
-#: Core/Front_End.php:185
-msgid "The API for 500px.com is no longer available for public use."
-msgstr ""
-
-#: Core/Photonic.php:305
+#: Core/Photonic.php:318
 msgid "Settings"
 msgstr ""
 
-#: Core/Photonic.php:308
+#: Core/Photonic.php:321
 msgid "Shortcode Replacement"
 msgstr ""
 
-#: Core/Photonic.php:657
+#: Core/Photonic.php:665
 msgid "Please specify a value for %1$s. Accepted values are %2$s, %3$s, %4$s, %5$s"
 msgstr ""
 
@@ -2699,13 +2689,13 @@ msgstr ""
 msgid "See %1$shere%2$s for documentation."
 msgstr ""
 
-#: Core/Template.php:103
+#: Core/Template.php:104
 msgid ""
 "You are trying to display a gallery, but no gallery was found corresponding "
 "to the input."
 msgstr ""
 
-#: Core/Template.php:108
+#: Core/Template.php:109
 msgid "You are trying to display a gallery, but no input was provided."
 msgstr ""
 
@@ -2813,21 +2803,21 @@ msgstr ""
 msgid "Original height"
 msgstr ""
 
-#: Layouts/Core_Layout.php:27
+#: Layouts/Core_Layout.php:26
 msgid "Protected Content"
 msgstr ""
 
-#: Layouts/Core_Layout.php:28
+#: Layouts/Core_Layout.php:27
 msgid "Access"
 msgstr ""
 
-#: Layouts/Core_Layout.php:151
+#: Layouts/Core_Layout.php:150
 msgid "%s group"
 msgid_plural "%s groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Layouts/Core_Layout.php:154
+#: Layouts/Core_Layout.php:153
 msgid "%s set"
 msgid_plural "%s sets"
 msgstr[0] ""
@@ -2842,15 +2832,15 @@ msgstr ""
 msgid "Your browser does not support HTML5 videos."
 msgstr ""
 
-#: Lightboxes/Lightbox.php:104
+#: Lightboxes/Lightbox.php:102
 msgid "Buy"
 msgstr ""
 
-#: Options/Generic.php:477 Options/Generic.php:524
+#: Options/Generic.php:477 Options/Generic.php:515
 msgid "Overlay - show photos in an overlay first"
 msgstr ""
 
-#: Platforms/Base.php:254
+#: Platforms/Base.php:256
 msgid "There was an error connecting to %s. Please try again later."
 msgstr ""
 
@@ -2870,16 +2860,16 @@ msgstr ""
 msgid "DeviantArt Refresh Token invalid. Please authenticate from %s."
 msgstr ""
 
-#: Platforms/DeviantArt.php:104 Platforms/Google_Photos.php:124
+#: Platforms/DeviantArt.php:104 Platforms/Google_Photos.php:130
 msgid "Error encountered during authentication: %s"
 msgstr ""
 
-#: Platforms/DeviantArt.php:111 Platforms/Google_Photos.php:130
+#: Platforms/DeviantArt.php:111 Platforms/Google_Photos.php:136
 msgid "The %s parameter is mandatory for the shortcode."
 msgstr ""
 
-#: Platforms/DeviantArt.php:241 Platforms/Google_Photos.php:475
-#: Platforms/Google_Photos.php:483
+#: Platforms/DeviantArt.php:241 Platforms/Google_Photos.php:481
+#: Platforms/Google_Photos.php:489
 msgid "Failed to get data. Error:"
 msgstr ""
 
@@ -2891,41 +2881,45 @@ msgstr ""
 msgid "User id or default user is required for displaying a single gallery"
 msgstr ""
 
-#: Platforms/Flickr.php:1222
+#: Platforms/Flickr.php:1218
 msgid "Please pass the %1$s or %2$s attribute."
 msgstr ""
 
-#: Platforms/Flickr.php:1236
+#: Platforms/Flickr.php:1232
 msgid "User id: %s"
 msgstr ""
 
-#: Platforms/Flickr.php:1239
+#: Platforms/Flickr.php:1235
 msgid "Group id: %s"
 msgstr ""
 
-#: Platforms/Flickr.php:1242
+#: Platforms/Flickr.php:1238
 msgid "No data returned."
 msgstr ""
 
-#: Platforms/Google_Photos.php:64 Platforms/Lightroom.php:31
+#: Platforms/Google_Photos.php:65 Platforms/Lightroom.php:31
 msgid ""
 "Dates must be entered in the format Y/M/D where Y is from 0 to 9999, M is "
 "from 0 to 12 and D is from 0 to 31. You entered %s."
 msgstr ""
 
-#: Platforms/Google_Photos.php:110
+#: Platforms/Google_Photos.php:82
+msgid "Google Photos is no longer supported due to an API deprecation by Google."
+msgstr ""
+
+#: Platforms/Google_Photos.php:116
 msgid "Google Photos Client ID not defined."
 msgstr ""
 
-#: Platforms/Google_Photos.php:114
+#: Platforms/Google_Photos.php:120
 msgid "Google Photos Client Secret not defined."
 msgstr ""
 
-#: Platforms/Google_Photos.php:118
+#: Platforms/Google_Photos.php:124
 msgid "Google Photos Refresh Token not defined. Please authenticate from %s."
 msgstr ""
 
-#: Platforms/Google_Photos.php:122
+#: Platforms/Google_Photos.php:128
 msgid "Google Photos Refresh Token invalid. Please authenticate from %s."
 msgstr ""
 

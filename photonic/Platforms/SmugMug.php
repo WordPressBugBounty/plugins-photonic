@@ -207,7 +207,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 					attributes from the album node. So, splitting the call anyway, to introduce the album!images node...
 				*/
 				if ($is_album) {
-					$chained_calls[] = $this->base_url . 'album/' . $album_field . '?_expand=HighlightImage.ImageSizes,HighlightImage.ImageSizeDetails,HighlightImage.LargestImage';
+					$chained_calls[] = $this->base_url . 'album/' . $album_field . '?_expand=HighlightImage.ImageSizes,HighlightImage.ImageSizeDetails,HighlightImage.LargestImage,Node.FormattedValues';
 					// if ('images' === $attr['view']) { // Fix for https://wordpress.org/support/topic/smugmug-filter-on-keywords-not-working-for-me/
 					if (!empty($args['Keywords']) || !empty($args['Text'])) { // Fix for https://wordpress.org/support/topic/smugmug-filter-on-keywords-not-working-for-me/
 						$args['Scope'] = 'https://api.smugmug.com/api/v2/album/' . $album_field;
@@ -242,7 +242,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 			default:
 				$this->push_to_stack('Initial user tree');
 				$initial_call     = $this->base_url . 'user/' . $attr['nick_name'];
-				$initial_response = Photonic::http($initial_call, 'GET', $args);
+				$initial_response = Photonic::http($initial_call, 'GET', $args, null, 90, PHOTONIC_SSL_VERIFY);
 
 				if (!empty($attr['site_password'])) {
 					$chained_calls[]  = $this->base_url . 'user/' . $attr['nick_name'] . '!unlock';
@@ -333,10 +333,10 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 					$this->push_to_stack('Making call');
 					if ($this->oauth_done && empty($cookies)) {
 						$signed_args = $this->sign_call($chained_call, 'GET', $smug_args);
-						$response    = Photonic::http($chained_call, 'GET', $signed_args, null, 90, false, [], $cookies);
+						$response    = Photonic::http($chained_call, 'GET', $signed_args, null, 90, PHOTONIC_SSL_VERIFY, [], $cookies);
 					}
 					else {
-						$response = Photonic::http($chained_call, 'GET', $smug_args, null, 90, false, [], $cookies);
+						$response = Photonic::http($chained_call, 'GET', $smug_args, null, 90, PHOTONIC_SSL_VERIFY, [], $cookies);
 					}
 
 					$this->pop_from_stack();
@@ -377,7 +377,19 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 										$header              = new Header();
 										$header->title       = wp_kses_post($album->Name);
 										$header->page_url    = $album->WebUri;
-										$header->description = wp_kses_post($album->Description ?? '');
+
+										if (isset($album->FormattedValues->Description->html) && !empty($album->FormattedValues->Description->html)) {
+											// wp_kses_post is OK here, as we want to permit <a> and other tags - this markup is printed directly on a page and not in a lightbox.
+											$header->description = wp_kses_post($album->FormattedValues->Description->html);
+										}
+										elseif (isset($album->Uris->Node->Node->FormattedValues->Description->html) && !empty($album->Uris->Node->Node->FormattedValues->Description->html)) {
+											// wp_kses_post is OK here, as we want to permit <a> and other tags - this markup is printed directly on a page and not in a lightbox.
+											$header->description = wp_kses_post($album->Uris->Node->Node->FormattedValues->Description->html);
+										}
+										else {
+											// wp_kses_post is OK here, as we want to permit <a> and other tags - this markup is printed directly on a page and not in a lightbox.
+											$header->description = wp_kses_post($album->Description ?? '');
+										}
 
 										if (isset($album->Uris->HighlightImage->Image)) {
 											$header->thumb_url = $album->Uris->HighlightImage->Image->ThumbnailUrl;
@@ -482,7 +494,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 	 * @param int $level
 	 * @return Collection
 	 */
-	private function get_collection($node, $short_code, $indent = '', $level = 0): Collection {
+	private function get_collection($node, $short_code, string $indent = '', int $level = 0): Collection {
 		$collection         = new Collection();
 		$collection->indent = $indent;
 
@@ -566,7 +578,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 	 * @param $pages
 	 * @return Album_List
 	 */
-	private function process_albums($albums, $indent, $album_filter, $short_code, $pages): Album_List {
+	private function process_albums($albums, string $indent, array $album_filter, $short_code, $pages): Album_List {
 		global $photonic_smug_albums_album_per_row_constraint, $photonic_smug_albums_album_constrain_by_count, $photonic_smug_albums_album_title_display, $photonic_smug_hide_albums_album_photos_count_display, $photonic_gallery_template_page;
 		$objects = $this->build_level_2_objects($albums, $short_code, $album_filter);
 
@@ -596,7 +608,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 	 * @param $header
 	 * @return array
 	 */
-	private function process_images($response, $short_code, $header): array {
+	private function process_images($response, array $short_code, $header): array {
 		global $photonic_smug_photos_per_row_constraint, $photonic_smug_photos_constrain_by_count,
 			   $photonic_smug_photo_title_display, $photonic_smug_photo_pop_title_display;
 		$body = $response['body'];
@@ -624,7 +636,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 				$photo_objects = $this->build_level_1_objects($images, $short_code);
 			}
 
-			$pages      = isset($images->Pages) ? $images->Pages : (is_array($images) && isset($body->Pages) ? $body->Pages : null);
+			$pages      = $images->Pages ?? (is_array($images) && isset($body->Pages) ? $body->Pages : null);
 			$pagination = $this->get_pagination($pages);
 
 			if (!empty($photo_objects)) {
@@ -703,7 +715,14 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 
 				$photonic_photo->title       = wp_kses_post($image->Title);
 				$photonic_photo->alt_title   = $photonic_photo->title;
-				$photonic_photo->description = wp_kses_post($image->Caption);
+
+				if (isset($image->FormattedValues->Caption->html) && !empty($image->FormattedValues->Caption->html)) {
+					$photonic_photo->description = wp_kses($image->FormattedValues->Caption->html, Photonic::$safe_description_tags);
+				}
+				else {
+					$photonic_photo->description = wp_kses($image->Caption, Photonic::$safe_description_tags);
+				}
+
 				if (isset($image->WebUri)) {
 					$photonic_photo->main_page = esc_url($image->WebUri);
 					$photonic_photo->buy_link  = esc_url($image->WebUri . '/buy');
@@ -733,7 +752,7 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 		return $photo_objects;
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array $options = [], ?Pagination &$pagination = null): array {
 		global $photonic_smug_hide_password_protected_thumbnail, $photonic_gallery_template_page;
 
 		$named_albums = $filter_list;
@@ -790,14 +809,24 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 
 					$photonic_album->main_page = esc_url($album->WebUri);
 
-					$photonic_album->title       = wp_kses_post($album->Name);
-					$photonic_album->description = !empty($album->Description) ? wp_kses_post($album->Description) : '';
+					$photonic_album->title = wp_kses_post($album->Name);
+
+					if (isset($album->FormattedValues->Description->html) && !empty($album->FormattedValues->Description->html)) {
+						$photonic_album->description = wp_kses($album->FormattedValues->Description->html, Photonic::$safe_description_tags);
+					}
+					elseif (isset($album->Uris->Node->Node->FormattedValues->Description->html) && !empty($album->Uris->Node->Node->FormattedValues->Description->html)) {
+						$photonic_album->description = wp_kses($album->Uris->Node->Node->FormattedValues->Description->html, Photonic::$safe_description_tags);
+					}
+					else {
+						$photonic_album->description = !empty($album->Description) ? wp_kses($album->Description, Photonic::$safe_description_tags) : '';
+					}
 
 					if ('page' === $short_code['popup'] && !empty($photonic_gallery_template_page) && is_string(get_post_status($photonic_gallery_template_page))) {
 						$internal_short_code           = $short_code;
 						$internal_short_code['view']   = 'album';
 						$internal_short_code['album']  = $photonic_album->id;
 						$internal_short_code['layout'] = empty($short_code['photo_layout']) ? $short_code['layout'] : $short_code['photo_layout'];
+						$internal_short_code['count'] = empty($short_code['photo_count']) ? $short_code['count'] : $short_code['photo_count'];
 
 						$photonic_album->gallery_url = $this->get_gallery_url($internal_short_code, ['title' => $photonic_album->title]);
 					}
@@ -811,8 +840,8 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 						$photonic_album->passworded = 1;
 					}
 
-					if (empty($named_albums) || (!empty($named_albums) && in_array($album->AlbumKey, $named_albums, true) && 'exclude' !== strtolower($short_code['filter_type'])) ||
-						(!empty($named_albums) && !in_array($album->AlbumKey, $named_albums, true) && 'exclude' === strtolower($short_code['filter_type']))) {
+					if (empty($named_albums) || (in_array($album->AlbumKey, $named_albums, true) && 'exclude' !== strtolower($short_code['filter_type'])) ||
+						(!in_array($album->AlbumKey, $named_albums, true) && 'exclude' === strtolower($short_code['filter_type']))) {
 						$objects[] = $photonic_album;
 					}
 				}
@@ -883,13 +912,12 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 	 * Tests to see if the OAuth Access Token that is cached is still valid. This is important because a user might have manually revoked
 	 * access for your app through the provider's control panel.
 	 *
-	 * @param $token
 	 * @return array|WP_Error
 	 */
 	public function check_access_token() {
 		$signed_parameters = $this->sign_call($this->base_url . 'user/sayontan', 'GET', []);
 		$end_point         = $this->base_url . 'user/sayontan?' . self::build_query($signed_parameters);
-		return Photonic::http($end_point, 'GET', null);
+		return Photonic::http($end_point, 'GET', null, null, 90, PHOTONIC_SSL_VERIFY);
 	}
 
 	/**

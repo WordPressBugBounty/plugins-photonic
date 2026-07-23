@@ -21,7 +21,7 @@ class PrettyPhoto extends Lightbox {
 		$rel = 'lightbox-photonic-' . $module->provider . '-stream-' . (empty($rel_id) ? $module->gallery_index : $rel_id);
 		return [
 			'class'    => $this->class,
-			'rel'      => ["photonic-prettyPhoto[{$rel}]"],
+			'rel'      => ["photonic-prettyPhoto[$rel]"],
 			'specific' => [],
 		];
 	}

@@ -16,7 +16,7 @@ class Grid_Image implements Printable {
 	public array $dimensions = [];
 	public string $lazy_load;
 
-	public function html(Base $module, Core_Layout $layout, $print = false): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		$img_dim = '';
 		if (!empty($this->dimensions) && !empty($this->dimensions['w']) && !empty($this->dimensions['h'])) {
 			$img_dim = " width='{$this->dimensions['w']}' height='{$this->dimensions['h']}'";

@@ -36,8 +36,6 @@ require_once PHOTONIC_PATH . '/Components/Collection.php';
  * All galleries can be laid out using any of the layout options.
  */
 class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pageable {
-	private static $instance = null;
-
 	protected function __construct() {
 		parent::__construct();
 		global $photonic_flickr_api_key, $photonic_flickr_api_secret, $photonic_flickr_disable_title_link, $photonic_flickr_access_token, $photonic_flickr_token_secret;
@@ -345,7 +343,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		}
 
 		$this->push_to_stack("Make call ({$params['method']})");
-		$response = Photonic::http($this->base_url, 'GET', $params, $this->user_agent);
+		$response = Photonic::http($this->base_url, 'GET', $params, $this->user_agent, 90, PHOTONIC_SSL_VERIFY);
 		$this->pop_from_stack();
 		return $response;
 	}
@@ -359,7 +357,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 	 * @param string $filters
 	 * @return array
 	 */
-	private function get_collection_list($user_id, $collection_id = '', $filters = ''): array {
+	private function get_collection_list($user_id, string $collection_id = '', string $filters = ''): array {
 		$this->push_to_stack("Collection list (collection id '$collection_id')");
 		$query         = $this->base_url . '?method=flickr.collections.getTree';
 		$flickr_params = [];
@@ -429,7 +427,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		$processed[] = $id;
 		$id          = substr($id, strpos($id, '-') + 1);
 		$title       = wp_kses_post($collection->title ?? '');
-		$description = wp_kses_post($collection->description ?? '');
+		$description = wp_kses($collection->description ?? '', Photonic::$safe_description_tags);
 		$thumb       = esc_url($collection->iconsmall ?? ($collection->iconlarge ?? ''));
 		$thumb       = ('/images/collection_default_l.gif' === $thumb || '/images/collection_default_s.gif' === $thumb) ? 'https://www.flickr.com' . $thumb : $thumb;
 
@@ -443,7 +441,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 					$sets[] = [
 						'id'          => wp_kses_post($inner_set->id),
 						'title'       => wp_kses_post($inner_set->title),
-						'description' => wp_kses_post($inner_set->description),
+						'description' => wp_kses($inner_set->description, Photonic::$safe_description_tags),
 					];
 				}
 			}
@@ -491,7 +489,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 						break;
 
 					case 'flickr.photos.search':
-						if (isset($body->photos) && isset($body->photos->photo)) {
+						if (isset($body->photos->photo)) {
 							$photos       = $body->photos->photo;
 							$components[] = $this->get_photo_list($photos, 'stream', $flickr_params, $short_code, $this->get_pagination($body->photos));
 						}
@@ -509,10 +507,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 							$photoset = $body->photoset;
 							if (isset($photoset->photo) && isset($photoset->owner)) {
 								$photos  = $photoset->photo;
-								$options = [];
-								if (isset($photoset->owner)) {
-									$options['owner'] = $photoset->owner;
-								}
+								$options = ['owner' => $photoset->owner];
 								$components[] = $this->get_photo_list($photos, 'set', $flickr_params, $short_code, $this->get_pagination($photoset), $options);
 							}
 						}
@@ -637,13 +632,13 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 	 *
 	 * @param $photos
 	 * @param string $parent
-	 * @param $flickr_params
-	 * @param $short_code
+	 * @param array $flickr_params
+	 * @param array $short_code
 	 * @param Pagination $pagination
 	 * @param array $options
 	 * @return Photo_List
 	 */
-	private function get_photo_list($photos, $parent, $flickr_params, $short_code, $pagination, $options = []): Photo_List {
+	private function get_photo_list($photos, string $parent, array $flickr_params, array $short_code, Pagination $pagination, array $options = []): Photo_List {
 		global $photonic_flickr_photo_title_display, $photonic_flickr_photo_pop_title_display;
 		global $photonic_flickr_photos_per_row_constraint, $photonic_flickr_photos_constrain_by_count;
 
@@ -684,7 +679,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 					$dimensions['h'] = $photo->{'height_' . $value};
 					return esc_url($photo->{'url_' . $value});
 				}
-				elseif (isset($photo->primary_photo_extras) && isset($photo->primary_photo_extras->{'url_' . $value})) {
+				elseif (isset($photo->primary_photo_extras->{'url_' . $value})) {
 					$dimensions['w'] = $photo->primary_photo_extras->{'width_' . $value};
 					$dimensions['h'] = $photo->primary_photo_extras->{'height_' . $value};
 					return esc_url($photo->primary_photo_extras->{'url_' . $value});
@@ -699,7 +694,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		return esc_url('https://farm' . $photo->farm . '.staticflickr.com/' . $photo->server . '/' . (!empty($photo->primary) ? $photo->primary : $photo->id) . '_' . $photo->secret . '_z.jpg');
 	}
 
-	private function find_largest_video_thumb(&$photo_struct, $current_sizes, $shortcode_sizes) {
+	private function find_largest_video_thumb($photo_struct, $current_sizes, $shortcode_sizes) {
 		$video_sizes = [
 			'o' => 'Original',
 			'k' => 'Large 2048',
@@ -788,9 +783,6 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 			if (isset($photo->description)) {
 				$photonic_photo->description = $photo->description->_content;
 			}
-			else {
-				$photonic_photo->description = '';
-			}
 
 			if (isset($photo->datetaken)) {
 				$photonic_photo->taken_on = sanitize_text_field($photo->datetaken);
@@ -842,7 +834,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		return $photo_objects;
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array $options = [], ?Pagination &$pagination = null): array {
 		global $photonic_gallery_template_page;
 
 		$main_size = sanitize_text_field('none' === $short_code['main_size'] ? '' : $short_code['main_size']);
@@ -890,7 +882,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 				$photonic_album->tile_image = esc_url($this->find_largest_image($flickr_object, $tile_size, $photonic_album->tile_size));
 
 				$owner                     = $flickr_object->owner ?? $short_code['user_id'];
-				$photonic_album->main_page = esc_url("https://www.flickr.com/photos/$owner/sets/{$flickr_object->id}");
+				$photonic_album->main_page = esc_url("https://www.flickr.com/photos/$owner/sets/$flickr_object->id");
 				$photonic_album->counter   = $flickr_object->photos;
 
 				$internal_short_code['view']        = 'photoset';
@@ -923,7 +915,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 	 * @param array $short_code
 	 * @return Header
 	 */
-	private function get_photoset_header($photoset, $short_code = []): Header {
+	private function get_photoset_header($photoset, array $short_code = []): Header {
 		global $photonic_flickr_hide_set_thumbnail, $photonic_flickr_hide_set_title, $photonic_flickr_hide_set_photo_count;
 
 		$owner  = $photoset->owner;
@@ -932,7 +924,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		$header              = new Header();
 		$header->title       = wp_kses_post($photoset->title->_content);
 		$header->description = wp_kses_post($photoset->description->_content);
-		$header->thumb_url   = esc_url($photoset->primary_photo_extras->{'url_' . $short_code['thumb_size']} ?? "https://farm{$photoset->farm}.staticflickr.com/{$photoset->server}/{$photoset->primary}_{$photoset->secret}_{$short_code['thumb_size']}.jpg");
+		$header->thumb_url   = esc_url($photoset->primary_photo_extras->{'url_' . $short_code['thumb_size']} ?? "https://farm$photoset->farm.staticflickr.com/$photoset->server/{$photoset->primary}_{$photoset->secret}_{$short_code['thumb_size']}.jpg");
 		$header->page_url    = 'https://www.flickr.com/photos/' . $owner . '/sets/' . $photoset->id;
 
 		$header->header_for       = 'set';
@@ -988,7 +980,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		$header              = new Header();
 		$header->title       = wp_kses_post($gallery->title->_content);
 		$header->description = wp_kses_post($gallery->description->_content);
-		$header->thumb_url   = esc_url($gallery->primary_photo_extras->{'url_' . $short_code['thumb_size']} ?? "https://farm{$gallery->primary_photo_farm}.staticflickr.com/{$gallery->primary_photo_server}/{$gallery->primary_photo_id}_{$gallery->primary_photo_secret}_{$short_code['thumb_size']}.jpg");
+		$header->thumb_url   = esc_url($gallery->primary_photo_extras->{'url_' . $short_code['thumb_size']} ?? "https://farm$gallery->primary_photo_farm.staticflickr.com/$gallery->primary_photo_server/{$gallery->primary_photo_id}_{$gallery->primary_photo_secret}_{$short_code['thumb_size']}.jpg");
 		$header->page_url    = $gallery->url;
 
 		$header->header_for       = 'gallery';
@@ -1008,7 +1000,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 	 * @param array $short_code
 	 * @return Album_List
 	 */
-	private function get_gallery_list($galleries, $filter_list = [], $short_code = []): Album_List {
+	private function get_gallery_list($galleries, array $filter_list = [], array $short_code = []): Album_List {
 		global $photonic_flickr_galleries_per_row_constraint, $photonic_gallery_template_page,
 			   $photonic_flickr_galleries_constrain_by_count, $photonic_flickr_gallery_title_display, $photonic_flickr_hide_gallery_photos_count_display;
 
@@ -1037,10 +1029,10 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 	 * @param array $short_code
 	 * @return Collection
 	 */
-	private function get_collections($collections, $short_code = []): Collection {
+	private function get_collections($collections, array $short_code = []): Collection {
 		global $photonic_flickr_hide_empty_collection_details, $photonic_flickr_collection_set_per_row_constraint, $photonic_gallery_template_page,
 			   $photonic_flickr_collection_set_constrain_by_count, $photonic_flickr_hide_collection_thumbnail, $photonic_flickr_hide_collection_title,
-		       $photonic_flickr_hide_collection_set_count, $photonic_flickr_collection_set_title_display, $photonic_flickr_hide_collection_set_photos_count_display;
+			   $photonic_flickr_hide_collection_set_count, $photonic_flickr_collection_set_title_display, $photonic_flickr_hide_collection_set_photos_count_display;
 		$photonic_collections = new Collection();
 		if (!empty($short_code['strip_top_level'])) {
 			$photonic_collections->strip_top_level = true;
@@ -1092,17 +1084,15 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 				$photonic_collection->header = $header;
 			}
 
-			if (isset($collection->set) && !empty($collection->set) && $short_code['iterate_level_3']) {
+			if (!empty($collection->set) && $short_code['iterate_level_3']) {
 				$flickr_objects = [];
 				$photosets      = $collection->set;
 
 				$parallel = [];
 				$psets    = [];
-				$hooks = new Hooks();
 
-				if (isset($hooks)) {
-					$hooks->register('curl.before_multi_add', [$this, 'ssl_verify_peer'], 100);
-				}
+				$hooks = new Hooks();
+				$hooks->register('curl.before_multi_add', [$this, 'ssl_verify_peer'], 100);
 
 				foreach ($photosets as $set) {
 					$parallel_params                   = [];
@@ -1126,7 +1116,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 					$psets[]    = $set->id;
 				}
 
-				if (!empty($parallel) && isset($hooks)) {
+				if (!empty($parallel)) {
 					$parallel_responses = Requests::request_multiple($parallel, ['hooks' => $hooks]); // DO NOT import this, since the class does not exist before WP 6.2
 					if (!empty($parallel_responses)) {
 						foreach ($parallel_responses as $ps_response) {
@@ -1209,10 +1199,10 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 		$end_point         .= '?' . self::build_query($signed_parameters);
 		$parameters        = null;
 
-		return Photonic::http($end_point, 'GET', $parameters, $this->user_agent);
+		return Photonic::http($end_point, 'GET', $parameters, $this->user_agent, 90, PHOTONIC_SSL_VERIFY);
 	}
 
-	public function execute_helper($args = []): string {
+	public function execute_helper(array $args = []): string {
 		if (!empty($args['user'])) {
 			$url = 'https://api.flickr.com/services/rest/?format=json&nojsoncallback=1&api_key=' . $this->api_key . '&method=flickr.urls.lookupUser&url=' . rawurlencode('https://www.flickr.com/photos/') . $args['user'];
 		}
@@ -1225,7 +1215,7 @@ class Flickr extends OAuth1 implements Level_One_Module, Level_Two_Module, Pagea
 
 		$response = wp_remote_request($url, ['sslverify' => PHOTONIC_SSL_VERIFY]);
 		if (!is_wp_error($response)) {
-			if (isset($response['response']) && isset($response['response']['code'])) {
+			if (isset($response['response']['code'])) {
 				if (200 === $response['response']['code']) {
 					$body = json_decode(wp_remote_retrieve_body($response));
 					if (isset($body->stat) && 'fail' === $body->stat) {

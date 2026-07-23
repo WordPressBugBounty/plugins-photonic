@@ -15,10 +15,10 @@ use Photonic_Plugin\Platforms\Base;
  * @package Photonic_Plugin\Components
  */
 class Single_Photo implements Printable {
-	public $src = '';
-	public $href = '';
-	public $title = '';
-	public $caption = '';
+	public string $src = '';
+	public string $href = '';
+	public string $title = '';
+	public string $caption = '';
 
 	/**
 	 * Single_Photo constructor.
@@ -28,14 +28,14 @@ class Single_Photo implements Printable {
 	 * @param string $title
 	 * @param string $caption
 	 */
-	public function __construct($src, $href, $title, $caption) {
+	public function __construct(string $src, string $href, string $title, string $caption) {
 		$this->src = $src;
 		$this->href = $href;
 		$this->title = $title;
 		$this->caption = $caption;
 	}
 
-	public function html(Base $module, ?Core_Layout $layout = null, $print = false): string {
+	public function html(Base $module, ?Core_Layout $layout, bool $print = false): string {
 		$ret = $layout->generate_single_photo_markup($this, $module);
 		if ($print) {
 			echo wp_kses($ret, Photonic::$safe_tags);

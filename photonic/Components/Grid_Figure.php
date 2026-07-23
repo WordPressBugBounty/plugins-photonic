@@ -22,7 +22,7 @@ class Grid_Figure implements Printable {
 	 */
 	public Grid_Anchor $anchor;
 
-	public function html(Base $module, Core_Layout $layout, $print = false): string {
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string {
 		$classes = esc_attr(implode(' ', $this->classes));
 		$style = '';
 		if (!empty($this->styles)) {

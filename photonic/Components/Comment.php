@@ -5,7 +5,7 @@ namespace Photonic_Plugin\Components;
 use Photonic_Plugin\Layouts\Core_Layout;
 use Photonic_Plugin\Platforms\Base;
 
-class Error implements Printable {
+class Comment implements Printable {
 	private string $message;
 
 	/**
@@ -22,12 +22,9 @@ class Error implements Printable {
 	 */
 	public function html(Base $module, ?Core_Layout $layout, bool $print = false): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		$ret = "
-<div class='photonic-error photonic-{$module->provider}-error' id='photonic-{$module->provider}-error-{$module->gallery_index}'>
-	<span class='photonic-error-icon photonic-icon'>&nbsp;</span>
-	<div class='photonic-message'>
-		{$this->message}
-	</div>
-</div>\n";
+<!-- 
+	{$this->message}
+-->\n";
 		if ($print) {
 			echo wp_kses_post($ret);
 		}

@@ -16,6 +16,7 @@ class Photonic {
 	public static array $lightbox_replacements;
 	public static array $safe_tags;
 	public static array $safe_title_tags;
+	public static array $safe_description_tags;
 
 	public function __construct() {
 		// $start = microtime(true);
@@ -25,6 +26,7 @@ class Photonic {
 			'fancybox'    => 'fancybox3',
 			'magnific'    => 'venobox',
 			'prettyphoto' => 'spotlight',
+			'strip'       => 'venobox',
 		];
 
 		self::$safe_tags = array_merge_recursive(
@@ -70,7 +72,8 @@ class Photonic {
 					'data-splide' => true,
 				],
 
-/*				'ul' => [
+				/*
+				'ul' => [
 					// Slideshows
 					'data-photonic-columns' => true,
 					'data-photonic-controls' => true,
@@ -80,7 +83,8 @@ class Photonic {
 					'data-photonic-speed' => true,
 					'data-photonic-strip-style' => true,
 					'data-photonic-timeout' => true,
-				],*/
+				],
+				*/
 
 				'img' => [
 					// Lazy loading
@@ -175,6 +179,15 @@ class Photonic {
 			'h4' => [],
 		];
 
+		self::$safe_description_tags = [
+			'strong' => [],
+			'em'     => [],
+			'b'      => [],
+			'i'      => [],
+			'br'     => [],
+			'p'      => [],
+		];
+
 		require_once PHOTONIC_PATH . "/Options/Options.php";
 		add_action('admin_init', [Options::get_instance(), 'prepare_options'], 20); // Setting to 20 so that CPTs can be picked up - Utilities are loaded with a priority 10
 
@@ -262,13 +275,13 @@ class Photonic {
 		// The above code was commented out in March 2023, Photonic v 2.85, to prevent running the cron for Instagram.
 		// The code below was added to clean out any previously scheduled cron jobs.
 		// This will be removed not before March 2024, to give users the opportunity to install the plugin and have it un-schedule their jobs.
-		$photonic_token_monitor_timestamp = wp_next_scheduled('photonic_token_monitor');
-		wp_unschedule_event($photonic_token_monitor_timestamp, 'photonic_token_monitor');
+		// $photonic_token_monitor_timestamp = wp_next_scheduled('photonic_token_monitor');
+		// wp_unschedule_event($photonic_token_monitor_timestamp, 'photonic_token_monitor');
 
 		$this->add_extensions();
 		$this->add_gutenberg_support();
 
-		add_action('http_api_curl', [&$this, 'curl_timeout'], 100, 1);
+		add_action('http_api_curl', [&$this, 'curl_timeout'], 100);
 
 		add_action('plugins_loaded', [&$this, 'enable_translations']);
 
@@ -522,7 +535,7 @@ class Photonic {
 	 * @param bool $header
 	 * @return string
 	 */
-	public function generate_css($header = true): string {
+	public function generate_css(bool $header = true): string {
 		global $photonic_tile_spacing, $photonic_masonry_tile_spacing, $photonic_mosaic_tile_spacing;
 
 		$css = '';
@@ -575,7 +588,7 @@ class Photonic {
 	 * Overrides the native gallery short code, and does a lot more.
 	 *
 	 * @param $content
-	 * @param array $attr
+	 * @param array|string $attr
 	 * @return string
 	 */
 	public function modify_gallery($content, $attr = []) {
@@ -598,11 +611,7 @@ class Photonic {
 		$this->conditionally_add_scripts();
 		$images = $this->get_gallery_images($attr);
 
-		if (!is_array($images)) {
-			return wp_kses($images, self::$safe_tags);
-		}
-
-		return wp_kses($content, self::$safe_tags);
+		return wp_kses($images, self::$safe_tags);
 	}
 
 	/**
@@ -645,7 +654,7 @@ class Photonic {
 	 * @param array $attr
 	 * @return string
 	 */
-	public function helper_shortcode($attr = []): string {
+	public function helper_shortcode(array $attr = []): string {
 		if (empty($attr)) {
 			$attr = [];
 		}
@@ -673,17 +682,17 @@ class Photonic {
 	 * Make an HTTP request
 	 *
 	 * @static
-	 * @param $url
-	 * @param string $method GET | POST | DELETE.
-	 * @param null $post_fields
-	 * @param string $user_agent
-	 * @param int $timeout
-	 * @param bool $ssl_verify_peer
-	 * @param array $headers
-	 * @param array $cookies
+	 * @param string      $url
+	 * @param string      $method GET | POST.
+	 * @param array|null  $post_fields
+	 * @param string|null $user_agent
+	 * @param int         $timeout
+	 * @param bool        $ssl_verify_peer
+	 * @param array       $headers
+	 * @param array       $cookies
 	 * @return array|WP_Error
 	 */
-	public static function http($url, $method = 'POST', $post_fields = null, $user_agent = null, $timeout = 90, $ssl_verify_peer = false, $headers = [], $cookies = []) {
+	public static function http(string $url, string $method = 'POST', ?array $post_fields = null, ?string $user_agent = null, int $timeout = 90, bool $ssl_verify_peer = false, array $headers = [], array $cookies = []) {
 		$curl_args = [
 			'user-agent' => $user_agent,
 			'timeout'    => $timeout,
@@ -694,19 +703,11 @@ class Photonic {
 			'cookies'    => $cookies,
 		];
 
-		switch ($method) {
-			case 'DELETE':
-				if (!empty($post_fields)) {
-					$url = "{$url}?{$post_fields}";
-				}
-				break;
-		}
-
 		return wp_remote_request($url, $curl_args);
 	}
 
 	public function enable_translations() {
-		load_plugin_textdomain('photonic', false, false);
+		load_plugin_textdomain('photonic');
 	}
 
 	/**
@@ -732,10 +733,10 @@ class Photonic {
 			$shortcode = (array) (json_decode($attributes['shortcode']));
 
 			if (!empty($attributes['align'])) {
-				$shortcode['alignment'] = $attributes['align'];
+				$shortcode['alignment'] = esc_attr($attributes['align']);
 			}
 			if (!empty($attributes['className'])) {
-				$shortcode['custom_classes'] = $attributes['className'];
+				$shortcode['custom_classes'] = esc_attr($attributes['className']);
 			}
 
 			$this->conditionally_add_scripts();
@@ -763,7 +764,7 @@ class Photonic {
 	public function curl_timeout($handle) {
 		// Forcing phpcs:ignore here, since the explicit purpose is to change cURL's timeout.
 		curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, PHOTONIC_CURL_TIMEOUT); // phpcs:ignore WordPress.WP.AlternativeFunctions
-		curl_setopt($handle, CURLOPT_TIMEOUT, PHOTONIC_CURL_TIMEOUT < 30 ? 30 : PHOTONIC_CURL_TIMEOUT); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		curl_setopt($handle, CURLOPT_TIMEOUT, max(PHOTONIC_CURL_TIMEOUT, 30)); // phpcs:ignore WordPress.WP.AlternativeFunctions
 	}
 
 	public static function log($element) {

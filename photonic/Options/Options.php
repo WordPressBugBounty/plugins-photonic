@@ -2,7 +2,7 @@
 namespace Photonic_Plugin\Options;
 
 class Options {
-	private static $instance;
+	private static ?Options $instance;
 
 	private function __construct() {
 		require_once 'Defaults.php';
@@ -15,7 +15,7 @@ class Options {
 		global $photonic_setup_options;
 
 		$photonic_setup_options = [];
-		if (is_admin() && !empty($_REQUEST['page']) && in_array($_REQUEST['page'], ['photonic-options-manager', 'photonic-options'], true)) {
+		if (is_admin() && !empty($_REQUEST['page']) && in_array($_REQUEST['page'], ['photonic-options-manager', 'photonic-options'], true)) { // phpcs:ignore WordPress.Security.NonceVerification
 			require_once 'Option_Tab.php';
 
 			require_once 'Generic.php';
@@ -59,18 +59,18 @@ class Options {
 		}
 	}
 
-	public static function get_instance() {
-		if (null === self::$instance) {
+	public static function get_instance(): Options {
+		if (!isset(self::$instance)) {
 			self::$instance = new Options();
 		}
 		return self::$instance;
 	}
 
 	/**
-	 * @param $options array
-	 * @param $photonic_setup_options array
+	 * @param array $options
+	 * @param array $photonic_setup_options
 	 */
-	public function add_options($options, &$photonic_setup_options) {
+	public function add_options(array $options, array &$photonic_setup_options) {
 		foreach ($options as $option) {
 			$photonic_setup_options[] = $option;
 		}

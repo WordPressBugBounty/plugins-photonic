@@ -14,12 +14,11 @@ use Photonic_Plugin\Platforms\Base;
  * All other layout managers extend this, and might implement their own versions of generate_level_1_gallery and generate_level_2_gallery
  */
 abstract class Core_Layout {
-	protected $library;
-	protected $layout;
-	protected $common_parameters = [];
-	protected $prompt_title;
-	protected $prompt_submit;
-	protected $prompt_text;
+	protected ?string $library;
+	protected array $common_parameters = [];
+	protected string $prompt_title;
+	protected string $prompt_submit;
+	protected string $prompt_text;
 
 	protected function __construct() {
 		$this->library = esc_attr(Photonic::$library);

@@ -15,7 +15,7 @@ trait Authenticator {
 	 *
 	 * @static
 	 * @param $input
-	 * @return array|mixed|string
+	 * @return array|string
 	 */
 	public static function urlencode_rfc3986($input) {
 		if (is_array($input)) {
@@ -64,8 +64,7 @@ trait Authenticator {
 			}
 		}
 
-		$string = implode('&', $pairs);
-		return $string;
+		return implode('&', $pairs);
 	}
 
 	/**
@@ -98,7 +97,7 @@ trait Authenticator {
 	 *
 	 * @return array|null
 	 */
-	public function get_cached_token() {
+	public function get_cached_token(): ?array {
 		$transient_token         = get_transient('photonic_' . $this->provider . '_token');
 		$photonic_authentication = get_option('photonic_authentication');
 		if (false !== $transient_token) {

@@ -24,7 +24,7 @@ class Grid_Anchor implements Printable {
 	 */
 	public $image;
 
-	public function html(Base $module, Core_Layout $layout, $print = false): string {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string {  // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		$data_pieces = array_map(
 			function (string $key, string $value): string {
 				return $key . '="' . $value . '"';

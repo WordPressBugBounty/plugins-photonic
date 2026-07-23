@@ -560,7 +560,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 	 * @param Pagination|null $pagination
 	 * @return Photo_List|Error
 	 */
-	private function process_photos($response, $parent, $short_code, Pagination $pagination) {
+	private function process_photos($response, string $parent, array $short_code, Pagination $pagination) {
 		if (!is_array($response)) {
 			if (empty($response->Photos) || !is_array($response->Photos)) {
 				return new Error(esc_html__('Response is not an array', 'photonic'));
@@ -651,7 +651,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 		return $photo_objects;
 	}
 
-	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array &$options = [], ?Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array $options = [], ?Pagination &$pagination = null): array {
 		global $photonic_zenfolio_hide_password_protected_thumbnail, $photonic_gallery_template_page;
 		$tile_size = (empty($short_code['tile_size']) || 'same' === $short_code['tile_size']) ? $short_code['main_size'] : $short_code['tile_size'];
 

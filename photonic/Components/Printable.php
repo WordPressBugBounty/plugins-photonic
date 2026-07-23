@@ -14,10 +14,10 @@ interface Printable {
 	/**
 	 * Generates and prints the markup for a Photonic component
 	 *
-	 * @param Base $module
+	 * @param Base        $module
 	 * @param Core_Layout $layout
-	 * @param false $print
+	 * @param bool        $print
 	 * @return mixed
 	 */
-	public function html(Base $module, Core_Layout $layout, $print = false): string;
+	public function html(Base $module, Core_Layout $layout, bool $print = false): string;
 }

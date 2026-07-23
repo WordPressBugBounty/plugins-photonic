@@ -87,9 +87,9 @@ class Front_End {
 				'fb3_transition_effect'   => esc_js($photonic_fb3_transition_effect ?: 'zoom'),
 				'fb3_transition_speed'    => (isset($photonic_fb3_transition_speed) && absint($photonic_fb3_transition_speed)) ? absint($photonic_fb3_transition_speed) : 366,
 				'fb3_fullscreen_button'   => !empty($photonic_fb3_show_fullscreen),
-				'fb3_fullscreen'          => isset($photonic_enable_fb3_fullscreen) && 'on' === $photonic_enable_fb3_fullscreen ? true : false,
+				'fb3_fullscreen'          => isset($photonic_enable_fb3_fullscreen) && 'on' === $photonic_enable_fb3_fullscreen,
 				'fb3_thumbs_button'       => empty($photonic_fb3_hide_thumbs),
-				'fb3_thumbs'              => isset($photonic_enable_fb3_thumbnail) && 'on' === $photonic_enable_fb3_thumbnail ? true : false,
+				'fb3_thumbs'              => isset($photonic_enable_fb3_thumbnail) && 'on' === $photonic_enable_fb3_thumbnail,
 				'fb3_zoom'                => empty($photonic_fb3_disable_zoom),
 				'fb3_slideshow'           => empty($photonic_fb3_disable_slideshow),
 				'fb3_download'            => !empty($photonic_fb3_enable_download),
@@ -176,16 +176,6 @@ class Front_End {
 
 		$type = strtolower($attr['type']);
 
-		if ('picasa' === $type) {
-			$message = esc_html__('Google has deprecated the Picasa API. Please consider switching over to Google Photos', 'photonic');
-			return "<div class='photonic-error'>\n\t<span class='photonic-error-icon photonic-icon'>&nbsp;</span>\n\t<div class='photonic-message'>\n\t\t$message\n\t</div>\n</div>\n";
-		}
-
-		if ('500px' === $type) {
-			$message = esc_html__('The API for 500px.com is no longer available for public use.', 'photonic');
-			return "<div class='photonic-error'>\n\t<span class='photonic-error-icon photonic-icon'>&nbsp;</span>\n\t<div class='photonic-message'>\n\t\t$message\n\t</div>\n</div>\n";
-		}
-
 		$layout = ('default' === $type || 'wp' === $type)
 			? $attr['style']
 			: (!empty($attr['layout'])
@@ -197,7 +187,7 @@ class Front_End {
 			&& in_array($layout, ['square', 'circle', 'random', 'masonry', 'mosaic'], true);
 
 		if (!empty($attr['show_gallery']) && $lazy_allowed) { // Lazy button not for WP galleries
-			$images = $this->get_lazy_load_button($attr, 'show_gallery');
+			$images = $this->get_lazy_load_button($attr);
 		}
 		elseif ((('js' === $photonic_load_mode && (empty($attr['load_mode']) || 'js' === trim(esc_attr($attr['load_mode'])))) || ('php' === $photonic_load_mode && (!empty($attr['load_mode']) && 'js' === trim(sanitize_text_field($attr['load_mode'])))))
 			&& $lazy_allowed) { // Lazy button not for WP galleries

@@ -10,6 +10,7 @@ require_once PHOTONIC_PATH . '/Components/Printable.php';
 require_once PHOTONIC_PATH . '/Components/Stack_Trace.php';
 require_once PHOTONIC_PATH . '/Components/Header.php';
 require_once PHOTONIC_PATH . '/Components/Error.php';
+require_once PHOTONIC_PATH . '/Components/Comment.php';
 
 /**
  * Gallery processor class to be extended by individual processors. This class has an abstract method called <code>get_gallery_images</code>
@@ -19,7 +20,8 @@ require_once PHOTONIC_PATH . '/Components/Error.php';
  * Most utility functions have been adapted from the OAuth PHP package distributed here: https://code.google.com/p/oauth-php/.
  */
 abstract class Base {
-	public $api_key, $api_secret, $provider, $user_agent, $nonce, $oauth_timestamp, $signature_parameters, $link_lightbox_title,
+	public $api_key;
+	public $api_secret, $provider, $user_agent, $nonce, $oauth_timestamp, $signature_parameters, $link_lightbox_title,
 		$oauth_version, $oauth_done, $show_more_link, $gallery_index, $common_parameters,
 		$doc_links, $password_protected, $token, $token_secret, $show_buy_link, $stack_trace;
 
@@ -173,10 +175,10 @@ abstract class Base {
 	 * Retrieves the error messages from a WP_Response object and formats them in a display-ready markup.
 	 *
 	 * @param WP_Error $response
-	 * @param bool $server_msg
+	 * @param bool     $server_msg
 	 * @return string
 	 */
-	public function wp_error_message($response, $server_msg = true): string {
+	public function wp_error_message(WP_Error $response, bool $server_msg = true): string {
 		$ret = '';
 		if ($server_msg) {
 			$ret = $this->get_server_error() . "<br/>\n";
@@ -260,7 +262,7 @@ abstract class Base {
 	 * @param array $args
 	 * @return string
 	 */
-	public function execute_helper($args = []): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	public function execute_helper(array $args = []): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 		// Blank method, to be overridden by child classes
 		return '';
 	}

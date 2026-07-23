@@ -9,7 +9,7 @@ namespace Photonic_Plugin\Core;
  */
 class Template {
 	public function __construct() {
-		add_filter('the_content', [&$this, 'load_gallery'], 100, 1);
+		add_filter('the_content', [&$this, 'load_gallery'], 100);
 		add_filter('the_title', [&$this, 'set_header_title'], 10, 2);
 
 		/*
@@ -42,8 +42,9 @@ class Template {
 	/**
 	 * Changes the title of the template page to the title of the album being displayed.
 	 *
-	 * @param $title
-	 * @param $id
+	 * @param        $title
+	 * @param string $seperator
+	 * @param string $location
 	 * @return string|void
 	 */
 	public function set_meta_title($title, $seperator = ' &ndash; ', $location = 'right') {
@@ -73,7 +74,7 @@ class Template {
 	 * @param $content
 	 * @return string
 	 */
-	public function load_gallery($content) {
+	public function load_gallery($content): string {
 		global $photonic_gallery_template_page;
 		if (!empty($photonic_gallery_template_page) && is_page($photonic_gallery_template_page)) {
 			// Cannot check nonce for front-end gallery, but will vet the request fully

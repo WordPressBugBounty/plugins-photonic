@@ -1,5 +1,12 @@
 == Changelog ==
 
+= 3.34 =
+
+*	Changed: Security hardening of blocks against XSS
+*	Changed: Added more features for PHP 7.4+
+*	Changed: Improved formatting of captions in tooltips and slide-ups.
+*	Removed: StripJS, which is archived and not maintained any more
+
 = 3.33 =
 
 *	Fixed: Deprecation issues with PHP 8.4

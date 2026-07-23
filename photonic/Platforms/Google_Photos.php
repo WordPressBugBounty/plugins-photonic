@@ -3,6 +3,7 @@
 namespace Photonic_Plugin\Platforms;
 
 use Photonic_Plugin\Components\Album_List;
+use Photonic_Plugin\Components\Comment;
 use Photonic_Plugin\Components\Error;
 use Photonic_Plugin\Components\Pagination;
 use Photonic_Plugin\Components\Photo_List;
@@ -20,9 +21,8 @@ require_once 'Pageable.php';
  * Lacks support for dual title / description fields, doesn't provide download URLs, and video support is ambiguous.
  */
 class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module, Pageable {
-	public $error_date_format;
+	public string $error_date_format;
 	public $refresh_token_valid;
-	private static $instance = null;
 
 	private $eol_date;
 	private $current_date;
@@ -76,6 +76,11 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	 * @return array
 	 */
 	public function get_gallery_images($attr = []): array {
+		// This block kills the rest of the execution without deleting the rest of the code.
+		if ('google' === $attr['type']) {
+			return [new Comment(esc_html__('Google Photos is no longer supported due to an API deprecation by Google.', 'photonic'))];
+		}
+
 		global $photonic_google_refresh_token, $photonic_google_media, $photonic_google_title_caption;
 
 		$out = [];
@@ -133,7 +138,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 			if ('albums' === $attr['view']) {
 				$additional = [];
 				if (!empty($attr['count'])) {
-					$additional['pageSize'] = intval($attr['count']) > 50 ? 50 : intval($attr['count']);
+					$additional['pageSize'] = min(intval($attr['count']), 50);
 				}
 
 				if (!empty($attr['next_token'])) {
@@ -248,7 +253,8 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 						 * A "-" before the filter's name indicates that the filter should be excluded rather than included.
 						 */
 						$content_filters = explode(',', $attr['content_filters']);
-						$include         = $exclude = [];
+						$include = [];
+						$exclude = [];
 						foreach ($content_filters as $content_filter) {
 							$content_filter = strtoupper($content_filter);
 							if (stripos($content_filter, '-') === 0 && array_key_exists(substr($content_filter, 1), $valid_filters)) {
@@ -294,7 +300,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 
 				if (!empty($attr['count']) || !empty($attr['photo_count'])) {
 					$additional['pageSize'] = !empty($attr['photo_count']) ? $attr['photo_count'] : $attr['count'];
-					$additional['pageSize'] = intval($additional['pageSize']) > 100 ? 100 : intval($additional['pageSize']);
+					$additional['pageSize'] = min(intval($additional['pageSize']), 100);
 				}
 				if (!empty($attr['next_token'])) {
 					$additional['pageToken'] = $attr['next_token'];
@@ -406,11 +412,11 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	/**
 	 * @param $body
 	 * @param $short_code
-	 * @param bool|false $deferred
+	 * @param bool $deferred
 	 * @param array $remove
 	 * @return mixed
 	 */
-	private function process_response($body, $short_code, $deferred = false, $remove = []) {
+	private function process_response($body, $short_code, bool $deferred = false, array $remove = []) {
 		global $photonic_google_photo_title_display, $photonic_google_photos_per_row_constraint, $photonic_gallery_template_page,
 			$photonic_google_photos_constrain_by_count, $photonic_google_photo_pop_title_display, $photonic_google_hide_album_photo_count_display;
 
@@ -519,7 +525,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 				}
 			}
 
-			$photonic_photo->thumb_size = $photonic_photo->tile_size = $photonic_photo->main_size = [];
+			$photonic_photo->thumb_size = $photonic_photo->tile_size = $photonic_photo->main_size = []; // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments
 
 			$media     = explode(',', $short_code['media']);
 			$videos_ok = in_array('videos', $media, true) || in_array('all', $media, true);
@@ -569,12 +575,12 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	/**
 	 * @param $objects_or_response
 	 * @param array $short_code
-	 * @param array $remove
+	 * @param array $filter_list
 	 * @param array $options
 	 * @param Pagination|null $pagination
 	 * @return array
 	 */
-	public function build_level_2_objects($objects_or_response, array $short_code, array $remove = [], array &$options = [], ?Pagination &$pagination = null): array {
+	public function build_level_2_objects($objects_or_response, array $short_code, array $filter_list = [], array $options = [], ?Pagination &$pagination = null): array {
 		$filter    = $short_code['filter'];
 		$filters   = empty($filter) ? [] : explode(',', $filter);
 		$processed = [];
@@ -586,7 +592,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 				continue;
 			}
 
-			if (in_array($album->id, $remove, true)) {
+			if (in_array($album->id, $filter_list, true)) {
 				continue;
 			}
 
@@ -601,7 +607,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		if (!empty($pagination->next_token) && strtolower($short_code['filter_type']) !== 'exclude' && !empty($filters) && count($processed) < count($filters) && !empty($photonic_google_chain_queries)) {
 			$additional = [];
 			if (!empty($short_code['count'])) {
-				$additional['pageSize'] = intval($short_code['count']) > 50 ? 50 : intval($short_code['count']);
+				$additional['pageSize'] = min(intval($short_code['count']), 50);
 			}
 
 			$additional['pageToken'] = $pagination->next_token;
@@ -640,7 +646,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 					$remaining            = implode(',', $remaining);
 					$inner_code           = $short_code;
 					$inner_code['filter'] = $remaining;
-					$inner                = $this->build_level_2_objects($inner_albums, $inner_code, $remove, $options, $pagination);
+					$inner                = $this->build_level_2_objects($inner_albums, $inner_code, $filter_list, $options, $pagination);
 					$objects              = array_merge($objects, $inner);
 				}
 			}
@@ -649,7 +655,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		return $objects;
 	}
 
-	private function calculate_sizes($photo, &$object, $sizes) {
+	private function calculate_sizes($photo, $object, $sizes) {
 		if (!empty($photo->mediaMetadata->width) && !empty($photo->mediaMetadata->height)) {
 			$original_width  = $photo->mediaMetadata->width;
 			$original_height = $photo->mediaMetadata->height;
@@ -680,10 +686,9 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		}
 	}
 
-	private function update_thumbnail_information(&$albums, array $short_code) {
+	private function update_thumbnail_information($albums, array $short_code) {
 		$thumbnail_albums = [];
 		$thumbnail_ids = [];
-		$additional = [];
 		foreach ($albums as $album) {
 			$thumbnail_albums[$album->thumbnail_id] = $album;
 			$thumbnail_ids[] = $album->thumbnail_id;
@@ -694,8 +699,6 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		if (!empty($photonic_google_refresh_token) && !empty($this->access_token)) {
 			$query_url = add_query_arg('access_token', $this->access_token, $query_url);
 		}
-
-		$additional['mediaItemIds'] = $thumbnail_ids;
 
 		$headers   = [];
 		$headers['Accept'] = 'application/json';
@@ -748,12 +751,13 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 	 * @param $short_code
 	 * @return Album
 	 */
-	private function process_album($album, $short_code) {
+	private function process_album($album, $short_code): ?Album {
 		if (empty($album->coverPhotoBaseUrl)) {
 			return null;
 		}
 
-/*		$sizes = [
+		/*
+		$sizes = [
 			'thumb_size' => [
 				'size' => $short_code['thumb_size'],
 				'crop' => $short_code['crop_thumb'],
@@ -761,7 +765,8 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 			'tile_size'  => [
 				'size' => $short_code['tile_size'],
 			],
-		];*/
+		];
+		*/
 
 		$photonic_album = new Album();
 
@@ -778,8 +783,6 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		$photonic_album->thumbnail  = esc_url($album->coverPhotoBaseUrl . "=w{$short_code['thumb_size']}-h{$short_code['thumb_size']}" . ('crop' === $short_code['crop_thumb'] ? '-c' : ''));
 		$photonic_album->tile_image = esc_url($album->coverPhotoBaseUrl . "=w{$short_code['tile_size']}-h{$short_code['tile_size']}");
 		$photonic_album->thumbnail_id = $album->coverPhotoMediaItemId;
-
-//		$this->calculate_sizes($album, $photonic_album, $sizes);
 
 		$photonic_album->main_page = '';
 
@@ -829,7 +832,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 		$this->refresh_token_valid = $validity;
 	}
 
-	public function execute_helper($args = []): string {
+	public function execute_helper(array $args = []): string {
 		if (empty($args['album_type']) || !in_array($args['album_type'], ['self', 'shared'], true)) {
 			$album_type = 'self';
 		}
@@ -843,8 +846,8 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 			'access_token' => $this->access_token,
 			'pageSize'     => 50,
 		];
-		if (!empty($args['nextPageToken'])) {
-			$parameters['pageToken'] = sanitize_text_field($args['nextPageToken']);
+		if (!empty($args['next_page_token'])) {
+			$parameters['pageToken'] = sanitize_text_field($args['next_page_token']);
 		}
 
 		$call_args              = [];
@@ -920,7 +923,10 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 				'client_secret' => $this->client_secret,
 				'refresh_token' => $refresh_token,
 				'grant_type'    => 'refresh_token'
-			]
+			],
+			$this->user_agent,
+			90,
+			PHOTONIC_SSL_VERIFY
 		);
 
 		if (!is_wp_error($response)) {
@@ -930,7 +936,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 			}
 			set_transient('photonic_' . $this->provider . '_token', $token, $token['oauth_token_expires']);
 			if (empty($token)) {
-				$error = print_r(wp_remote_retrieve_body($response), true);
+				$error = print_r(wp_remote_retrieve_body($response), true); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 			}
 		}
 		else {
@@ -961,7 +967,7 @@ class Google_Photos extends OAuth2 implements Level_One_Module, Level_Two_Module
 			$pagination->total      = 10;
 			$pagination->start      = 0;
 			$pagination->end        = 1;
-			$pagination->per_page   = $short_code;
+			$pagination->per_page   = $short_code['count'];
 			$pagination->next_token = $body->nextPageToken;
 		}
 		return $pagination;

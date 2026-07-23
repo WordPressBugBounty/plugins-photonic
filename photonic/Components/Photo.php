@@ -3,26 +3,26 @@
 namespace Photonic_Plugin\Components;
 
 class Photo {
-	public $id;
-	public $thumbnail;
-	public $tile_image;
-	public $main_image;
-	public $download;
+	public string $id = '';
+	public string $thumbnail = '';
+	public string $tile_image = '';
+	public string $main_image = '';
+	public string $download = '';
 
-	public $title;
-	public $alt_title;
-	public $description;
+	public string $title = '';
+	public string $alt_title = '';
+	public string $description = '';
 
-	public $video;
-	public $mime;
+	public string $video = '';
+	public string $mime = '';
 
-	public $thumb_size;
-	public $tile_size;
-	public $main_size;
+	public array $thumb_size = [];
+	public array $tile_size = [];
+	public array $main_size = [];
 
-	public $taken_on;
-	public $uploaded_on;
+	public string $taken_on = '';
+	public string $uploaded_on = '';
 
-	public $main_page;
-	public $buy_link;
+	public string $main_page = '';
+	public string $buy_link = '';
 }

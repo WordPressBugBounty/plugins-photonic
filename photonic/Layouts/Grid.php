@@ -8,6 +8,7 @@ use Photonic_Plugin\Components\Grid_Figure;
 use Photonic_Plugin\Components\Grid_Image;
 use Photonic_Plugin\Components\Pagination;
 use Photonic_Plugin\Components\Photo_List;
+use Photonic_Plugin\Core\Photonic;
 use Photonic_Plugin\Layouts\Features\Can_Use_Lightbox;
 use Photonic_Plugin\Platforms\Base;
 use Photonic_Plugin\Components\Album;
@@ -155,7 +156,8 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 			$shown_title = '';
 			if (in_array($title_position, ['below', 'hover-slideup-show', 'hover-slidedown-show', 'slideup-stick'], true) && !empty($title)) {
 				// Convoluted... we want to remove any funky markup from $title, so wp_filter_nohtml_kses is used. But that does an `addslashes`, which causes more funky markup. So we use stripslashes, but then we decode the special characters.
-				$shown_title = '<figcaption class="photonic-title-info"><div class="photonic-photo-title photonic-title">' . wp_specialchars_decode(stripslashes(wp_filter_nohtml_kses($title)), ENT_QUOTES) . '</div></figcaption>';
+				// $shown_title = '<figcaption class="photonic-title-info"><div class="photonic-photo-title photonic-title">' . wp_specialchars_decode(stripslashes(wp_filter_nohtml_kses($title)), ENT_QUOTES) . '</div></figcaption>';
+				$shown_title = '<figcaption class="photonic-title-info"><div class="photonic-photo-title photonic-title">' . wp_specialchars_decode(stripslashes(wp_kses($title, Photonic::$safe_description_tags)), ENT_QUOTES) . '</div></figcaption>';
 			}
 
 			$photo_data = ['title' => $title_markup, 'deep' => $deep_value, 'raw_title' => esc_attr($title)];
@@ -245,7 +247,7 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 	 *
 	 * @param Album_List $album_list
 	 * @param array $short_code
-	 * @param $module Base
+	 * @param Base $module
 	 * @return string
 	 */
 	public function generate_level_2_gallery(Album_List $album_list, array $short_code, Base $module): string {
@@ -287,8 +289,6 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 		if ($album_list->album_opens_gallery) {
 			$gallery_anchor_classes[] = 'gallery-page';
 		}
-
-		$counter = 0;
 
 		$layout_engine = $this->get_layout_engine($module, $short_code);
 		$all_sizes_present = strtolower($layout_engine) === 'css';
@@ -342,11 +342,11 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 
 			$shown_title = '';
 			if (in_array($title_position, ['below', 'hover-slideup-show', 'hover-slidedown-show', 'slideup-stick'], true)) {
-				$shown_title = "\n{$indent}\t\t\t<figcaption class='photonic-title-info'>\n{$indent}\t\t\t\t<div class='photonic-$singular_type-title photonic-title'>" . wp_specialchars_decode(stripslashes(wp_filter_nohtml_kses($title)), ENT_QUOTES) . "";
+				$shown_title = "\n$indent\t\t\t<figcaption class='photonic-title-info'>\n$indent\t\t\t\t<div class='photonic-$singular_type-title photonic-title'>" . wp_specialchars_decode(stripslashes(wp_filter_nohtml_kses($title)), ENT_QUOTES);
 				if (!$level_1_count_display && !empty($object->counter)) {
 					$shown_title .= '<span class="photonic-title-photo-count photonic-' . $singular_type . '-photo-count">' . sprintf(esc_html__('%s photos', 'photonic'), $object->counter) . '</span>';
 				}
-				$shown_title .= "</div>\n{$indent}\t\t\t</figcaption>";
+				$shown_title .= "</div>\n$indent\t\t\t</figcaption>";
 			}
 
 			$grid_image             = new Grid_Image();
@@ -356,7 +356,7 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 			$grid_image->dimensions = $inbuilt_sizes ?? [];
 
 			$grid_anchor             = new Grid_Anchor();
-			$grid_anchor->id         = "photonic-{$provider}-$singular_type-thumb-$id";
+			$grid_anchor->id         = "photonic-$provider-$singular_type-thumb-$id";
 			$grid_anchor->href       = esc_url($object->gallery_url ?? $object->main_page);
 			$grid_anchor->classes    = array_merge($gallery_anchor_classes, $object->classes);
 			$grid_anchor->data       = $anchor_data;
@@ -366,7 +366,7 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 			$grid_anchor->indent     = $indent;
 
 			$grid_figure                  = new Grid_Figure();
-			$grid_figure->id              = "photonic-{$provider}-$singular_type-$id";
+			$grid_figure->id              = "photonic-$provider-$singular_type-$id";
 			$grid_figure->classes         = $gallery_figure_classes;
 			$grid_figure->styles          = $styles;
 			$grid_figure->data            = $figure_data;
@@ -375,7 +375,6 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 			$grid_figure->prompter_markup = $this->get_password_prompter($object, $provider, $singular_type, $id);
 
 			$grid_figures[] = $grid_figure;
-			$counter++;
 		}
 
 		if (!empty($grid_figures)) {
@@ -499,18 +498,18 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 		$password_prompt = '';
 		if (!empty($object->passworded)) {
 			$password_prompt = "
-							<div class='photonic-password-prompter' id='photonic-{$provider}-$singular_type-prompter-$id' title='{$this->prompt_title}' data-photonic-prompt='password'>
+							<div class='photonic-password-prompter' id='photonic-$provider-$singular_type-prompter-$id' title='$this->prompt_title' data-photonic-prompt='password'>
 								<div class='photonic-password-prompter-content'>
 									<div class='photonic-prompt-head'>
 										<h3>
-											<span class='title'>{$this->prompt_title}</span>
+											<span class='title'>$this->prompt_title</span>
 											<button class='close'>&times;</button>
 										</h3>
 									</div>
 									<div class='photonic-prompt-body'>
-										<p>{$this->prompt_text}</p>
-										<input type='password' name='photonic-{$provider}-password' />
-										<button class='photonic-{$provider}-submit photonic-password-submit confirm'>{$this->prompt_submit}</button>
+										<p>$this->prompt_text</p>
+										<input type='password' name='photonic-$provider-password' />
+										<button class='photonic-$provider-submit photonic-password-submit confirm'>$this->prompt_submit</button>
 									</div>
 								</div>
 							</div>";
@@ -615,10 +614,10 @@ class Grid extends Core_Layout implements Level_One_Gallery, Level_Two_Gallery {
 				$ret .= $figure->html($module, $this, false);
 			}
 
-			$ret .= "\n$indent</div> <!-- ./photonic-level-{$level}-container -->";
+			$ret .= "\n$indent</div> <!-- ./photonic-level-$level-container -->";
 			$ret .= "\n$indent<span id='$end_id'></span>";
 
-			if (!empty($pagination) && isset($pagination->end) && isset($pagination->total) && $pagination->total > $pagination->end) {
+			if ($pagination->end > -1 && $pagination->total > -1 && $pagination->total > $pagination->end) {
 				$ret .= !empty($more) ? "\n$indent<a href='#' class='photonic-more-button photonic-more-dynamic'>$more</a>\n" : '';
 			}
 		}

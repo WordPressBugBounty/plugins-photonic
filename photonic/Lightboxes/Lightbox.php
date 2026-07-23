@@ -8,12 +8,10 @@ use Photonic_Plugin\Platforms\Base;
 
 abstract class Lightbox {
 	/** @var array */
-	public $class;
+	public array $class;
 
-	public $supports_video;
-
-	public $library;
-	public $default_lightbox_text;
+	public string $library;
+	public string $default_lightbox_text;
 
 	/**
 	 * Lightbox constructor.

@@ -112,7 +112,7 @@ class Getting_Started extends Admin_Page {
 			<p>
 				Photonic can show you photos and galleries not just from standard WordPress, but also from several
 				third-party photo-hosting providers
-				such as Flickr, SmugMug, Google Photos etc. The following table tells you what you need for each
+				such as Flickr, SmugMug, etc. The following table tells you what you need for each
 				provider, and provides you with
 				documentation links for how to show something using Photonic.
 			</p>
@@ -186,17 +186,14 @@ class Getting_Started extends Admin_Page {
 
 				<tr>
 					<th>
-						Google Photos<br/>
-						<a href="https://console.developers.google.com/apis/">Client ID required</a><br/>
-						<a href="https://aquoid.com/plugins/photonic/google-photos/#auth">Authentication required</a>
+						Google Photos
 					</th>
 					<td>Not supported</td>
-					<td><a href="https://aquoid.com/plugins/photonic/google-photos/photos/">Photos and Videos</a></td>
-					<td><a href="https://aquoid.com/plugins/photonic/google-photos/albums/">Albums</a></td>
+					<td>Not supported</td>
+					<td>Not supported</td>
 					<td>No such feature in Google Photos</td>
-					<td><a href="https://aquoid.com/plugins/photonic/google-photos/#auth">Back-end authentication</a>
-					</td>
-					<td>All; Fancybox, Featherlight, Image Lightbox, PrettyPhoto and StripJS cannot handle videos</td>
+					<td>Not supported</td>
+					<td>Not supported</td>
 				</tr>
 
 				<tr>
@@ -219,17 +216,14 @@ class Getting_Started extends Admin_Page {
 
 				<tr>
 					<th>
-						Instagram<br/>
-						<a href="https://aquoid.com/plugins/photonic/instagram/#auth-setup">Authentication required</a>
+						Instagram
 					</th>
-					<td><a href="https://aquoid.com/plugins/photonic/instagram/#photo-of-the-day">Supported</a></td>
-					<td><a href="https://aquoid.com/plugins/photonic/instagram/#own-photos">User photos and videos</a>
-					</td>
-					<td>No such feature in Instagram</td>
-					<td>No such feature in Instagram</td>
-					<td><a href="https://aquoid.com/plugins/photonic/instagram/#auth-setup">Back-end / server-side</a>
-					</td>
-					<td>All; Image Lightbox, PrettyPhoto and StripJS cannot handle videos</td>
+					<td>Not supported</td>
+					<td>Not supported</td>
+					<td>Not supported</td>
+					<td>No such feature in Google Photos</td>
+					<td>Not supported</td>
+					<td>Not supported</td>
 				</tr>
 			</table>
 		</div>

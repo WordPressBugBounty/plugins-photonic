@@ -7,7 +7,7 @@ use Photonic_Plugin\Layouts\Core_Layout;
 use Photonic_Plugin\Platforms\Base;
 
 class Stack_Trace implements Printable {
-	public $events = [];
+	public array $events = [];
 
 	public function add_to_first_open_event($new_event) {
 		$found = false;
@@ -83,7 +83,7 @@ class Stack_Trace implements Printable {
 	}
 
 
-	public function html(Base $module, ?Core_Layout $layout = null, $print = false): string {
+	public function html(Base $module, ?Core_Layout $layout, bool $print = false): string {
 		$ret = "<!--\n";
 		$ret .= "Stats for Platform: {$module->provider}, Gallery: {$module->gallery_index}, Library: {$layout->get_library()}\n";
 		$ret .= $this->get_nested_element();
