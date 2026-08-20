@@ -306,6 +306,9 @@ class Photonic {
 	 * @return void
 	 */
 	public function add_admin_menu() {
+		require_once PHOTONIC_PATH . "/Admin/Admin_Menu.php";
+		$this->admin_menu = new Admin_Menu(__FILE__, $this);
+
 		if (current_user_can('edit_theme_options')) {
 			$parent_slug = 'photonic-options-manager';
 		}
@@ -570,12 +573,6 @@ class Photonic {
 
 	public function admin_init(): void {
 		require_once PHOTONIC_PATH . "/Admin/Admin.php";
-
-		if (!empty($_REQUEST['page']) && // phpcs:ignore WordPress.Security.NonceVerification
-			in_array($_REQUEST['page'], ['photonic-options-manager', 'photonic-options', 'photonic-helpers', 'photonic-getting-started', 'photonic-auth', 'photonic-shortcode-replace'], true)) { // phpcs:ignore WordPress.Security.NonceVerification
-			require_once PHOTONIC_PATH . "/Admin/Admin_Menu.php";
-			$this->admin_menu = new Admin_Menu(__FILE__, $this);
-		}
 	}
 
 	public function add_extensions() {
