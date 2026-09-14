@@ -6,7 +6,7 @@ Text Domain: photonic
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.35
+Stable tag: 3.36
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -42,7 +42,6 @@ Of all plugins free or paid, Photonic has support built in for the highest numbe
 *	<a href='https://noelboss.github.io/featherlight/'>Featherlight</a>
 *	<a href='https://osvaldas.info/image-lightbox-responsive-touch-friendly'>Image Lightbox</a>
 *	<a href='https://cornel.bopp-art.com/lightcase/'>Lightcase</a>
-*	<a href='http://www.stripjs.com'>Strip</a>
 *	<a href='https://brutaldesign.github.io/swipebox/'>Swipebox</a>
 *	Thickbox
 
@@ -51,6 +50,7 @@ Of all plugins free or paid, Photonic has support built in for the highest numbe
 *	<a href='http://fancybox.net/'>Fancybox 1</a> - no update since November 2010
 *	<a href='http://dimsemenov.com/plugins/magnific-popup/'>Magnific Popup</a> - no update since February 2016
 *	<a href='http://www.no-margin-for-errors.com/projects/prettyphoto-jquery-lightbox-clone/'>PrettyPhoto</a> - no update since May 2015
+*	<a href='http://www.stripjs.com'>Strip</a> - archived GitHub repository
 
 For the non-GPL alternatives like <a href='https://fancyapps.com/fancybox/'>Fancybox2</a> and the obsolete libraries, Photonic has code to work with them, but you have to install the scripts yourself or rely on them from your theme or another plugin.
 
@@ -212,6 +212,6 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.35 =
+= 3.36 =
 
-*	Fixed: Menu was broken due to changes in WP 7.1
+*	Fixed: Groups in Zenfolio were not working

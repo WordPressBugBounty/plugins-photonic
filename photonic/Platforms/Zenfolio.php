@@ -323,7 +323,7 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 					break;
 
 				case 'group':
-					if (empty($object_id)) {
+					if (empty($attr['object_id'])) {
 						$this->pop_from_stack();
 						return [
 							new Error(
@@ -332,6 +332,10 @@ class Zenfolio extends Base implements Level_One_Module, Level_Two_Module {
 							)
 						];
 					}
+					else {
+						$object_id = $attr['object_id'];
+					}
+
 					$chained_methods[] = 'LoadGroup';
 					$f = stripos($object_id, 'f');
 					if (false !== $f) {

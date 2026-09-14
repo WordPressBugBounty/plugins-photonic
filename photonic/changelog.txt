@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 3.36 =
+
+*	Fixed: Groups in Zenfolio were not working
+
 = 3.35 =
 
 *	Fixed: Menu was broken due to changes in WP 7.1
