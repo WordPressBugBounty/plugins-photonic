@@ -6,7 +6,7 @@ Text Domain: photonic
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.36
+Stable tag: 3.37
 License: GPLv3 or later
 
 Galleries on steroids! A stylish lightbox & gallery plugin for WP, Flickr, SmugMug and Zenfolio photos and videos.
@@ -212,6 +212,6 @@ Yes, but only for the plugin front-end and the wizard. The Settings pages are no
 
 == Changelog ==
 
-= 3.36 =
+= 3.37 =
 
-*	Fixed: Groups in Zenfolio were not working
+*	Fixed: Security hardening for galleries on dedicated pages

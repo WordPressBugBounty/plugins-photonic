@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 3.37 =
+
+*	Fixed: Security hardening for galleries on dedicated pages
+
 = 3.36 =
 
 *	Fixed: Groups in Zenfolio were not working

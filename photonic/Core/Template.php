@@ -32,7 +32,7 @@ class Template {
 		if (!empty($id)) {
 			if (!empty($photonic_gallery_template_page) && is_page($photonic_gallery_template_page) && 'replace-if-available' === $photonic_page_title && absint($photonic_gallery_template_page) === absint($id)) {
 				if (isset($_REQUEST['photonic_gallery_title'])) { // phpcs:ignore WordPress.Security.NonceVerification
-					return wptexturize(stripslashes_deep(wp_kses_post($_REQUEST['photonic_gallery_title']))); // phpcs:ignore WordPress.Security.NonceVerification
+					return wptexturize(stripslashes_deep(wp_kses_data($_REQUEST['photonic_gallery_title']))); // phpcs:ignore WordPress.Security.NonceVerification
 				}
 			}
 		}
