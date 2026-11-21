@@ -1,5 +1,11 @@
 == Changelog ==
 
+= 3.38 =
+
+*	Fixed: Additional security hardening for galleries on dedicated pages
+*	Fixed: SmugMug albums were not displaying without authentication
+*	Fixed: SmugMug Helper was requiring an API key
+
 = 3.37 =
 
 *	Fixed: Security hardening for galleries on dedicated pages

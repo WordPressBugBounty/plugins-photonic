@@ -435,7 +435,12 @@ class SmugMug extends Source {
 				}
 			}
 
-			$response = Photonic::http($call, 'GET', $args, null, 300);
+			if (!empty($photonic_smug_access_token)) {
+				$response = Photonic::http($call, 'GET', $args, null, 300);
+			}
+			else {
+				$response = wp_remote_request(add_query_arg($args, $call), 'GET', $args);
+			}
 			return [$response, ['nick_name' => $user], $call];
 		}
 		return ['error' => $this->error_unauthorized];

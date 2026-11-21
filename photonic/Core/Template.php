@@ -86,17 +86,23 @@ class Template {
 				$shortcode = base64_decode($shortcode); // The `encode` is defined in Core.php's get_gallery_url method. We check this in the following steps.
 
 				// Input is coming via a URL, so we have to ensure it is safe.
-				// The input is expected to be a Photonic shortcode, so the simplest way is to strip out all instances of the Photonic
-				// shortcode and verify that the input is blank. If it is blank, then all that the input had was a Photonic shortcode.
+				// The input is expected to be a Photonic shortcode, so we do two things:
+				// 1). We strip out all instances of shortcodes and verify that the rest of the content is blank.
+				// 2). We verify that only one shortcode was submitted, and that it was a Photonic shortcode.
+
 				$content_without_shortcodes = strip_shortcodes($shortcode);
-				if (!empty(trim($shortcode)) && has_shortcode($shortcode, $shortcode_tag) && empty(trim($content_without_shortcodes))) {
+
+				$shortcode_regex = get_shortcode_regex([$shortcode_tag]);
+				preg_match('/^' . $shortcode_regex . '$/', $shortcode, $shortcode_matches, PREG_OFFSET_CAPTURE); // ^ & $ to ensure that the Photonic shortcode is the only shortcode in the string.
+
+				if (!empty(trim($shortcode)) && !empty($shortcode_matches) && empty(trim($content_without_shortcodes))) {
 					// Looks good. Let's proceed.
 					global $photonic_page_content;
 					if ('replace-if-available' === $photonic_page_content) {
-						$content = do_shortcode($shortcode);
+						$content = wp_kses(do_shortcode($shortcode), Photonic::$safe_tags);
 					}
 					elseif ('append-if-available' === $photonic_page_content) {
-						$content .= do_shortcode($shortcode);
+						$content .= wp_kses(do_shortcode($shortcode), Photonic::$safe_tags);
 					}
 				}
 				else {

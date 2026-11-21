@@ -336,7 +336,9 @@ class SmugMug extends OAuth1 implements Level_One_Module, Level_Two_Module, Page
 						$response    = Photonic::http($chained_call, 'GET', $signed_args, null, 90, PHOTONIC_SSL_VERIFY, [], $cookies);
 					}
 					else {
-						$response = Photonic::http($chained_call, 'GET', $smug_args, null, 90, PHOTONIC_SSL_VERIFY, [], $cookies);
+						// $response = Photonic::http($chained_call, 'GET', $smug_args, null, 90, PHOTONIC_SSL_VERIFY, [], $cookies);
+						// For some reason, the above started failing suddenly, not fetching any data
+						$response = wp_remote_request(add_query_arg($smug_args, $chained_call), ['sslverify' => PHOTONIC_SSL_VERIFY]);
 					}
 
 					$this->pop_from_stack();

@@ -124,17 +124,11 @@ class Helper extends Admin_Page {
 	}
 
 	private function display_smugmug_album_id_helper() {
-		global $photonic_smug_api_key;
-		if (empty($photonic_smug_api_key)) {
-			echo sprintf(esc_html__('Please set up your SmugMug API Key under %s', 'photonic'), '<em>Photonic &rarr; Settings &rarr; SmugMug &rarr; SmugMug Settings</em>');
-		}
-		else {
-			echo '<label>' . esc_html__('Enter your SmugMug username and click "Find"', 'photonic');
-			echo '<input type="text" value="username" id="photonic-smugmug-user" name="photonic-smugmug-user"/>';
-			echo '</label>';
-			echo '<input type="button" value="' . esc_attr__('Find', 'photonic') . '" id="photonic-smugmug-user-tree" class="button button-primary"/>';
-			echo '<div class="result">&nbsp;</div>';
-		}
+		echo '<label>' . esc_html__('Enter your SmugMug username and click "Find"', 'photonic');
+		echo '<input type="text" value="username" id="photonic-smugmug-user" name="photonic-smugmug-user"/>';
+		echo '</label>';
+		echo '<input type="button" value="' . esc_attr__('Find', 'photonic') . '" id="photonic-smugmug-user-tree" class="button button-primary"/>';
+		echo '<div class="result">&nbsp;</div>';
 	}
 
 	private function display_zenfolio_category_helper() {
@@ -177,11 +171,11 @@ class Helper extends Admin_Page {
 							// $api_call = 'https://api.smugmug.com/api/v2/user/' . $user . '?_expand=Node.ChildNodes.ChildNodes.ChildNodes.ChildNodes.ChildNodes';
 							$api_call = 'https://api.smugmug.com/api/v2/user/' . $user;
 							$args = [
-								'APIKey'        => $smugmug_api_key,
+								'APIKey'        => !empty($smugmug_api_key) ? trim($smugmug_api_key) : '86MZ8N8TqJf5x2fQ4FRWXRtJ3C6Jm7XV',
 								'_accept'       => 'application/json',
 								'_verbosity'    => 1,
 								'_expandmethod' => 'inline',
-								'count'         => 20
+								'count'         => 100
 							];
 
 							$response = Photonic::http($api_call, 'GET', $args);
